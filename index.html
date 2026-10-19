@@ -464,6 +464,40 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 @media(max-width:370px){.stats{grid-template-columns:1fr}.stat{display:flex;align-items:center;justify-content:space-between;gap:12px}.stat strong{font-size:22px}.stat span{max-width:60%;text-align:right}}
 @media(prefers-reduced-motion:reduce){.side-link,.stat,.rotation-week-card,.pokemon,.poke-img{transition:none!important}}
 
+
+/* Ajuste de densidad: reducir espacios vacíos en pantallas anchas */
+@media(min-width:901px){
+  main{max-width:1320px;padding:24px 24px 44px}
+  .app-shell{padding-left:252px}
+  .hero{margin-bottom:14px;padding:24px 28px;border-radius:22px}
+  .hero h1{font-size:clamp(30px,3vw,40px);margin:6px 0 8px}
+  .hero p{margin:6px 0}
+  .stats{margin-top:14px;gap:10px}
+  .stat{padding:11px 13px}
+  .stat strong{font-size:25px}
+  .dashboard{margin-bottom:14px;padding:18px}
+  .dashboard-grid{gap:10px}
+  .dashboard-card{padding:15px}
+  .dashboard-main{font-size:32px;margin:7px 0}
+  .dashboard-line{margin:1px 0;padding:4px 0}
+  .auth-drawer,.profile-drawer{margin-top:9px}
+  .auth-drawer summary,.profile-drawer summary{padding:11px 15px}
+  .tabs{margin:12px 0 10px}
+  .mission-panel{padding:12px}
+  .controls{margin:10px 0;padding:7px}
+  .clan,.mountain-card{margin:9px 0}
+  .clan-head{padding:12px 15px;min-height:60px}
+  .rows{padding:3px 14px 8px}
+  .pokemon{padding-top:10px;padding-bottom:10px}
+  .rotation-calendar{gap:8px;margin:10px 0 14px}
+}
+@media(min-width:1200px){
+  main{max-width:1440px;padding-left:30px;padding-right:30px}
+  .hero{padding:22px 28px}
+  .dashboard{padding:17px}
+  .dashboard-card{padding:14px 16px}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
