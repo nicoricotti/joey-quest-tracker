@@ -62,7 +62,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
-const firebaseConfig={apiKey:"AIzaSyBHfZojCuU0pIiN7xYifufdLFdQpnJjUmU",authDomain:"pxg-mission-tracker.firebaseapp.com",databaseURL:"https://pxg-mission-tracker-default-rtdb.firebaseio.com",projectId:"pxg-mission-tracker",storageBucket:"pxg-mission-tracker.firebasestorage.app",messagingSenderId:"418258644259",appId:"1:418258644259:web:7f3d4b57e74f9ef9acb096"};
+const firebaseConfig={apiKey:"AIzaSyBHfZojCuU0pTiN7xYifufdLFdQpnJjUmU",authDomain:"pxg-mission-tracker.firebaseapp.com",databaseURL:"https://pxg-mission-tracker-default-rtdb.firebaseio.com",projectId:"pxg-mission-tracker",storageBucket:"pxg-mission-tracker.firebasestorage.app",messagingSenderId:"418258644259",appId:"1:418258644259:web:7f3d4b57e74f9ef9acb096"};
 const firebaseApp=initializeApp(firebaseConfig);const auth=getAuth(firebaseApp);const db=getDatabase(firebaseApp);const googleProvider=new GoogleAuthProvider();
 function setAuthStatus(message){const el=document.getElementById("authStatus");if(el)el.textContent=message;}
 
