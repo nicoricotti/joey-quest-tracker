@@ -402,6 +402,68 @@ button,.friendly-btn{touch-action:manipulation}
 @media(max-width:560px){.hero{border-radius:18px}.hero:after{right:-100px;opacity:.65}.stats .stat{border-radius:12px}.clan-head{gap:8px}.clan-symbol{width:29px;height:29px}.rows{padding-left:9px;padding-right:9px}.rotation-heading{align-items:flex-start}.tabs{gap:6px;padding:4px}.tabs .tab{min-height:52px}.mission-panel{border-radius:15px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+
+/* Segunda pasada estética: look de HUD / panel de misión */
+:root{--surface-glass:#172132d9;--stroke-soft:#465570;--shadow-deep:0 18px 42px #05091245}
+body{background-image:radial-gradient(ellipse at 48% -15%,#314c70 0,#172133 38%,#0b1019 100%),linear-gradient(135deg,#ffffff04 25%,transparent 25%,transparent 50%,#ffffff04 50%,#ffffff04 75%,transparent 75%);background-size:auto,7px 7px;background-attachment:fixed}
+.app-shell{isolation:isolate}
+.app-sidebar{border-right-color:#52627c55}
+.brand-mark{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#b7fa7c,#63cba7);color:#14221a;font-weight:1000;letter-spacing:-.08em;box-shadow:0 7px 22px #a6ef7026,inset 0 1px #ffffff9c}
+.sidebar-brand{gap:11px!important;text-decoration:none}
+.sidebar-brand strong{letter-spacing:-.025em}
+.sidebar-brand small{display:block;margin-top:3px;font-size:9px;letter-spacing:.2em;color:#8394ad}
+.side-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;background:#ffffff07;border:1px solid #ffffff0b;font-size:16px;flex-shrink:0}
+.side-link.active .side-icon{background:#a6ef7018;border-color:#a6ef7030;color:var(--accent)}
+main{position:relative}
+.hero{border-radius:24px;background:linear-gradient(115deg,#293d58f5 0%,#1a2638f5 53%,#17202ef5 100%);border-color:#52647d;box-shadow:var(--shadow-deep),inset 0 1px #ffffff0d}
+.hero:before{content:"";position:absolute;left:0;top:22px;bottom:22px;width:3px;border-radius:0 5px 5px 0;background:linear-gradient(180deg,var(--accent),var(--accent2));box-shadow:0 0 18px #a6ef7040}
+.hero:after{border-color:#a6ef7020;box-shadow:0 0 0 24px #7ce4dd08,0 0 0 48px #a6ef7005}
+.kicker{font-size:10px}
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stat{position:relative;overflow:hidden;border-color:#465671;background:linear-gradient(140deg,#202f44,#131b29);box-shadow:inset 0 1px #ffffff09}
+.stat:after{content:"";position:absolute;right:-16px;bottom:-27px;width:70px;height:70px;border-radius:50%;border:1px solid #7ce4dd17;box-shadow:0 0 0 10px #7ce4dd05;pointer-events:none}
+.stat strong{font-size:clamp(22px,3vw,29px)}
+.dashboard{position:relative;border-radius:22px;background:linear-gradient(145deg,#1c283a,#121925);border-color:#465570;box-shadow:var(--shadow-deep),inset 0 1px #ffffff0a}
+.dashboard:before{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,#9be56460,#7ce4dd60,transparent)}
+.dashboard-card{border-radius:17px}
+.dashboard-card h2{font-size:15px;text-transform:uppercase;letter-spacing:.045em;color:#dce8f7}
+.dashboard-main{font-variant-numeric:tabular-nums;text-shadow:0 4px 20px #00000030}
+.dashboard-line:last-of-type{border-bottom:0}
+.rotation-week-card{border-radius:17px}
+.rotation-week-number{font-size:16px}
+.rotation-week-tag{padding:4px 6px;border:1px solid #ffd16635;border-radius:6px;background:#ffd1660b}
+.tabs{position:sticky;top:10px;z-index:20;backdrop-filter:blur(14px);box-shadow:0 12px 26px #00000020}
+.tabs .tab{border-radius:12px;letter-spacing:-.01em}
+.tabs .tab:not(.active){background:linear-gradient(145deg,#202b3d,#17202e)}
+.mission-panel{border-radius:20px;box-shadow:var(--shadow-deep),inset 0 1px #ffffff07}
+.controls{padding:9px;border:1px solid #34425a;border-radius:15px;background:#0d1420a8}
+.controls input,.controls select{border-radius:10px}
+.controls input::placeholder{color:#8291a8}
+.clan,.mountain-card{border-radius:17px;overflow:hidden}
+.clan-head{min-height:70px}
+.clan-head .pill{align-self:center}
+.clan-symbol{box-shadow:0 4px 12px #00000030}
+.clan-meta{font-size:11px}
+.pokemon{padding-top:14px;padding-bottom:14px}
+.pokemon:hover{background:linear-gradient(90deg,#ffffff08,transparent)}
+.pokemon.done{border-left:2px solid #a6ef7040;padding-left:8px}
+.pokemon.done .check{background:linear-gradient(135deg,#203b28,#111722);border-color:#6a9c55}
+.poke-img{border-color:#3b4a62}
+.ball-count-controls .ball-step{background:#202c40;border-color:#40516c;color:#dce8f7}
+.ball-count-controls .ball-step:hover:not(:disabled){background:#2c405a;border-color:var(--accent2)}
+.item-img{box-shadow:0 8px 18px #00000020,inset 0 1px #ffffff0a}
+.mountain-status{letter-spacing:.025em}
+.auth-drawer[open],.profile-drawer[open]{border-color:#61748f;box-shadow:0 12px 28px #00000020}
+.footer button{min-height:40px}
+.empty{border:1px dashed #465570;border-radius:15px;background:#11172280}
+.notice{border-left:2px solid var(--accent2);padding-left:10px}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role="button"]:focus-visible{outline:2px solid #b8ff8b;outline-offset:3px;box-shadow:0 0 0 5px #a6ef7018}
+@media(min-width:901px){.app-sidebar{width:252px}.app-shell{padding-left:252px}.hero{padding:30px 32px}.dashboard{padding:22px}.mission-panel{padding:17px}}
+@media(max-width:900px){.app-sidebar{backdrop-filter:blur(18px)}main{padding-top:22px}}
+@media(max-width:560px){.hero{padding:19px 17px 18px 21px}.hero:before{top:18px;bottom:18px}.stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat strong{font-size:20px}.stat span{font-size:10px;letter-spacing:.02em}.dashboard{padding:12px}.dashboard-card{padding:14px}.dashboard-main{font-size:30px}.tabs{top:4px;border-radius:14px}.tabs .tab{font-size:13px}.clan-head{min-height:62px;padding:12px}.clan-head h2{font-size:15px}.clan-meta{max-width:220px}.mission-panel{padding:7px}.controls{padding:7px}.pokemon.done{padding-left:5px}}
+@media(max-width:370px){.stats{grid-template-columns:1fr}.stat{display:flex;align-items:center;justify-content:space-between;gap:12px}.stat strong{font-size:22px}.stat span{max-width:60%;text-align:right}}
+@media(prefers-reduced-motion:reduce){.side-link,.stat,.rotation-week-card,.pokemon,.poke-img{transition:none!important}}
+
 </style>
 </head>
 <body><div class="app-shell">
