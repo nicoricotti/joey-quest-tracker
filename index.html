@@ -37,7 +37,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <button class="primary" id="export">Exportar progreso</button>
 <button id="importBtn">Importar progreso</button><input id="importFile" type="file" accept="application/json" hidden>
 </div>
-<div class="notice">Nota: el progreso se guarda en este navegador. Los perfiles se guardan por separado en este navegador. Si juegan en computadores distintos, exporten el progreso e importen el archivo en el otro equipo para trasladarlo; no hay sincronización automática.</div>
+<div class="notice" id="storageNotice">💾 El progreso se guarda automáticamente en este navegador y los perfiles de Nico y Dani son independientes. Por ahora no hay sincronización entre dispositivos; usa “Exportar progreso” para guardar una copia.</div>
 <div class="tabs"><button class="tab active" id="tabJoey" type="button">🎒 Joey Quest</button><button class="tab" id="tabMountain" type="button">⛰️ Dimensional Mountain</button></div><section class="mission-panel" id="panelJoey"><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div id="mountain"></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
@@ -74,6 +74,11 @@ const dexIds={"Darumaka":554,"Darmanitan":555,"Heatmor":631,"Wingull":278,"Pelip
 const spriteUrl=name=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dexIds[name]||0}.png`;
 const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexIds[name]||0}.png`;
 const all=()=>clans.flatMap((c,ci)=>c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,clan:c.name,name:p[0],detail:p[1]})));
+function createSafetyBackup(){
+ const snapshot={profiles:JSON.parse(JSON.stringify(profiles)),activeProfile,updatedAt:new Date().toISOString()};
+ try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
+ return snapshot;
+}
 function save(){localStorage.setItem(KEY,JSON.stringify({profiles,activeProfile}));render()}
 function state(id){return !!profiles[activeProfile][id]}
 
@@ -162,9 +167,9 @@ document.getElementById("tabJoey").addEventListener("click",()=>setTab("joey"));
 document.getElementById("search").addEventListener("input",render);document.getElementById("filter").addEventListener("change",render);document.getElementById("profile").addEventListener("change",e=>{activeProfile=e.target.value;save()});
 document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({profiles,activeProfile,updatedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="joey-quest-progreso.json";a.click();URL.revokeObjectURL(a.href)});
 document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(obj.profiles){profiles=obj.profiles;profiles.nico=profiles.nico||{};profiles.pareja=profiles.pareja||{};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado correctamente.")}catch(err){alert("No pude leer ese archivo de progreso.")}e.target.value=""});
+document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Importar puede reemplazar el progreso actual. Guardaré una copia de seguridad antes de continuar. ¿Quieres seguir?"))return;createSafetyBackup();if(obj.profiles){profiles=obj.profiles;profiles.nico=profiles.nico||{};profiles.pareja=profiles.pareja||{};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado. Guardé una copia de seguridad local previa por si necesitas recuperar el estado anterior.")}catch(err){alert("No pude leer ese archivo de progreso.")}finally{e.target.value=""}});
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
 document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
-document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+(activeProfile==="nico"?"Nico":"Dani")+"?")){profiles[activeProfile]={};save()}});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+(activeProfile==="nico"?"Nico":"Dani")+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
 render();
 </script></body></html>
