@@ -164,7 +164,43 @@ button:disabled{cursor:not-allowed;opacity:.45}
 }
 @media(prefers-reduced-motion:reduce){.rows{animation:none!important}button,.stat,.dashboard-card,.rotation-week-card,.poke-img,.item-img{transition:none!important}}
 
-\n/* Identidad de juego: rangos, medallas y expedición */\n\n.clan-reward-list{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:7px}.reward-item{display:inline-flex;align-items:center;gap:4px;min-height:23px;color:#c4cede;font-size:11px;white-space:nowrap}.reward-item img{width:22px;height:22px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 1px 3px #0007)}.reward-item:last-child img{width:27px;height:27px}.clan-reward-list .reward-item:last-child span{color:#f3dfaa;font-weight:700}.clan-heading{min-width:0}.clan-title-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.clan-symbol{width:34px;height:34px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 5px #0004);transition:transform .18s}.clan-head:hover .clan-symbol{transform:scale(1.06)}.clan .clan-head{background:linear-gradient(110deg,#283348,#202a3c)}.clan .clan-head:hover{background:linear-gradient(110deg,#30405a,#26334a)}\n.mountain-hero{position:relative;isolation:isolate;overflow:hidden;border-color:#547d91;background:radial-gradient(ellipse at 82% 10%,#4ba7b522 0,transparent 34%),linear-gradient(130deg,#1c3d53 0%,#202c43 48%,#171e2d 100%);box-shadow:0 18px 42px #0003}.mountain-hero:before{content:"";position:absolute;z-index:-1;right:-24px;bottom:-85px;width:270px;height:220px;opacity:.28;background:linear-gradient(145deg,transparent 48%,#79d8d0 49% 51%,transparent 52%),linear-gradient(35deg,transparent 47%,#79d8d0 48% 50%,transparent 51%);clip-path:polygon(0 100%,34% 22%,48% 48%,67% 0,100% 100%);border-bottom:1px solid #7ce4dd;pointer-events:none}.mountain-hero:after{content:"DIMENSIONAL EXPEDITION";position:absolute;right:22px;top:20px;color:#a7e8e4;font-size:10px;letter-spacing:.2em;font-weight:900;opacity:.65;pointer-events:none}.mountain-hero .stats{position:relative}.mountain-hero .stat{background:linear-gradient(145deg,#1c3547dd,#111722dd);border-color:#45677b}.mountain-hero .stat strong{color:#d6fbf6}.mountain-hero .bar div{background:linear-gradient(90deg,#42c9d0,#a4fff0)}.mountain-card .mountain-status{box-shadow:0 3px 10px #0002}.mountain-card.mountain-ready .item-img{border-color:#8acb6e;box-shadow:0 0 0 3px #9be56412}.mountain-card.mountain-in-progress .item-img{border-color:#c7a15d}\n@media(max-width:560px){.mountain-hero:after{right:14px;top:12px;font-size:8px;letter-spacing:.12em}.mountain-hero:before{width:170px;height:145px;right:-20px;bottom:-55px;opacity:.17}.clan-title-line{gap:6px}.clan-state{font-size:8px}}\n</style>
+\n/* Identidad de juego: rangos, medallas y expedición */\n\n.clan-reward-list{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:7px}.reward-item{display:inline-flex;align-items:center;gap:4px;min-height:23px;color:#c4cede;font-size:11px;white-space:nowrap}.reward-item img{width:22px;height:22px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 1px 3px #0007)}.reward-item:last-child img{width:27px;height:27px}.clan-reward-list .reward-item:last-child span{color:#f3dfaa;font-weight:700}.clan-heading{min-width:0}.clan-title-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.clan-symbol{width:34px;height:34px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 5px #0004);transition:transform .18s}.clan-head:hover .clan-symbol{transform:scale(1.06)}.clan .clan-head{background:linear-gradient(110deg,#283348,#202a3c)}.clan .clan-head:hover{background:linear-gradient(110deg,#30405a,#26334a)}\n.mountain-hero{position:relative;isolation:isolate;overflow:hidden;border-color:#547d91;background:radial-gradient(ellipse at 82% 10%,#4ba7b522 0,transparent 34%),linear-gradient(130deg,#1c3d53 0%,#202c43 48%,#171e2d 100%);box-shadow:0 18px 42px #0003}.mountain-hero:before{content:"";position:absolute;z-index:-1;right:-24px;bottom:-85px;width:270px;height:220px;opacity:.28;background:linear-gradient(145deg,transparent 48%,#79d8d0 49% 51%,transparent 52%),linear-gradient(35deg,transparent 47%,#79d8d0 48% 50%,transparent 51%);clip-path:polygon(0 100%,34% 22%,48% 48%,67% 0,100% 100%);border-bottom:1px solid #7ce4dd;pointer-events:none}.mountain-hero:after{content:"DIMENSIONAL EXPEDITION";position:absolute;right:22px;top:20px;color:#a7e8e4;font-size:10px;letter-spacing:.2em;font-weight:900;opacity:.65;pointer-events:none}.mountain-hero .stats{position:relative}.mountain-hero .stat{background:linear-gradient(145deg,#1c3547dd,#111722dd);border-color:#45677b}.mountain-hero .stat strong{color:#d6fbf6}.mountain-hero .bar div{background:linear-gradient(90deg,#42c9d0,#a4fff0)}.mountain-card .mountain-status{box-shadow:0 3px 10px #0002}.mountain-card.mountain-ready .item-img{border-color:#8acb6e;box-shadow:0 0 0 3px #9be56412}.mountain-card.mountain-in-progress .item-img{border-color:#c7a15d}\n@media(max-width:560px){.mountain-hero:after{right:14px;top:12px;font-size:8px;letter-spacing:.12em}.mountain-hero:before{width:170px;height:145px;right:-20px;bottom:-55px;opacity:.17}.clan-title-line{gap:6px}.clan-state{font-size:8px}}\n
+/* Visual refresh: compact reward rows and Mountain inventory layout */
+.clan-reward-list{gap:10px 13px;margin-top:8px}
+.reward-item{gap:5px;font-size:12px}
+.reward-item img{width:25px;height:25px}
+.reward-item:last-child img{width:30px;height:30px}
+.clan-head{gap:16px;padding:16px 18px}
+.clan-heading{flex:1;min-width:0}
+.clan-title-line{gap:11px}
+.clan-symbol{width:38px;height:38px;padding:2px}
+.clan .clan-head h2{font-size:19px}
+.clan .pill{align-self:center;font-size:12px;padding:6px 10px}
+#panelMountain #mountain{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:stretch}
+#panelMountain .mountain-card{margin:0;min-width:0;height:100%;display:flex;flex-direction:column}
+#panelMountain .mountain-card>.clan-head{height:100%;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:12px;padding:15px;background:linear-gradient(145deg,#203449,#17202e)}
+#panelMountain .mountain-object{align-items:flex-start;gap:12px;min-width:0}
+#panelMountain .item-img{width:76px;height:76px;border-radius:15px;background:radial-gradient(circle at 50% 35%,#30485e,#101722 75%);padding:8px}
+#panelMountain .mountain-object>div{flex:1;min-width:0}
+#panelMountain .mountain-object h2{font-size:16px;line-height:1.25;overflow-wrap:anywhere}
+#panelMountain .mountain-object .bar{margin:10px 0 7px}
+#panelMountain .mountain-status{align-self:flex-start;white-space:normal}
+#panelMountain .mountain-card .pill{align-self:flex-start}
+#panelMountain .mountain-card .rows{padding:0 15px 13px}
+#panelMountain .mountain-card .controls{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#panelMountain .mountain-card .ready-check{grid-column:1/-1;white-space:normal}
+#panelMountain .mountain-card .controls button{padding:9px 8px;font-size:12px}
+@media(max-width:760px){#panelMountain #mountain{grid-template-columns:1fr}}
+@media(max-width:560px){
+ .clan-head{align-items:flex-start}
+ .clan-reward-list{gap:7px 10px}
+ .reward-item{font-size:11px}
+ .clan .pill{white-space:nowrap}
+ #panelMountain .mountain-object{gap:10px}
+ #panelMountain .item-img{width:62px;height:62px}
+ #panelMountain .mountain-card>.clan-head{padding:12px}
+}
+</style>
 </head>
 <body><main>
 <section class="hero">
