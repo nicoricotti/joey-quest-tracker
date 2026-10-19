@@ -209,6 +209,7 @@ const clans = [
 {name:"Malefic",reward:"100 Malefic Essence · Spectre Egg",pokemon:[["Poochyena","Fácil · DZ Mightyena"],["Mightyena","Difícil · DZ Mightyena"],["Skorupi","Fácil · DZ Drapion"],["Drapion","Difícil · DZ Drapion"],["Pawniard","Fácil · DZ Bisharp"],["Bisharp","Difícil · DZ Bisharp"]]},
 {name:"Ironhard",reward:"100 Ironhard Essence · Smither Egg",pokemon:[["Probopass","Difícil · DZ Probopass"],["Ferroseed","Fácil · DZ Shiny Ferrothorn"],["Ferrothorn","Difícil · DZ Shiny Ferrothorn"],["Pawniard","Fácil · DZ Bisharp"],["Bisharp","Difícil · DZ Bisharp"]]}
 ]
+const clanSymbolFiles={Volcanic:"Volcanic1.png",Seavell:"Seave1ll.png",Naturia:"Naturia1.png",Gardestrike:"Gardestrike1.png",Orebound:"Orebound.png",Raibolt:"Raibol1t.png",Wingeon:"Wingeon1.png",Psycraft:"Psycraft1.png",Malefic:"Malefi1c.png",Ironhard:"Ironhard1.png"};
 const KEY="joeyQuestTrackerV2";
 let profiles={nico:{},pareja:{}};
 let profileNames={nico:"Nico",pareja:"Dani"};
@@ -238,7 +239,7 @@ const mountainItems=[
 ];
 function runKey(name){return "mountain-runs:"+name}
 const itemImageFiles={"Concrete Pillar":"Concrete Pillar.png","Frozen Ice Ears":"Frozen Ice Ears.png","Sky Cloud":"Sky Cloud.png","Giant Electric Fang":"Giant Electric Fang.png","Solar Leaf Tail":"Solar Leaf Tail.gif","Volcano Stone":"Volcano Stone.png","Heavy Bell":"Heavy Bell.png","Purple Fairy Bow":"Purple Fairy Bow.png","Fallen Moon":"Fallen Moon.png","Electric Black Box":"Electric Black Box.png","Mega Steelix Tail":"Mega Steelix Tail.png","Streamlined Drill":"Streamlined Drill.png"};
-function itemImageUrl(item){return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(itemImageFiles[item]||item+".png");}
+function itemImageUrl(item){return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(itemImageFiles[item]||item+".png").replace(/%20/g,"_");}
 function renderMountain(){
  const root=document.getElementById("mountain");root.innerHTML="";
  const q=(document.getElementById("searchMountain")?.value||"").trim().toLowerCase();
@@ -311,7 +312,7 @@ function render(){
   });
   if(!filtered.length&&!c.note)return;shown+=filtered.length;
   const section=document.createElement("section");section.className="clan";
-  const head=document.createElement("div");head.className="clan-head";const clanCaptured=c.pokemon.filter((p,pi)=>state(`${ci}-${pi}`)).length;const clanComplete=c.pokemon.length>0&&clanCaptured===c.pokemon.length;const clanStarted=clanCaptured>0;head.innerHTML=`<div class="clan-heading"><div class="clan-title-line"><img class="clan-symbol" src="https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/${encodeURIComponent("Banner Clã "+c.name+".png").replace(/%20/g,"_")}" alt="" aria-hidden="true" onerror="this.hidden=true"><h2>${c.name}</h2></div><div class="clan-meta">${c.reward}</div></div><span class="pill">${clanCaptured}/${c.pokemon.length} ambos</span>`;
+  const head=document.createElement("div");head.className="clan-head";const clanCaptured=c.pokemon.filter((p,pi)=>state(`${ci}-${pi}`)).length;const clanComplete=c.pokemon.length>0&&clanCaptured===c.pokemon.length;const clanStarted=clanCaptured>0;head.innerHTML=`<div class="clan-heading"><div class="clan-title-line"><img class="clan-symbol" src="https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/${encodeURIComponent(clanSymbolFiles[c.name]||("Banner Clã "+c.name+".png")).replace(/%20/g,"_")}" alt="" aria-hidden="true" onerror="this.hidden=true"><h2>${c.name}</h2></div><div class="clan-meta">${c.reward}</div></div><span class="pill">${clanCaptured}/${c.pokemon.length} ambos</span>`;
   const rows=document.createElement("div");rows.className="rows";
   if(c.note){const note=document.createElement("p");note.className="notice";note.textContent=c.note;rows.appendChild(note);}
   filtered.forEach(x=>{const captured=state(x.id),row=document.createElement("div");row.className="pokemon"+(captured?" done":"");
