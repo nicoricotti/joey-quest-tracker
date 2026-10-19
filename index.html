@@ -28,6 +28,16 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 .secondary-btn{background:#2a3549;color:#e7edf9;border:1px solid #43516b}.danger-btn{background:#3a2630;color:#ffc4cd;border:1px solid #70404a}.google-btn{background:#e8f0fe;color:#1a2c4e}
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 14px}.tabs .tab{border:1px solid #39465e;background:#202a3b;color:#dbe5f6;padding:13px 18px;border-radius:14px;font-size:15px;font-weight:750;cursor:pointer;transition:all .15s}.tabs .tab.active{background:linear-gradient(135deg,#8ee16a,#5ecf9a);border-color:transparent;color:#14251a;box-shadow:0 5px 16px #7fdf6626}.tabs .tab:hover{transform:translateY(-1px)}.tab-progress{display:inline-flex;align-items:center;justify-content:center;margin-left:5px;padding:3px 7px;border-radius:999px;background:#10172255;border:1px solid currentColor;font-size:11px;font-weight:850;white-space:nowrap}.tabs .tab.active .tab-progress{background:#14251a16;border-color:#14251a55}@media(max-width:560px){.tabs .tab-progress{display:block;width:max-content;margin:6px auto 0}}
 .mission-panel{border:1px solid #303b51;border-radius:18px;padding:14px;background:rgba(17,23,35,.38)}
+.mountain-card{position:relative;transition:border-color .18s,background .18s,box-shadow .18s}
+.mountain-card.mountain-in-progress{border-color:#7a6941;background:linear-gradient(120deg,#302b20,#191e2c)}
+.mountain-card.mountain-ready{border-color:#6cae56;background:linear-gradient(120deg,#203a29,#191e2c);box-shadow:0 0 0 1px #9be56420 inset}
+.mountain-card.mountain-ready .clan-head{background:#263f2e}
+.mountain-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;border-radius:999px;padding:4px 8px;margin-top:6px;border:1px solid #4b566b;color:#c7d2e5;background:#111722}
+.mountain-status.in-progress{color:#ffdf9a;border-color:#806a3a;background:#30291b}.mountain-status.ready{color:#c9ffb0;border-color:#547f46;background:#1a2c1d}
+.achievement-toast{position:fixed;z-index:1000;left:50%;bottom:22px;transform:translateX(-50%);width:min(92vw,460px);padding:14px 18px;border-radius:15px;border:1px solid #8fcf6b;background:#1b2d20;color:#efffe7;box-shadow:0 12px 36px #0008;font-weight:750;text-align:center}.achievement-toast[hidden]{display:none}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role="button"]:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}.clan-head[role="button"]{cursor:pointer}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(max-width:560px){.mountain-card .clan-head{align-items:flex-start}.mountain-card .pill{white-space:normal;text-align:center;max-width:100px}.mountain-status{font-size:10px}}
 @media(max-width:560px){.auth-actions,.profile-actions{display:grid;grid-template-columns:1fr}.auth-actions input,.profile-content select,.friendly-btn{width:100%}.tabs .tab{flex:1;min-width:140px;padding:12px 10px}.mission-panel{padding:8px}.auth-drawer summary,.profile-drawer summary{padding:12px}}
 
 /* Dashboard polish */
@@ -103,6 +113,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <a href="https://wiki.pokexgames.com/Joey_Quest" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir wiki oficial ↗</a>
 </div>
 </main>
+<div id="achievementToast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, browserPopupRedirectResolver, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -110,6 +121,8 @@ import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebase
 const firebaseConfig={apiKey:"AIzaSyBHfZojCuU0pTiN7xYifufdLFdQpnJjUmU",authDomain:"pxg-mission-tracker.firebaseapp.com",databaseURL:"https://pxg-mission-tracker-default-rtdb.firebaseio.com",projectId:"pxg-mission-tracker",storageBucket:"pxg-mission-tracker.firebasestorage.app",messagingSenderId:"418258644259",appId:"1:418258644259:web:7f3d4b57e74f9ef9acb096"};
 const firebaseApp=initializeApp(firebaseConfig);const auth=getAuth(firebaseApp);const db=getDatabase(firebaseApp);const googleProvider=new GoogleAuthProvider();
 function setAuthStatus(message){const el=document.getElementById("authStatus");if(el)el.textContent=message;}
+let toastTimeout=null;
+function showAchievement(message){const el=document.getElementById("achievementToast");if(!el)return;el.textContent=message;el.hidden=false;if(toastTimeout)clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>{el.hidden=true;},4200);}
 
 const clans = [
 {name:"Volcanic",reward:"100 Volcanic Essence · Flame Egg",pokemon:[["Darumaka","Fácil · DZ Darmanitan"],["Darmanitan","Difícil · DZ Darmanitan"],["Heatmor","Difícil · DZ Heatmor"]]},
@@ -161,15 +174,17 @@ function renderMountain(){
  visibleItems.forEach(([dungeon,item])=>{
   const count=Math.max(0,Math.min(15,Number(profiles[activeProfile][runKey(dungeon)]||0)));
   const ready=!!profiles[activeProfile]["mountain-ready:"+dungeon];
-  const card=document.createElement("div");card.className="mountain-card";
-  card.innerHTML=`<div class="clan-head" style="cursor:default"><div class="mountain-object"><img class="item-img" src="${itemImageUrl(item)}" alt="${item}" loading="lazy"><div><h2>${dungeon}</h2><div class="clan-meta">Objeto requerido: <strong>${item}</strong></div><div class="bar"><div style="width:${count/15*100}%"></div></div><div class="clan-meta">${count===15?"¡15 dungeons completadas!":"Faltan "+(15-count)+" dungeons para el umbral"}</div></div></div><span class="pill">${count}/15 dungeons</span></div><div class="rows"><div class="controls" style="margin:8px 0;align-items:center"><button data-step="-1" data-dungeon="${dungeon}" ${count===0?"disabled":""}>− 1 dungeon</button><button class="primary" data-step="1" data-dungeon="${dungeon}" ${count===15?"disabled":""}>+ 1 dungeon</button><label class="ready-check"><input type="checkbox" data-ready="${dungeon}" ${ready?"checked":""}> Objeto listo</label></div></div>`;
+  const card=document.createElement("div");card.className="mountain-card"+(ready?" mountain-ready":count>0?" mountain-in-progress":"");
+  card.innerHTML=`<div class="clan-head" style="cursor:default"><div class="mountain-object"><img class="item-img" src="${itemImageUrl(item)}" alt="${item}" loading="lazy"><div><h2>${dungeon}</h2><div class="clan-meta">Objeto requerido: <strong>${item}</strong></div><div class="bar"><div style="width:${count/15*100}%"></div></div><div class="clan-meta">${count===15?"¡15 dungeons completadas!":"Faltan "+(15-count)+" dungeons para el umbral"}</div></div><span class="mountain-status ${ready?"ready":count>0?"in-progress":""}">${ready?"✓ Objeto listo":count===15?"✦ Umbral alcanzado":count>0?"◷ En progreso":"○ Sin comenzar"}</span></div><span class="pill">${count}/15 dungeons</span></div><div class="rows"><div class="controls" style="margin:8px 0;align-items:center"><button data-step="-1" data-dungeon="${dungeon}" ${count===0?"disabled":""}>− 1 dungeon</button><button class="primary" data-step="1" data-dungeon="${dungeon}" ${count===15?"disabled":""}>+ 1 dungeon</button><label class="ready-check"><input type="checkbox" data-ready="${dungeon}" ${ready?"checked":""}> Objeto listo</label></div></div>`;
   root.appendChild(card);
  });
- root.querySelectorAll("input[data-ready]").forEach(box=>{box.disabled=!canWrite;box.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile]["mountain-ready:"+box.dataset.ready]=box.checked;save()})});
+ root.querySelectorAll("input[data-ready]").forEach(box=>{box.disabled=!canWrite;box.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile]["mountain-ready:"+box.dataset.ready]=box.checked;const item=mountainItems.find(x=>x[0]===box.dataset.ready)?.[1]||"objeto";save();if(box.checked)showAchievement("🏆 ¡Objeto listo! "+item);})});
  root.querySelectorAll("button[data-step]").forEach(btn=>{btn.disabled=btn.disabled||!canWrite;btn.addEventListener("click",()=>{if(!canWrite)return;
   const k=runKey(btn.dataset.dungeon),old=Number(profiles[activeProfile][k]||0);
   profiles[activeProfile][k]=Math.max(0,Math.min(15,old+Number(btn.dataset.step)));
+  const updated=profiles[activeProfile][k];
   save();
+  if(old<15&&updated===15)showAchievement("⛰️ ¡Umbral alcanzado! "+btn.dataset.dungeon+" completó 15/15 dungeons.");
  });});
  const readyCount=mountainItems.filter(([d])=>!!profiles[activeProfile]["mountain-ready:"+d]).length;
  const totalRuns=mountainItems.reduce((sum,[d])=>sum+Number(profiles[activeProfile][runKey(d)]||0),0);
@@ -230,7 +245,7 @@ function render(){
    row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name">${x.name}</div><div class="poke-sub">${x.detail}</div></div></div><label class="ball-count"><span>Poké Balls <span class="ball-count-note">(aprox.)</span></span><span class="ball-count-controls"><button type="button" class="ball-step" data-ball-step="-1" data-ball-name="${x.name}" aria-label="Restar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>−</button><input type="number" min="0" step="1" inputmode="numeric" data-balls="${x.name}" value="${profiles[activeProfile]["pokeballs:"+x.name]===undefined?"":Math.max(0,Number(profiles[activeProfile]["pokeballs:"+x.name]||0))}" placeholder="—" aria-label="Cantidad aproximada de Poké Balls usadas para capturar ${x.name}" ${!canWrite?"disabled":""}><button type="button" class="ball-step" data-ball-step="1" data-ball-name="${x.name}" aria-label="Sumar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>+</button></span></label><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
    rows.appendChild(row);
   });
-  head.addEventListener("click",()=>rows.hidden=!rows.hidden);section.append(head,rows);root.appendChild(section);
+  head.setAttribute("role","button");head.setAttribute("tabindex","0");head.setAttribute("aria-expanded","true");head.setAttribute("aria-label","Mostrar u ocultar Pokémon del clan "+c.name);const toggleRows=()=>{rows.hidden=!rows.hidden;head.setAttribute("aria-expanded",String(!rows.hidden));};head.addEventListener("click",toggleRows);head.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleRows();}});section.append(head,rows);root.appendChild(section);
  });
  if(!shown)root.innerHTML='<div class="empty">No hay Pokémon que coincidan con esa búsqueda o filtro.</div>';
  root.querySelectorAll("input[data-balls]").forEach(el=>{el.addEventListener("change",()=>{if(!canWrite)return;if(el.value.trim()===""){delete profiles[activeProfile]["pokeballs:"+el.dataset.balls];save();return;}const n=Math.max(0,Math.floor(Number(el.value)||0));profiles[activeProfile]["pokeballs:"+el.dataset.balls]=n;el.value=String(n);save();});});root.querySelectorAll("button[data-ball-step]").forEach(btn=>btn.addEventListener("click",()=>{if(!canWrite)return;const key="pokeballs:"+btn.dataset.ballName;const current=Number(profiles[activeProfile][key]||0);profiles[activeProfile][key]=Math.max(0,current+Number(btn.dataset.ballStep));save();}));
@@ -239,6 +254,7 @@ function render(){
   const id=e.target.dataset.id, selected=items.find(x=>x.id===id);
   if(selected)items.filter(x=>x.name===selected.name).forEach(x=>{if(e.target.checked)profiles[activeProfile][x.id]=true;else delete profiles[activeProfile][x.id];});
   save();
+  if(selected&&e.target.checked){const unique=[...new Set(all().map(x=>x.name))];const captured=unique.filter(name=>all().some(x=>x.name===name&&state(x.id))).length;if(captured===unique.length)showAchievement("🎉 ¡Todas las capturas únicas de Joey Quest están completadas!");}
  });});
 }
 function setTab(which){const m=which==="mountain";document.getElementById("panelJoey").hidden=m;document.getElementById("panelMountain").hidden=!m;document.getElementById("tabJoey").classList.toggle("active",!m);document.getElementById("tabMountain").classList.toggle("active",m);document.getElementById("tabJoey").setAttribute("aria-selected",String(!m));document.getElementById("tabMountain").setAttribute("aria-selected",String(m));}
