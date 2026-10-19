@@ -94,7 +94,7 @@ const mountainItems=[
 ];
 function runKey(name){return "mountain-runs:"+name}
 const itemImageFiles={"Concrete Pillar":"Concrete Pillar.png","Frozen Ice Ears":"Frozen Ice Ears.png","Sky Cloud":"Sky Cloud.png","Giant Electric Fang":"Giant Electric Fang.png","Solar Leaf Tail":"Solar Leaf Tail.gif","Volcano Stone":"Volcano Stone.png","Heavy Bell":"Heavy Bell.png","Purple Fairy Bow":"Purple Fairy Bow.png","Fallen Moon":"Fallen Moon.png","Electric Black Box":"Electric Black Box.png","Mega Steelix Tail":"Mega Steelix Tail.png","Streamlined Drill":"Streamlined Drill.png"};
-function itemImageUrl(item){return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(itemImageFiles[item]||item+".png").replace(/%20/g,"_");}
+function itemImageUrl(item){return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(itemImageFiles[item]||item+".png");}
 function renderMountain(){
  const root=document.getElementById("mountain");root.innerHTML="";
  mountainItems.forEach(([dungeon,item])=>{
