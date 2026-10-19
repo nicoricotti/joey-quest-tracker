@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Joey Quest · Tracker compartido</title>
+<style>
+:root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(130deg,#222f45,#191e2c 65%);margin-bottom:18px}
+.kicker{color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:12px}h1{font-size:clamp(28px,5vw,42px);line-height:1.08;margin:8px 0 10px}p{margin:8px 0;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:20px}.stat{background:#11172299;border:1px solid var(--line);border-radius:14px;padding:13px}.stat strong{display:block;font-size:25px}.stat span{color:var(--muted);font-size:12px}
+.controls{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.controls input,.controls select,button{background:var(--panel);border:1px solid var(--line);border-radius:11px;color:var(--text);padding:11px 13px;font:inherit}.controls input{flex:1;min-width:190px}button{cursor:pointer}button:hover{border-color:var(--accent)}.primary{background:var(--accent);color:#14200d;border-color:var(--accent);font-weight:800}.notice{font-size:12px;color:var(--muted);margin:8px 2px 18px}
+.clan{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin:12px 0;overflow:hidden}.clan-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;cursor:pointer;background:var(--panel2)}.clan-head h2{margin:0;font-size:18px}.clan-meta{color:var(--muted);font-size:12px;margin-top:3px}.pill{white-space:nowrap;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--accent)}.rows{padding:4px 15px 10px}.pokemon{display:grid;grid-template-columns:minmax(0,1fr) 90px 90px;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid #30394e99}.pokemon:last-child{border-bottom:0}.poke-info{display:flex;align-items:center;gap:10px;min-width:0}.poke-img{width:48px;height:48px;object-fit:contain;image-rendering:pixelated;flex-shrink:0;background:#111722;border:1px solid var(--line);border-radius:10px}.poke-name{font-weight:700}.poke-sub{font-size:12px;color:var(--muted)}.check{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-size:12px}.check input{width:19px;height:19px;accent-color:var(--accent);cursor:pointer}.done .poke-name{text-decoration:line-through;color:#9aa5b7}.empty{padding:25px;text-align:center;color:var(--muted)}.footer{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.footer button{font-size:13px}.bar{height:7px;background:#30394e;border-radius:99px;overflow:hidden;margin-top:9px}.bar div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .2s}
+@media(max-width:560px){main{padding:12px 10px 36px}.hero{padding:20px}.stats{gap:6px}.stat{padding:10px}.stat strong{font-size:21px}.pokemon{grid-template-columns:minmax(0,1fr) 68px;gap:4px}.poke-img{width:42px;height:42px}.check{display:block;text-align:center;font-size:11px}.check input{display:block;margin:4px auto 0}.clan-head{padding:13px}.rows{padding:2px 10px 8px}}
+</style>
+</head>
+<body><main>
+<section class="hero">
+<div class="kicker">PokeXGames · misión de capturas</div>
+<h1>Joey Quest Tracker</h1>
+<p>Cada jugador tiene su propia misión. Cambia de perfil para marcar las capturas de Nico o las de Dani, sin mezclar los progresos.</p>
+<div class="controls" style="margin:18px 0 0">
+<label for="profile" style="align-self:center;color:var(--muted)">Jugador:</label>
+<select id="profile" aria-label="Seleccionar jugador"><option value="nico">Nico</option><option value="pareja">Dani</option></select>
+</div>
+<div class="stats">
+<div class="stat"><strong id="total">0/0</strong><span>Pokémon únicos capturados por este perfil</span></div>
+<div class="stat"><strong id="you">0%</strong><span>Progreso de este jugador (sin duplicados)</span><div class="bar"><div id="youbar"></div></div></div>
+<div class="stat"><strong id="partner">0</strong><span>Clanes completados por este jugador</span></div>
+</div>
+</section>
+<div class="controls">
+<input id="search" type="search" placeholder="Buscar Pokémon o clan…">
+<select id="filter"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select>
+<button class="primary" id="export">Exportar progreso</button>
+<button id="importBtn">Importar progreso</button><input id="importFile" type="file" accept="application/json" hidden>
+</div>
+<div class="notice">Nota: el progreso se guarda en este navegador. Los perfiles se guardan por separado en este navegador. Si juegan en computadores distintos, exporten el progreso e importen el archivo en el otro equipo para trasladarlo; no hay sincronización automática.</div>
+<div id="clans"></div>
+<div class="footer">
+<button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
+<a href="https://wiki.pokexgames.com/Joey_Quest" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir wiki oficial ↗</a>
+</div>
+</main>
+<script>
+const clans = [
+{name:"Volcanic",reward:"100 Volcanic Essence · Flame Egg",pokemon:[["Darumaka","Fácil · DZ Darmanitan"],["Darmanitan","Difícil · DZ Darmanitan"],["Heatmor","Difícil · DZ Heatmor"]]},
+{name:"Seavell",reward:"100 Seavell Essence · Waterfall Egg",pokemon:[["Wingull","Fácil · DZ Pelipper"],["Pelipper","Difícil · DZ Pelipper"],["Cubchoo","Fácil · DZ Beartic"],["Beartic","Difícil · DZ Beartic"]]},
+{name:"Naturia",reward:"100 Naturia Essence · Sprout Egg",pokemon:[["Shroomish","Fácil · DZ Breloom"],["Breloom","Difícil · DZ Breloom"],["Dwebble","Fácil · DZ Crustle"],["Crustle","Difícil · DZ Crustle"],["Joltik","Fácil · DZ Galvantula"],["Galvantula","Difícil · DZ Galvantula / Giant Galvantula"],["Ferroseed","Fácil · DZ Shiny Ferrothorn"],["Ferrothorn","Difícil · DZ Shiny Ferrothorn"]]},
+{name:"Gardestrike",reward:"100 Gardestrike Essence · Champion Egg",pokemon:[["Breloom","Difícil · DZ Breloom"],["Ambipom","Difícil · DZ Ambipom"],["Lickilicky","Difícil · DZ Lickilicky"],["Timburr","Fácil · DZ Conkeldurr"],["Gurdurr","Medio · DZ Conkeldurr"]]},
+{name:"Orebound",reward:"100 Orebound Essence · Sand Egg",pokemon:[["Nosepass","Fácil · DZ Probopass"],["Hippopotas","Fácil · DZ Hippowdon"],["Hippowdon","Difícil · DZ Hippowdon"],["Probopass","Difícil · DZ Probopass"],["Drilbur","Fácil · DZ Excadrill"],["Excadrill","Difícil · DZ Excadrill"],["Dwebble","Fácil · DZ Crustle"],["Crustle","Difícil · DZ Crustle"]]},
+{name:"Raibolt",reward:"100 Raibolt Essence · Eletrician Egg",pokemon:[["Emolga","Difícil · DZ Emolga"],["Joltik","Fácil · DZ Galvantula"],["Galvantula","Difícil · DZ Galvantula / Giant Galvantula"]]},
+{name:"Wingeon",reward:"100 Wingeon Essence · Falcon Egg",pokemon:[["Wingull","Fácil · DZ Pelipper"],["Pelipper","Difícil · DZ Pelipper"],["Emolga","Difícil · DZ Emolga"],["Axew","Fácil · DZ Haxorus"],["Fraxure","Medio · DZ Haxorus"],["Haxorus","Difícil · DZ Haxorus"]]},
+{name:"Psycraft",reward:"100 Psycraft Essence · Brain Egg",pokemon:[["Darmanitan","Difícil · DZ Darmanitan"]]},
+{name:"Malefic",reward:"100 Malefic Essence · Spectre Egg",pokemon:[["Poochyena","Fácil · DZ Mightyena"],["Mightyena","Difícil · DZ Mightyena"],["Skorupi","Fácil · DZ Drapion"],["Drapion","Difícil · DZ Drapion"],["Pawniard","Fácil · DZ Bisharp"],["Bisharp","Difícil · DZ Bisharp"]]},
+{name:"Ironhard",reward:"100 Ironhard Essence · Smither Egg",pokemon:[["Probopass","Difícil · DZ Probopass"],["Ferroseed","Fácil · DZ Shiny Ferrothorn"],["Ferrothorn","Difícil · DZ Shiny Ferrothorn"],["Pawniard","Fácil · DZ Bisharp"],["Bisharp","Difícil · DZ Bisharp"]]}
+]
+const KEY="joeyQuestTrackerV2";
+let profiles={nico:{},pareja:{}};
+let activeProfile="nico";
+try{
+ const stored=JSON.parse(localStorage.getItem(KEY)||"null");
+ if(stored && stored.profiles){
+  profiles=stored.profiles; profiles.nico=profiles.nico||{}; profiles.pareja=profiles.pareja||{};
+  activeProfile=stored.activeProfile||"nico";
+ } else {
+  const old=JSON.parse(localStorage.getItem("joeyQuestTrackerV1")||"{}");
+  Object.keys(old).forEach(id=>{if(old[id]?.me)profiles.nico[id]=true;if(old[id]?.partner)profiles.pareja[id]=true;});
+ }
+}catch(e){profiles={nico:{},pareja:{}}}
+const dexIds={"Darumaka":554,"Darmanitan":555,"Heatmor":631,"Wingull":278,"Pelipper":279,"Cubchoo":613,"Beartic":614,"Shroomish":285,"Breloom":286,"Dwebble":557,"Crustle":558,"Joltik":595,"Galvantula":596,"Ferroseed":597,"Ferrothorn":598,"Ambipom":424,"Lickilicky":463,"Timburr":532,"Gurdurr":533,"Nosepass":299,"Hippopotas":449,"Hippowdon":450,"Probopass":476,"Drilbur":529,"Excadrill":530,"Emolga":587,"Axew":610,"Fraxure":611,"Haxorus":612,"Poochyena":261,"Mightyena":262,"Skorupi":451,"Drapion":452,"Pawniard":624,"Bisharp":625};
+const spriteUrl=name=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dexIds[name]||0}.png`;
+const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexIds[name]||0}.png`;
+const all=()=>clans.flatMap((c,ci)=>c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,clan:c.name,name:p[0],detail:p[1]})));
+function save(){localStorage.setItem(KEY,JSON.stringify({profiles,activeProfile}));render()}
+function state(id){return !!profiles[activeProfile][id]}
+function render(){
+ const q=document.getElementById("search").value.trim().toLowerCase(),f=document.getElementById("filter").value;
+ const items=all();
+ const uniquePokemon=[...new Map(items.map(x=>[x.name,x])).values()];
+ const total=uniquePokemon.length, mine=uniquePokemon.filter(x=>items.some(y=>y.name===x.name&&state(y.id))).length;
+ document.getElementById("total").textContent=`${mine}/${total}`;
+ document.getElementById("you").textContent=Math.round(mine/total*100)+"%";
+ document.getElementById("youbar").style.width=(mine/total*100)+"%";
+ document.getElementById("partner").textContent=clans.filter((c,ci)=>c.pokemon.length>0&&c.pokemon.every((p,pi)=>state(`${ci}-${pi}`))).length;
+ document.getElementById("profile").value=activeProfile;
+ const root=document.getElementById("clans");root.innerHTML="";let shown=0;
+ clans.forEach((c,ci)=>{
+  const filtered=c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,name:p[0],detail:p[1]})).filter(x=>{
+   const captured=state(x.id), matches=!q||x.name.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)||x.detail.toLowerCase().includes(q);
+   const filterOK=f==="all"||(f==="pending"&&!captured)||(f==="done"&&captured);return matches&&filterOK;
+  });
+  if(!filtered.length&&!c.note)return;shown+=filtered.length;
+  const section=document.createElement("section");section.className="clan";
+  const head=document.createElement("div");head.className="clan-head";head.innerHTML=`<div><h2>${c.name}</h2><div class="clan-meta">${c.reward}</div></div><span class="pill">${c.pokemon.filter((p,pi)=>state(`${ci}-${pi}`)).length}/${c.pokemon.length} ambos</span>`;
+  const rows=document.createElement("div");rows.className="rows";
+  if(c.note){const note=document.createElement("p");note.className="notice";note.textContent=c.note;rows.appendChild(note);}
+  filtered.forEach(x=>{const captured=state(x.id),row=document.createElement("div");row.className="pokemon"+(captured?" done":"");
+   row.style.gridTemplateColumns="minmax(0,1fr) 90px";
+   row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name">${x.name}</div><div class="poke-sub">${x.detail}</div></div></div><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
+   rows.appendChild(row);
+  });
+  head.addEventListener("click",()=>rows.hidden=!rows.hidden);section.append(head,rows);root.appendChild(section);
+ });
+ if(!shown)root.innerHTML='<div class="empty">No hay Pokémon que coincidan con esa búsqueda o filtro.</div>';
+ root.querySelectorAll('input[type=checkbox]').forEach(el=>el.addEventListener("change",e=>{
+  const id=e.target.dataset.id, selected=items.find(x=>x.id===id);
+  if(selected)items.filter(x=>x.name===selected.name).forEach(x=>{if(e.target.checked)profiles[activeProfile][x.id]=true;else delete profiles[activeProfile][x.id];});
+  save();
+ }));
+}
+document.getElementById("search").addEventListener("input",render);document.getElementById("filter").addEventListener("change",render);document.getElementById("profile").addEventListener("change",e=>{activeProfile=e.target.value;save()});
+document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({profiles,activeProfile,updatedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="joey-quest-progreso.json";a.click();URL.revokeObjectURL(a.href)});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(obj.profiles){profiles=obj.profiles;profiles.nico=profiles.nico||{};profiles.pareja=profiles.pareja||{};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado correctamente.")}catch(err){alert("No pude leer ese archivo de progreso.")}e.target.value=""});
+document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
+document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+(activeProfile==="nico"?"Nico":"Dani")+"?")){profiles[activeProfile]={};save()}});
+render();
+</script></body></html>
