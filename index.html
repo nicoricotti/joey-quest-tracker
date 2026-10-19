@@ -37,6 +37,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 </div>
 <div class="notice">Nota: el progreso se guarda en este navegador. Los perfiles se guardan por separado en este navegador. Si juegan en computadores distintos, exporten el progreso e importen el archivo en el otro equipo para trasladarlo; no hay sincronización automática.</div>
 <div id="clans"></div>
+<section class="hero" style="margin-top:20px"><div class="kicker">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Registra las visitas a cada dungeon. La wiki enumera los objetos requeridos; el umbral de 15 runs se muestra como seguimiento editable según la actualización que mencionaste.</p><div id="mountain"></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
 <a href="https://wiki.pokexgames.com/Joey_Quest" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir wiki oficial ↗</a>
@@ -74,6 +75,25 @@ const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/ma
 const all=()=>clans.flatMap((c,ci)=>c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,clan:c.name,name:p[0],detail:p[1]})));
 function save(){localStorage.setItem(KEY,JSON.stringify({profiles,activeProfile}));render()}
 function state(id){return !!profiles[activeProfile][id]}
+
+const mountainItems=[
+ ["DZ Conkeldurr","Concrete Pillar"],["DZ Shiny Glaceon","Frozen Ice Ears"],["DZ Mega Altaria","Sky Cloud"],["DZ Giant Galvantula","Giant Electric Fang"],["DZ Shiny Leafeon","Solar Leaf Tail"],["DZ Heatran","Volcano Stone"],["DZ Shiny Bronzong","Heavy Bell"],["DZ Shiny Sylveon","Purple Fairy Bow"],["DZ Mega Absol","Fallen Moon"],["DZ Shiny Manectric","Electric Black Box"],["DZ Mega Steelix","Mega Steelix Tail"],["DZ Mega Excadrill","Streamlined Drill"]
+];
+function runKey(name){return "mountain-runs:"+name}
+function renderMountain(){
+ const root=document.getElementById("mountain");root.innerHTML="";
+ mountainItems.forEach(([dungeon,item])=>{
+  const count=Math.max(0,Math.min(15,Number(profiles[activeProfile][runKey(dungeon)]||0)));
+  const card=document.createElement("div");card.className="clan";
+  card.innerHTML=`<div class="clan-head" style="cursor:default"><div><h2>${dungeon}</h2><div class="clan-meta">Objeto requerido: ${item}</div><div class="bar"><div style="width:${count/15*100}%"></div></div></div><span class="pill">${count}/15 runs</span></div><div class="rows"><div class="controls" style="margin:8px 0"><button data-step="-1" data-dungeon="${dungeon}" ${count===0?"disabled":""}>− 1 run</button><button class="primary" data-step="1" data-dungeon="${dungeon}" ${count===15?"disabled":""}>+ 1 run</button><span class="notice" style="align-self:center;margin:0">${count===15?"Umbral de 15 alcanzado":"Faltan "+(15-count)+" runs"}</span></div></div>`;
+  root.appendChild(card);
+ });
+ root.querySelectorAll("button[data-step]").forEach(btn=>btn.addEventListener("click",()=>{
+  const k=runKey(btn.dataset.dungeon),old=Number(profiles[activeProfile][k]||0);
+  profiles[activeProfile][k]=Math.max(0,Math.min(15,old+Number(btn.dataset.step)));
+  save();
+ }));
+}
 function render(){
  const q=document.getElementById("search").value.trim().toLowerCase(),f=document.getElementById("filter").value;
  const items=all();
@@ -84,6 +104,7 @@ function render(){
  document.getElementById("youbar").style.width=(mine/total*100)+"%";
  document.getElementById("partner").textContent=clans.filter((c,ci)=>c.pokemon.length>0&&c.pokemon.every((p,pi)=>state(`${ci}-${pi}`))).length;
  document.getElementById("profile").value=activeProfile;
+ renderMountain();
  const root=document.getElementById("clans");root.innerHTML="";let shown=0;
  clans.forEach((c,ci)=>{
   const filtered=c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,name:p[0],detail:p[1]})).filter(x=>{
