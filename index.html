@@ -19,14 +19,14 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>Joey Quest Tracker</h1>
-<p>Cada jugador tiene su propia misión. Cambia de perfil para marcar las capturas de Nico o las de Dani, sin mezclar los progresos.</p>
+
 <div class="controls" style="margin:18px 0 0">
 <label for="profile" style="align-self:center;color:var(--muted)">Jugador:</label>
 <select id="profile" aria-label="Seleccionar perfil"></select><button type="button" id="addProfile">＋ Agregar perfil</button><button type="button" id="renameProfile">✎ Cambiar nombre</button>
 </div>
 <div class="stats">
-<div class="stat"><strong id="total">0/0</strong><span>Pokémon únicos capturados por este perfil</span></div>
-<div class="stat"><strong id="you">0%</strong><span>Progreso de este jugador (sin duplicados)</span><div class="bar"><div id="youbar"></div></div></div>
+<div class="stat"><strong id="total">0/0</strong><span>Pokémon únicos capturados</span></div>
+<div class="stat"><strong id="you">0%</strong><span>Progreso de captura</span><div class="bar"><div id="youbar"></div></div></div>
 <div class="stat"><strong id="partner">0</strong><span>Clanes completados por este jugador</span></div>
 </div>
 </section>
@@ -37,7 +37,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <button class="primary" id="export">Exportar progreso</button>
 <button id="importBtn">Importar progreso</button><input id="importFile" type="file" accept="application/json" hidden>
 </div>
-<div class="notice" id="storageNotice">💾 El progreso se guarda automáticamente en este navegador y los perfiles de Nico y Dani son independientes. Por ahora no hay sincronización entre dispositivos; usa “Exportar progreso” para guardar una copia.</div>
+
 <section class="dashboard" id="rotationPanel" aria-label="Rotación semanal Dimensional Zone"><div class="kicker">Calendario de dungeons</div><h2 style="margin:5px 0 8px">Rotación Dimensional Zone</h2><p>Consulta las dungeons disponibles por semana. Las Golden Weeks incluyen las dungeons de las dos semanas normales del ciclo.</p><div class="controls" style="margin:10px 0"><label for="rotationWeek" style="align-self:center;color:var(--muted)">Semana:</label><select id="rotationWeek"><option value="1">Semana 1 · Ciclo 1</option><option value="2">Semana 2 · Ciclo 1</option><option value="3">Semana 3 · Golden Week</option><option value="4">Semana 4 · Ciclo 2</option><option value="5">Semana 5 · Ciclo 2</option><option value="6">Semana 6 · Golden Week</option><option value="7">Semana 7 · Ciclo 3</option><option value="8">Semana 8 · Ciclo 3</option><option value="9">Semana 9 · Golden Week</option></select></div><p id="rotationDateRange" class="dashboard-missing">Calculando semana actual…</p><div id="rotationCalendar" class="rotation-calendar" aria-label="Calendario de las nueve semanas"></div><div class="dashboard-grid"><article class="dashboard-card"><h2 id="rotationTitle">Semana 8</h2><div id="rotationGold" class="rotation-list"></div></article><article class="dashboard-card"><h2>Relación con tus misiones</h2><div id="rotationObjectives" class="rotation-list"></div></article></div><p class="dashboard-missing">La semana actual se calcula automáticamente usando como referencia la semana 8 del 16 al 23 de octubre de 2026. Puedes elegir otra semana manualmente para consultar sus dungeons.</p></section>
 <div class="tabs"><button class="tab active" id="tabJoey" type="button">🎒 Joey Quest</button><button class="tab" id="tabMountain" type="button">⛰️ Dimensional Mountain</button></div><section class="mission-panel" id="panelJoey"><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div id="mountain"></div></section>
 <div class="footer">
