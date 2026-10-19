@@ -91,6 +91,79 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .poke-img{width:36px;height:36px}
  .ball-step{width:20px}
 }
+
+/* Acabado visual: jerarquía, profundidad y consistencia */
+:root{--accent:#a6ef70;--accent2:#7ce4dd;--panel:#191f2e;--panel2:#242e43;--line:#35415a}
+body{background:radial-gradient(ellipse at 50% -12%,#2b4261 0,#151b29 42%,#0d111a 100%);background-attachment:fixed}
+main{max-width:1120px;padding-top:28px}
+.hero{position:relative;overflow:hidden;box-shadow:0 16px 40px #00000020}
+.hero:after{content:"";position:absolute;right:-55px;top:-90px;width:230px;height:230px;border-radius:50%;border:1px solid #8ee16a18;box-shadow:0 0 0 24px #8ee16a08,0 0 0 48px #8ee16a05;pointer-events:none}
+.kicker{letter-spacing:.14em}
+.stats{gap:12px}
+.stat{background:linear-gradient(145deg,#192334,#111722);transition:transform .18s,border-color .18s}
+.stat:hover{transform:translateY(-2px);border-color:#536783}
+.stat strong{font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+.dashboard{box-shadow:0 12px 30px #00000015}
+.dashboard-card{transition:transform .18s,border-color .18s}
+.dashboard-card:hover{transform:translateY(-2px);border-color:#465670}
+.dashboard-card h2{letter-spacing:-.015em}
+.bar{background:#2b354a}
+.bar div{border-radius:99px}
+.controls input,.controls select,.auth-actions input,.profile-content select{transition:border-color .15s,box-shadow .15s;background-color:#101724}
+.controls input:focus,.controls select:focus,.auth-actions input:focus,.profile-content select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px #7ce4dd20}
+button{transition:transform .15s,border-color .15s,filter .15s,box-shadow .15s}
+button:hover:not(:disabled){transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(0)}
+button:disabled{cursor:not-allowed;opacity:.45}
+.primary{background:linear-gradient(135deg,#a6ef70,#7ed8a9);box-shadow:0 4px 12px #9be56418}
+.tabs .tab{min-height:58px;box-shadow:0 5px 15px #00000012}
+.tabs .tab.active{box-shadow:0 7px 18px #7fdf6620}
+.clan,.mountain-card{box-shadow:0 7px 22px #00000015}
+.clan{transition:border-color .18s,box-shadow .18s}
+.clan:hover{border-color:#465570}
+.clan-head{transition:background .15s}
+.clan-head:hover{background:#29354b}
+.clan-head h2{letter-spacing:-.02em}
+.pill{background:#10172280;font-variant-numeric:tabular-nums}
+.rows{animation:rowsIn .16s ease-out}
+@keyframes rowsIn{from{opacity:.6;transform:translateY(-2px)}to{opacity:1;transform:translateY(0)}}
+.pokemon{border-radius:11px;transition:background .15s,padding .15s}
+.pokemon:hover{background:#ffffff05}
+.pokemon.done:hover{background:#9be5640c}
+.poke-img{transition:transform .18s,border-color .18s}
+.pokemon:hover .poke-img{transform:scale(1.04);border-color:#60728f}
+.ball-step{background:#202a3b;border-color:#3b4961}
+.ball-step:hover:not(:disabled){background:#2d3b51;border-color:var(--accent2)}
+.mountain-card .clan-head{transition:background .15s}
+.mountain-card .item-img{transition:transform .18s,border-color .18s}
+.mountain-card:hover .item-img{transform:scale(1.035);border-color:#6d879e}
+.mountain-status{white-space:nowrap}
+.rotation-week-card{transition:transform .16s,border-color .16s,box-shadow .16s}
+.rotation-week-card:hover{box-shadow:0 8px 20px #00000022}
+.rotation-week-card.current .rotation-week-number{color:var(--accent)}
+.rotation-mini img{transition:transform .16s}
+.rotation-week-card:hover .rotation-mini img{transform:translateY(-2px)}
+.auth-drawer,.profile-drawer{box-shadow:0 6px 18px #00000012}
+.auth-drawer summary:hover,.profile-drawer summary:hover{background:#ffffff04}
+.footer{align-items:center;padding-top:8px;border-top:1px solid #30394e80}
+.footer button{background:#171e2b}
+.footer button:hover:not(:disabled){border-color:var(--accent2)}
+.empty{border:1px dashed #45516a;border-radius:14px;background:#11172280}
+@media(max-width:650px){
+ main{padding-top:12px}
+ .hero:after{right:-130px;opacity:.65}
+ .dashboard{padding:13px}
+ .dashboard-card{padding:15px}
+ .stats{gap:7px}
+ .stat strong{font-size:clamp(18px,5vw,24px)}
+ .rotation-week-card{padding:9px}
+ .rotation-mini{width:48px}
+ .rotation-mini img:not(.rotation-item-icon){width:44px;height:44px}
+ .rotation-week-date{font-size:11px}
+ .mountain-status{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.rows{animation:none!important}button,.stat,.dashboard-card,.rotation-week-card,.poke-img,.item-img{transition:none!important}}
+
 </style>
 </head>
 <body><main>
