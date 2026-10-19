@@ -200,6 +200,62 @@ button:disabled{cursor:not-allowed;opacity:.45}
  #panelMountain .item-img{width:62px;height:62px}
  #panelMountain .mountain-card>.clan-head{padding:12px}
 }
+
+/* Final visual polish: less scrolling, clearer progress and touch-friendly controls */
+.rotation-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.rotation-heading>div{min-width:0}
+#toggleRotation{flex-shrink:0;border:1px solid #4d697b;border-radius:11px;background:linear-gradient(135deg,#26394c,#1a2333);color:#c9f3ef;font-weight:750;padding:10px 13px}
+#rotationContent[hidden]{display:none}
+#rotationContent{padding-top:8px}
+#rotationPanel .rotation-week-card{min-height:100%}
+#rotationPanel .rotation-week-card.current .rotation-week-number{color:#c7f9a5}
+#rotationPanel .rotation-week-date{line-height:1.35}
+#rotationPanel .rotation-week-tag{border-radius:5px;background:#ffd16618;padding:3px 5px}
+#panelJoey .mission-controls,#panelMountain>.mission-controls{padding:10px;border:1px solid #303b51;border-radius:14px;background:#121925}
+#panelJoey .mission-controls button,#panelMountain>.mission-controls button{white-space:nowrap}
+#panelJoey .pokemon .check{min-width:0}
+#panelJoey .poke-info{min-width:0}
+#panelJoey .poke-info>div{min-width:0}
+#panelJoey .poke-name{overflow-wrap:anywhere}
+#panelJoey .poke-sub{line-height:1.35}
+#panelJoey .clan-reward-list{padding-top:2px}
+#panelMountain .mountain-card{box-shadow:0 8px 22px #0002}
+#panelMountain .mountain-card .controls button{min-height:38px}
+#panelMountain .mountain-card .ready-check input{flex-shrink:0}
+.footer{padding-top:14px;border-top:1px solid #30394e;align-items:center}
+.footer button{min-height:40px}
+@media(max-width:760px){
+ .rotation-heading{align-items:flex-start;flex-direction:column;gap:8px}
+ #toggleRotation{width:100%}
+ #panelJoey .mission-controls,#panelMountain>.mission-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ #panelJoey .mission-controls input[type=search],#panelMountain>.mission-controls input[type=search]{grid-column:1/-1;min-width:0}
+ #panelJoey .mission-controls select,#panelMountain>.mission-controls select{grid-column:1/-1;min-width:0;width:100%}
+ #panelJoey .mission-controls button,#panelMountain>.mission-controls button{width:100%;padding:10px 7px;font-size:12px}
+}
+@media(max-width:560px){
+ .hero{padding:17px}
+ .stats{gap:7px}
+ .stat{padding:9px}
+ .stat strong{font-size:20px}
+ .stat span{font-size:11px;line-height:1.3}
+ .dashboard{padding:13px}
+ .dashboard-card{padding:13px}
+ .dashboard-main{font-size:30px}
+ #panelJoey .clan-head{gap:9px;padding:12px}
+ #panelJoey .clan .pill{font-size:11px;padding:5px 7px}
+ #panelJoey .clan-symbol{width:34px;height:34px}
+ #panelJoey .clan .clan-head h2{font-size:17px}
+ #panelJoey .reward-item{white-space:normal}
+ #panelJoey .pokemon{grid-template-columns:minmax(0,1fr) 68px;gap:5px}
+ #panelJoey .pokemon .ball-count{grid-column:1/2;grid-row:2;display:block;padding-left:48px}
+ #panelJoey .pokemon .check{grid-column:2;grid-row:1/3;align-self:center}
+ #panelJoey .poke-img{width:40px;height:40px}
+ #panelJoey .ball-count-controls{max-width:150px}
+ #panelJoey .ball-count-note{display:none}
+ .footer{gap:7px}
+ .footer button,.footer a{flex:1;text-align:center;font-size:12px;padding:9px 7px!important}
+}
+@media(prefers-reduced-motion:reduce){#rotationPanel .rotation-week-card{transition:none}}
 </style>
 </head>
 <body><main>
@@ -215,7 +271,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 </div>
 </section>
 <section class="dashboard" aria-label="Resumen de misiones"><div class="kicker">Panel de progreso</div><h2 style="margin:5px 0 12px">Resumen de misiones · <span id="dashboardProfile">Perfil activo</span></h2><div class="dashboard-grid"><article class="dashboard-card"><h2>🎒 Joey Quest</h2><div class="dashboard-main" id="dashJoeyPercent">0%</div><div class="bar"><div id="dashJoeyBar" style="width:0%"></div></div><div class="dashboard-line"><span>Pokémon únicos</span><strong id="dashUnique">0/0</strong></div><div class="dashboard-line"><span>Clanes completados</span><strong id="dashClans">0/0</strong></div><div class="dashboard-line"><span>Poké Balls usadas (aprox.)</span><strong id="dashPokeballs">0</strong></div><div class="dashboard-missing" id="dashJoeyMissing">Pendientes por revisar.</div></article><article class="dashboard-card"><h2>⛰️ Dimensional Mountain</h2><div class="dashboard-main" id="dashMountainPercent">0%</div><div class="bar"><div id="dashMountainBar" style="width:0%"></div></div><div class="dashboard-line"><span>Objetos listos</span><strong id="dashReady">0/12</strong></div><div class="dashboard-line"><span>Dungeons acumuladas</span><strong id="dashRuns">0/180</strong></div><div class="dashboard-missing" id="dashMountainMissing">Pendientes por revisar.</div></article></div></section>
-<section class="dashboard" id="rotationPanel" aria-label="Rotación semanal Dimensional Zone"><div class="kicker">Calendario de dungeons</div><h2 style="margin:5px 0 8px">Rotación Dimensional Zone</h2><p>Consulta las dungeons disponibles por semana. Las Golden Weeks incluyen las dungeons de las dos semanas normales del ciclo.</p><div class="controls" style="margin:10px 0"><label for="rotationWeek" style="align-self:center;color:var(--muted)">Semana:</label><select id="rotationWeek"><option value="1">Semana 1 · Ciclo 1</option><option value="2">Semana 2 · Ciclo 1</option><option value="3">Semana 3 · Golden Week</option><option value="4">Semana 4 · Ciclo 2</option><option value="5">Semana 5 · Ciclo 2</option><option value="6">Semana 6 · Golden Week</option><option value="7">Semana 7 · Ciclo 3</option><option value="8">Semana 8 · Ciclo 3</option><option value="9">Semana 9 · Golden Week</option></select></div><p id="rotationDateRange" class="dashboard-missing">Calculando semana actual…</p><div id="rotationCalendar" class="rotation-calendar" aria-label="Calendario de las nueve semanas"></div><div class="dashboard-grid"><article class="dashboard-card"><h2 id="rotationTitle">Semana 8</h2><div id="rotationGold" class="rotation-list"></div></article><article class="dashboard-card"><h2>Relación con tus misiones</h2><div id="rotationObjectives" class="rotation-list"></div></article></div><p class="dashboard-missing">La semana actual se calcula automáticamente usando como referencia la semana 8 del 16 al 23 de octubre de 2026. Puedes elegir otra semana manualmente para consultar sus dungeons.</p></section>
+<section class="dashboard" id="rotationPanel" aria-label="Rotación semanal Dimensional Zone"><div class="kicker">Calendario de dungeons</div><div class="rotation-heading"><div><h2 style="margin:5px 0 8px">Rotación Dimensional Zone</h2><p>Consulta las dungeons disponibles por semana. Las Golden Weeks incluyen las dungeons de las dos semanas normales del ciclo.</p></div><button type="button" id="toggleRotation" aria-expanded="false">Mostrar calendario ＋</button></div><div id="rotationContent" hidden><div class="controls" style="margin:10px 0"><label for="rotationWeek" style="align-self:center;color:var(--muted)">Semana:</label><select id="rotationWeek"><option value="1">Semana 1 · Ciclo 1</option><option value="2">Semana 2 · Ciclo 1</option><option value="3">Semana 3 · Golden Week</option><option value="4">Semana 4 · Ciclo 2</option><option value="5">Semana 5 · Ciclo 2</option><option value="6">Semana 6 · Golden Week</option><option value="7">Semana 7 · Ciclo 3</option><option value="8">Semana 8 · Ciclo 3</option><option value="9">Semana 9 · Golden Week</option></select></div><p id="rotationDateRange" class="dashboard-missing">Calculando semana actual…</p><div id="rotationCalendar" class="rotation-calendar" aria-label="Calendario de las nueve semanas"></div><div class="dashboard-grid"><article class="dashboard-card"><h2 id="rotationTitle">Semana 8</h2><div id="rotationGold" class="rotation-list"></div></article><article class="dashboard-card"><h2>Relación con tus misiones</h2><div id="rotationObjectives" class="rotation-list"></div></article></div><p class="dashboard-missing">La semana actual se calcula automáticamente usando como referencia la semana 8 del 16 al 23 de octubre de 2026. Puedes elegir otra semana manualmente para consultar sus dungeons.</p></div></section>
 <div class="tabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
@@ -383,6 +439,7 @@ function render(){
 }
 function setTab(which){const m=which==="mountain";document.getElementById("panelJoey").hidden=m;document.getElementById("panelMountain").hidden=!m;document.getElementById("tabJoey").classList.toggle("active",!m);document.getElementById("tabMountain").classList.toggle("active",m);document.getElementById("tabJoey").setAttribute("aria-selected",String(!m));document.getElementById("tabMountain").setAttribute("aria-selected",String(m));}
 document.getElementById("rotationWeek").addEventListener("change",e=>{e.target.dataset.manual="1";renderRotation();});
+document.getElementById("toggleRotation").addEventListener("click",()=>{const content=document.getElementById("rotationContent"),button=document.getElementById("toggleRotation");content.hidden=!content.hidden;button.setAttribute("aria-expanded",String(!content.hidden));button.textContent=content.hidden?"Mostrar calendario ＋":"Ocultar calendario −";});
 document.getElementById("tabJoey").addEventListener("click",()=>setTab("joey"));document.getElementById("tabMountain").addEventListener("click",()=>setTab("mountain"));
 document.getElementById("searchJoey").addEventListener("input",render);document.getElementById("filterJoey").addEventListener("change",render);document.getElementById("searchMountain").addEventListener("input",renderMountain);document.getElementById("filterMountain").addEventListener("change",renderMountain);document.getElementById("profile").addEventListener("change",e=>{activeProfile=e.target.value;save()});
 document.getElementById("addProfile").addEventListener("click",addProfile);
