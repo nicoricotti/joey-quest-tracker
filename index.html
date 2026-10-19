@@ -29,6 +29,58 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 14px}.tabs .tab{border:1px solid #39465e;background:#202a3b;color:#dbe5f6;padding:13px 18px;border-radius:14px;font-size:15px;font-weight:750;cursor:pointer;transition:all .15s}.tabs .tab.active{background:linear-gradient(135deg,#8ee16a,#5ecf9a);border-color:transparent;color:#14251a;box-shadow:0 5px 16px #7fdf6626}.tabs .tab:hover{transform:translateY(-1px)}
 .mission-panel{border:1px solid #303b51;border-radius:18px;padding:14px;background:rgba(17,23,35,.38)}
 @media(max-width:560px){.auth-actions,.profile-actions{display:grid;grid-template-columns:1fr}.auth-actions input,.profile-content select,.friendly-btn{width:100%}.tabs .tab{flex:1;min-width:140px;padding:12px 10px}.mission-panel{padding:8px}.auth-drawer summary,.profile-drawer summary{padding:12px}}
+
+/* Dashboard polish */
+.dashboard-card{position:relative;overflow:hidden;isolation:isolate;padding:18px;background:linear-gradient(145deg,#1b2638,#111722 78%);box-shadow:0 8px 24px #0000001c}
+.dashboard-card:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:3px;background:var(--accent)}
+.dashboard-card:nth-child(2):before{background:var(--accent2)}
+.dashboard-card h2{display:flex;align-items:center;gap:8px}
+.dashboard-main{font-size:clamp(32px,4vw,40px);line-height:1.1;letter-spacing:-.04em;margin:10px 0 8px}
+.dashboard-card .bar{height:9px;border-radius:99px;overflow:hidden;background:#30394e;margin:10px 0 14px}
+.dashboard-card .bar>div{height:100%;border-radius:99px;transition:width .25s ease}
+#dashJoeyBar{background:linear-gradient(90deg,#75c945,#b6f477)}
+#dashMountainBar{background:linear-gradient(90deg,#38bfc4,#8ce6db)}
+.dashboard-line{align-items:center;padding:5px 0;margin:3px 0;border-bottom:1px solid #30394e66}
+.dashboard-line strong{font-variant-numeric:tabular-nums;color:var(--text)}
+.dashboard-missing{padding:9px 10px;background:#0d1420;border:1px solid #30394e;border-radius:10px;line-height:1.4}
+.dashboard-card:first-child .dashboard-missing{border-left:3px solid var(--accent)}
+.dashboard-card:nth-child(2) .dashboard-missing{border-left:3px solid var(--accent2)}
+.pokemon{grid-template-columns:minmax(0,1fr) 128px 94px;gap:12px;padding:13px 4px}
+.poke-img{width:58px;height:58px;image-rendering:auto;background:linear-gradient(145deg,#202d40,#111722);border-radius:13px}
+.poke-name{font-size:15px;letter-spacing:.01em}
+.poke-sub{margin-top:3px}
+.ball-count{gap:5px;font-size:11px;font-weight:650}
+.ball-count input{height:38px;text-align:center;font-size:15px;font-weight:750;border-color:#3b4961;background:#0d1420}
+.ball-count input:focus{outline:2px solid var(--accent2);outline-offset:1px}
+.ball-count input:disabled{opacity:.65;cursor:not-allowed}
+.ball-count-controls{display:flex;align-items:center;gap:4px}
+.ball-step{width:29px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:17px;font-weight:800}
+.ball-count-controls input{flex:1;min-width:0;width:100%}
+.ball-count-note{font-size:10px;color:var(--muted);font-weight:400}
+.pokemon.done{background:linear-gradient(90deg,#9be5640b,transparent 75%)}
+.pokemon.done .poke-name{text-decoration:none;color:#dff8cf}
+.pokemon.done .poke-img{border-color:#54764b}
+.pokemon .check{padding:7px 5px;border:1px solid var(--line);border-radius:10px;background:#111722;min-height:44px}
+.pokemon .check input{width:18px;height:18px}
+.pokemon .check:has(input:checked){color:#b9f58b;border-color:#577b43;background:#1c2a20}
+.pokemon:not(.done) .ball-count{opacity:.9}
+@media(max-width:650px){
+ .pokemon{grid-template-columns:minmax(0,1fr) 96px 66px;gap:6px;padding:10px 0}
+ .poke-img{width:42px;height:42px}
+ .poke-info{gap:7px}
+ .poke-name{font-size:13px}
+ .poke-sub{font-size:10px}
+ .ball-count{font-size:9px}
+ .ball-count-controls{gap:3px}
+ .ball-step{width:23px;height:30px;font-size:14px}
+ .ball-count input{padding:4px;font-size:13px;height:30px}
+ .pokemon .check{font-size:10px;padding:5px 2px;min-height:40px}
+}
+@media(max-width:380px){
+ .pokemon{grid-template-columns:minmax(0,1fr) 88px 58px;gap:4px}
+ .poke-img{width:36px;height:36px}
+ .ball-step{width:20px}
+}
 </style>
 </head>
 <body><main>
@@ -139,14 +191,14 @@ function updateDashboard(uniquePokemon,total,mine){
  const ready=mountainItems.filter(([d])=>!!profiles[activeProfile]["mountain-ready:"+d]).length;
  const runs=mountainItems.reduce((sum,[d])=>sum+Math.max(0,Math.min(15,Number(profiles[activeProfile][runKey(d)]||0))),0);
  const finishedDungeons=mountainItems.filter(([d])=>Number(profiles[activeProfile][runKey(d)]||0)>=15).length;
- const mountainPct=Math.round((ready+finishedDungeons)/24*100);
+ const mountainPct=Math.round(ready/12*100);
  document.getElementById("dashboardProfile").textContent=profileLabel(activeProfile);
  document.getElementById("dashJoeyPercent").textContent=joeyPct+"%";document.getElementById("dashJoeyBar").style.width=joeyPct+"%";
  document.getElementById("dashUnique").textContent=mine+"/"+total;const ballTotal=[...new Set(all().map(x=>x.name))].reduce((sum,name)=>sum+Math.max(0,Number(profiles[activeProfile]["pokeballs:"+name]||0)),0);document.getElementById("dashPokeballs").textContent=ballTotal.toLocaleString("es-CL");document.getElementById("dashClans").textContent=completeClans+"/"+clans.length;
  document.getElementById("dashJoeyMissing").textContent=mine===total&&completeClans===clans.length?"¡Joey Quest completada!":`Faltan ${total-mine} Pokémon únicos y ${clans.length-completeClans} clanes por completar.`;
  document.getElementById("dashMountainPercent").textContent=mountainPct+"%";document.getElementById("dashMountainBar").style.width=mountainPct+"%";
  document.getElementById("dashReady").textContent=ready+"/12";document.getElementById("dashRuns").textContent=runs+"/180";
- document.getElementById("dashMountainMissing").textContent=ready===12&&finishedDungeons===12?"¡Dimensional Mountain completada!":`Faltan ${12-ready} objetos listos y ${12-finishedDungeons} objetivos de 15 dungeons.`;
+ document.getElementById("dashMountainMissing").textContent=ready===12?"¡Los 12 objetos están listos!":`Faltan ${12-ready} objetos por completar. ${12-finishedDungeons} dungeons ya alcanzaron 15/15.`;
 }
 function render(){
  const q=document.getElementById("searchJoey").value.trim().toLowerCase(),f=document.getElementById("filterJoey").value;
@@ -172,13 +224,13 @@ function render(){
   const rows=document.createElement("div");rows.className="rows";
   if(c.note){const note=document.createElement("p");note.className="notice";note.textContent=c.note;rows.appendChild(note);}
   filtered.forEach(x=>{const captured=state(x.id),row=document.createElement("div");row.className="pokemon"+(captured?" done":"");
-   row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name">${x.name}</div><div class="poke-sub">${x.detail}</div></div></div><label class="ball-count">Poké Balls usadas<input type="number" min="0" step="1" inputmode="numeric" data-balls="${x.name}" value="${Math.max(0,Number(profiles[activeProfile]["pokeballs:"+x.name]||0))}" aria-label="Cantidad aproximada de Poké Balls usadas para capturar ${x.name}"></label><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
+   row.innerHTML=`<div class="poke-info"><img class="poke-img" src="${spriteUrl(x.name)}" alt="${x.name}" loading="lazy" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='${spriteFallback(x.name)}'}else{this.style.display='none'}"><div><div class="poke-name">${x.name}</div><div class="poke-sub">${x.detail}</div></div></div><label class="ball-count"><span>Poké Balls <span class="ball-count-note">(aprox.)</span></span><span class="ball-count-controls"><button type="button" class="ball-step" data-ball-step="-1" data-ball-name="${x.name}" aria-label="Restar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>−</button><input type="number" min="0" step="1" inputmode="numeric" data-balls="${x.name}" value="${profiles[activeProfile]["pokeballs:"+x.name]===undefined?"":Math.max(0,Number(profiles[activeProfile]["pokeballs:"+x.name]||0))}" placeholder="—" aria-label="Cantidad aproximada de Poké Balls usadas para capturar ${x.name}" ${!canWrite?"disabled":""}><button type="button" class="ball-step" data-ball-step="1" data-ball-name="${x.name}" aria-label="Sumar una Poké Ball a ${x.name}" ${!canWrite?"disabled":""}>+</button></span></label><label class="check">Capturado<input type="checkbox" data-id="${x.id}" ${captured?"checked":""}></label>`;
    rows.appendChild(row);
   });
   head.addEventListener("click",()=>rows.hidden=!rows.hidden);section.append(head,rows);root.appendChild(section);
  });
  if(!shown)root.innerHTML='<div class="empty">No hay Pokémon que coincidan con esa búsqueda o filtro.</div>';
- root.querySelectorAll("input[data-balls]").forEach(el=>{el.disabled=!canWrite;el.addEventListener("change",()=>{if(!canWrite)return;const n=Math.max(0,Math.floor(Number(el.value)||0));profiles[activeProfile]["pokeballs:"+el.dataset.balls]=n;save();});});
+ root.querySelectorAll("input[data-balls]").forEach(el=>{el.addEventListener("change",()=>{if(!canWrite)return;if(el.value.trim()===""){delete profiles[activeProfile]["pokeballs:"+el.dataset.balls];save();return;}const n=Math.max(0,Math.floor(Number(el.value)||0));profiles[activeProfile]["pokeballs:"+el.dataset.balls]=n;el.value=String(n);save();});});root.querySelectorAll("button[data-ball-step]").forEach(btn=>btn.addEventListener("click",()=>{if(!canWrite)return;const key="pokeballs:"+btn.dataset.ballName;const current=Number(profiles[activeProfile][key]||0);profiles[activeProfile][key]=Math.max(0,current+Number(btn.dataset.ballStep));save();}));
  root.querySelectorAll('input[type=checkbox]').forEach(el=>{el.disabled=!canWrite;el.addEventListener("change",e=>{
   if(!canWrite)return;
   const id=e.target.dataset.id, selected=items.find(x=>x.id===id);
