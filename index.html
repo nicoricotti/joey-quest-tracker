@@ -302,6 +302,41 @@ button:disabled{cursor:not-allowed;opacity:.45}
  #appMain>.hero{padding:17px}
 }
 @media(prefers-reduced-motion:reduce){.side-link{transition:none}}
+
+/* Visual polish: unify surfaces and improve mission readability */
+body{background:radial-gradient(ellipse at 70% -10%,#233954 0,transparent 36%),linear-gradient(180deg,#0e1520,#0b1018 68%);background-attachment:fixed}
+#appMain>.hero{position:relative;overflow:hidden;background:radial-gradient(ellipse at 100% 0%,#80d8d01a,transparent 38%),linear-gradient(135deg,#202d42,#171e2b 64%);border-color:#3b4b64;box-shadow:0 15px 42px #0002}
+#appMain>.hero h1{letter-spacing:-.045em}
+.kicker{font-size:10px;letter-spacing:.18em}
+.stat,.dashboard-card{box-shadow:0 7px 20px #00000015;transition:border-color .18s,transform .18s}
+.dashboard-card:hover{border-color:#465a76}
+.dashboard-main{letter-spacing:-.04em}
+.bar{overflow:hidden;background:#0e1520;border:1px solid #303d52}
+.bar div{border-radius:inherit;transition:width .3s ease}
+.dashboard-missing{border-radius:9px;padding:8px 10px;background:#101722;color:#9daec3}
+#appMain>.dashboard{border-color:#303e53;background:linear-gradient(145deg,#171f2d,#131a26)}
+#rotationPanel .rotation-week-card{box-shadow:0 4px 14px #0002}
+.tabs{position:sticky;top:12px;z-index:30;padding:6px;border:1px solid #35445a;border-radius:15px;background:#111925ef;backdrop-filter:blur(16px);box-shadow:0 8px 26px #0003}
+.tab{border-radius:10px;min-height:43px}
+.tab.active{box-shadow:0 4px 14px #a6ef7015,inset 0 0 0 1px #a6ef7040}
+#panelJoey .clan,#panelMountain .mountain-card{border-color:#33445b;box-shadow:0 7px 22px #0002;transition:transform .18s,border-color .18s,box-shadow .18s}
+#panelJoey .clan:hover,#panelMountain .mountain-card:hover{transform:translateY(-2px);border-color:#4c657e;box-shadow:0 12px 26px #0003}
+#panelJoey .pokemon{border-color:#2e3a4f;transition:background .15s,border-color .15s}
+#panelJoey .pokemon:hover{background:#1c293a;border-color:#3f526d}
+#panelJoey .poke-name{font-weight:750}
+#panelJoey .clan-reward-list{padding:7px 9px;border:1px solid #35445a;border-radius:11px;background:#111925}
+#panelMountain .item-img{border:1px solid #40556d;box-shadow:0 5px 15px #0003}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #7ce4dd;outline-offset:3px}
+button{transition:transform .15s,border-color .15s,background .15s,box-shadow .15s}
+button:active{transform:translateY(1px)}
+.app-sidebar{background:linear-gradient(180deg,#151f2f 0%,#0f151f 82%);border-right-color:#2e3c51}
+.side-link{min-height:46px}
+.side-link.active{box-shadow:inset 3px 0 #a6ef70,0 5px 16px #0002}
+.side-count{font-variant-numeric:tabular-nums}
+.footer{margin-top:24px!important}
+.footer button{border-radius:10px}
+@media(max-width:700px){#appMain{padding-top:10px}.tabs{top:55px}#panelJoey .clan:hover,#panelMountain .mountain-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.stat,.dashboard-card,.bar div,.tab,button,#panelJoey .clan,#panelMountain .mountain-card{transition:none}}
 </style>
 </head>
 <body><div class="app-shell">
