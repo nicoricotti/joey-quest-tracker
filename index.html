@@ -22,7 +22,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <p>Cada jugador tiene su propia misión. Cambia de perfil para marcar las capturas de Nico o las de Dani, sin mezclar los progresos.</p>
 <div class="controls" style="margin:18px 0 0">
 <label for="profile" style="align-self:center;color:var(--muted)">Jugador:</label>
-<select id="profile" aria-label="Seleccionar jugador"><option value="nico">Nico</option><option value="pareja">Dani</option></select>
+<select id="profile" aria-label="Seleccionar perfil"></select><button type="button" id="addProfile">＋ Agregar perfil</button><button type="button" id="renameProfile">✎ Cambiar nombre</button>
 </div>
 <div class="stats">
 <div class="stat"><strong id="total">0/0</strong><span>Pokémon únicos capturados por este perfil</span></div>
@@ -59,17 +59,23 @@ const clans = [
 ]
 const KEY="joeyQuestTrackerV2";
 let profiles={nico:{},pareja:{}};
+let profileNames={nico:"Nico",pareja:"Dani"};
 let activeProfile="nico";
 try{
  const stored=JSON.parse(localStorage.getItem(KEY)||"null");
  if(stored && stored.profiles){
-  profiles=stored.profiles; profiles.nico=profiles.nico||{}; profiles.pareja=profiles.pareja||{};
+  profiles=stored.profiles; Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});
+  profileNames={...profileNames,...(stored.profileNames||{})};
   activeProfile=stored.activeProfile||"nico";
  } else {
   const old=JSON.parse(localStorage.getItem("joeyQuestTrackerV1")||"{}");
   Object.keys(old).forEach(id=>{if(old[id]?.me)profiles.nico[id]=true;if(old[id]?.partner)profiles.pareja[id]=true;});
  }
-}catch(e){profiles={nico:{},pareja:{}}}
+}catch(e){profiles={nico:{},pareja:{}};profileNames={nico:"Nico",pareja:"Dani"};}
+function profileLabel(id){return profileNames[id]||id;}
+function refreshProfileSelect(){const sel=document.getElementById("profile");const previous=activeProfile;sel.innerHTML="";Object.keys(profiles).forEach(id=>{const opt=document.createElement("option");opt.value=id;opt.textContent=profileLabel(id);sel.appendChild(opt);});if(!profiles[activeProfile])activeProfile=Object.keys(profiles)[0]||"nico";sel.value=activeProfile;}
+function addProfile(){const name=prompt("¿Qué nombre usas en el juego?");if(name===null)return;const clean=name.trim();if(!clean){alert("Escribe un nombre para crear el perfil.");return;}if(Object.values(profileNames).some(n=>n.trim().toLowerCase()===clean.toLowerCase())){alert("Ya existe un perfil con ese nombre. Puedes cambiar el nombre de uno existente.");return;}let id="player_"+Date.now().toString(36);while(profiles[id])id+="_";profiles[id]={};profileNames[id]=clean;activeProfile=id;save();}
+function renameProfile(){const oldName=profileLabel(activeProfile);const name=prompt("Nuevo nombre para este perfil:",oldName);if(name===null)return;const clean=name.trim();if(!clean){alert("El nombre no puede quedar vacío.");return;}if(Object.keys(profileNames).some(id=>id!==activeProfile&&(profileNames[id]||id).trim().toLowerCase()===clean.toLowerCase())){alert("Ese nombre ya está en uso por otro perfil.");return;}profileNames[activeProfile]=clean;save();}
 const dexIds={"Darumaka":554,"Darmanitan":555,"Heatmor":631,"Wingull":278,"Pelipper":279,"Cubchoo":613,"Beartic":614,"Shroomish":285,"Breloom":286,"Dwebble":557,"Crustle":558,"Joltik":595,"Galvantula":596,"Ferroseed":597,"Ferrothorn":598,"Ambipom":424,"Lickilicky":463,"Timburr":532,"Gurdurr":533,"Nosepass":299,"Hippopotas":449,"Hippowdon":450,"Probopass":476,"Drilbur":529,"Excadrill":530,"Emolga":587,"Axew":610,"Fraxure":611,"Haxorus":612,"Poochyena":261,"Mightyena":262,"Skorupi":451,"Drapion":452,"Pawniard":624,"Bisharp":625};
 const spriteUrl=name=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dexIds[name]||0}.png`;
 const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexIds[name]||0}.png`;
@@ -79,7 +85,7 @@ function createSafetyBackup(){
  try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
  return snapshot;
 }
-function save(){localStorage.setItem(KEY,JSON.stringify({profiles,activeProfile}));render()}
+function save(){localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile}));refreshProfileSelect();render()}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
@@ -117,7 +123,7 @@ function updateDashboard(uniquePokemon,total,mine){
  const runs=mountainItems.reduce((sum,[d])=>sum+Math.max(0,Math.min(15,Number(profiles[activeProfile][runKey(d)]||0))),0);
  const finishedDungeons=mountainItems.filter(([d])=>Number(profiles[activeProfile][runKey(d)]||0)>=15).length;
  const mountainPct=Math.round((ready+finishedDungeons)/24*100);
- document.getElementById("dashboardProfile").textContent=activeProfile==="nico"?"Nico":"Dani";
+ document.getElementById("dashboardProfile").textContent=profileLabel(activeProfile);
  document.getElementById("dashJoeyPercent").textContent=joeyPct+"%";document.getElementById("dashJoeyBar").style.width=joeyPct+"%";
  document.getElementById("dashUnique").textContent=mine+"/"+total;document.getElementById("dashClans").textContent=completeClans+"/"+clans.length;
  document.getElementById("dashJoeyMissing").textContent=mine===total&&completeClans===clans.length?"¡Joey Quest completada!":`Faltan ${total-mine} Pokémon únicos y ${clans.length-completeClans} clanes por completar.`;
@@ -135,7 +141,7 @@ function render(){
  document.getElementById("youbar").style.width=(mine/total*100)+"%";
  document.getElementById("partner").textContent=clans.filter((c,ci)=>c.pokemon.length>0&&c.pokemon.every((p,pi)=>state(`${ci}-${pi}`))).length;
  updateDashboard(uniquePokemon,total,mine);
- document.getElementById("profile").value=activeProfile;
+ refreshProfileSelect();
  renderMountain();
  const root=document.getElementById("clans");root.innerHTML="";let shown=0;
  clans.forEach((c,ci)=>{
@@ -165,11 +171,14 @@ function render(){
 function setTab(which){const m=which==="mountain";document.getElementById("panelJoey").hidden=m;document.getElementById("panelMountain").hidden=!m;document.getElementById("tabJoey").classList.toggle("active",!m);document.getElementById("tabMountain").classList.toggle("active",m);}
 document.getElementById("tabJoey").addEventListener("click",()=>setTab("joey"));document.getElementById("tabMountain").addEventListener("click",()=>setTab("mountain"));
 document.getElementById("search").addEventListener("input",render);document.getElementById("filter").addEventListener("change",render);document.getElementById("profile").addEventListener("change",e=>{activeProfile=e.target.value;save()});
-document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({profiles,activeProfile,updatedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="joey-quest-progreso.json";a.click();URL.revokeObjectURL(a.href)});
+document.getElementById("addProfile").addEventListener("click",addProfile);
+document.getElementById("renameProfile").addEventListener("click",renameProfile);
+document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="joey-quest-progreso.json";a.click();URL.revokeObjectURL(a.href)});
 document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Importar puede reemplazar el progreso actual. Guardaré una copia de seguridad antes de continuar. ¿Quieres seguir?"))return;createSafetyBackup();if(obj.profiles){profiles=obj.profiles;profiles.nico=profiles.nico||{};profiles.pareja=profiles.pareja||{};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado. Guardé una copia de seguridad local previa por si necesitas recuperar el estado anterior.")}catch(err){alert("No pude leer ese archivo de progreso.")}finally{e.target.value=""}});
+document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Importar puede reemplazar el progreso actual. Guardaré una copia de seguridad antes de continuar. ¿Quieres seguir?"))return;createSafetyBackup();if(obj.profiles){profiles=obj.profiles;Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});profileNames={...profileNames,...(obj.profileNames||{})};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado. Guardé una copia de seguridad local previa por si necesitas recuperar el estado anterior.")}catch(err){alert("No pude leer ese archivo de progreso.")}finally{e.target.value=""}});
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
 document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
-document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+(activeProfile==="nico"?"Nico":"Dani")+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+profileLabel(activeProfile)+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
+refreshProfileSelect();
 render();
 </script></body></html>
