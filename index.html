@@ -19,7 +19,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-
+<div id="authPanel" class="dashboard" style="margin-top:12px"><div class="kicker">Acceso compartido</div><div id="authStatus" style="margin:6px 0 10px">Conectando con Firebase…</div><div class="controls" style="margin:8px 0"><button type="button" id="googleLogin">Continuar con Google</button><input id="authEmail" type="email" placeholder="Correo electrónico" autocomplete="email"><input id="authPassword" type="password" placeholder="Contraseña" autocomplete="current-password"><button type="button" id="emailLogin">Entrar</button><button type="button" id="emailSignup">Crear cuenta</button><button type="button" id="logout" hidden>Cerrar sesión</button></div><div id="authHelp" class="notice">La consulta del progreso es pública. Solo las dos cuentas autorizadas podrán modificarlo.</div></div>
 <div class="controls" style="margin:18px 0 0">
 <label for="profile" style="align-self:center;color:var(--muted)">Jugador:</label>
 <select id="profile" aria-label="Seleccionar perfil"></select><button type="button" id="addProfile">＋ Agregar perfil</button><button type="button" id="renameProfile">✎ Cambiar nombre</button><button type="button" id="deleteProfile" disabled>✕ Eliminar perfil</button>
@@ -45,7 +45,14 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 <a href="https://wiki.pokexgames.com/Joey_Quest" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir wiki oficial ↗</a>
 </div>
 </main>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyBHfZojCuU0pIiN7XyifufdLFdQpnJjUmU",authDomain:"pxg-mission-tracker.firebaseapp.com",databaseURL:"https://pxg-mission-tracker-default-rtdb.firebaseio.com",projectId:"pxg-mission-tracker",storageBucket:"pxg-mission-tracker.firebasestorage.app",messagingSenderId:"418258644259",appId:"1:418258644259:web:7f3d4b57e74f9ef9acb096"};
+const firebaseApp=initializeApp(firebaseConfig);const auth=getAuth(firebaseApp);const db=getDatabase(firebaseApp);const googleProvider=new GoogleAuthProvider();
+function setAuthStatus(message){document.getElementById("authStatus").textContent=message;}
+
 const clans = [
 {name:"Volcanic",reward:"100 Volcanic Essence · Flame Egg",pokemon:[["Darumaka","Fácil · DZ Darmanitan"],["Darmanitan","Difícil · DZ Darmanitan"],["Heatmor","Difícil · DZ Heatmor"]]},
 {name:"Seavell",reward:"100 Seavell Essence · Waterfall Egg",pokemon:[["Wingull","Fácil · DZ Pelipper"],["Pelipper","Difícil · DZ Pelipper"],["Cubchoo","Fácil · DZ Beartic"],["Beartic","Difícil · DZ Beartic"]]},
