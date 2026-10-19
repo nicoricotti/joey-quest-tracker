@@ -69,22 +69,14 @@ const KEY="joeyQuestTrackerV2";
 let profiles={nico:{},pareja:{}};
 let profileNames={nico:"Nico",pareja:"Dani"};
 let activeProfile="nico";
-try{
- const stored=JSON.parse(localStorage.getItem(KEY)||"null");
- if(stored && stored.profiles){
-  profiles=stored.profiles; Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});
-  profileNames={...profileNames,...(stored.profileNames||{})};
-  activeProfile=stored.activeProfile||"nico";
- } else {
-  const old=JSON.parse(localStorage.getItem("joeyQuestTrackerV1")||"{}");
-  Object.keys(old).forEach(id=>{if(old[id]?.me)profiles.nico[id]=true;if(old[id]?.partner)profiles.pareja[id]=true;});
- }
-}catch(e){profiles={nico:{},pareja:{}};profileNames={nico:"Nico",pareja:"Dani"};}
+let firebaseUser=null,canWrite=false,cloudReady=false,applyingCloud=false,migrationAttempted=false;
+const authorizedEmails=["nicoricotti94@gmail.com","daniel.guzba@gmail.com"];
+try{const stored=JSON.parse(localStorage.getItem(KEY)||"null");if(stored&&stored.profiles){profiles=stored.profiles;Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});profileNames={...profileNames,...(stored.profileNames||{})};activeProfile=stored.activeProfile||"nico";}else{const old=JSON.parse(localStorage.getItem("joeyQuestTrackerV1")||"{}");Object.keys(old).forEach(id=>{if(old[id]?.me)profiles.nico[id]=true;if(old[id]?.partner)profiles.pareja[id]=true;});}}catch(e){profiles={nico:{},pareja:{}};profileNames={nico:"Nico",pareja:"Dani"};}
 function profileLabel(id){return profileNames[id]||id;}
-function refreshProfileSelect(){const sel=document.getElementById("profile");sel.innerHTML="";Object.keys(profiles).forEach(id=>{const opt=document.createElement("option");opt.value=id;opt.textContent=profileLabel(id);sel.appendChild(opt);});if(!profiles[activeProfile])activeProfile=Object.keys(profiles)[0]||"nico";sel.value=activeProfile;const del=document.getElementById("deleteProfile");if(del)del.disabled=!activeProfile.startsWith("player_");}
-function addProfile(){const name=prompt("¿Qué nombre usas en el juego?");if(name===null)return;const clean=name.trim();if(!clean){alert("Escribe un nombre para crear el perfil.");return;}if(Object.values(profileNames).some(n=>n.trim().toLowerCase()===clean.toLowerCase())){alert("Ya existe un perfil con ese nombre. Puedes cambiar el nombre de uno existente.");return;}let id="player_"+Date.now().toString(36);while(profiles[id])id+="_";profiles[id]={};profileNames[id]=clean;activeProfile=id;save();}
-function deleteProfile(){if(!activeProfile.startsWith("player_")){alert("Solo puedes eliminar perfiles que hayas creado.");return;}const name=profileLabel(activeProfile);if(!confirm("¿Eliminar el perfil \""+name+"\" y todo su progreso guardado en este navegador? Esta acción no se puede deshacer."))return;delete profiles[activeProfile];delete profileNames[activeProfile];activeProfile=profiles.nico?"nico":(profiles.pareja?"pareja":Object.keys(profiles)[0]);save();}
-function renameProfile(){const oldName=profileLabel(activeProfile);const name=prompt("Nuevo nombre para este perfil:",oldName);if(name===null)return;const clean=name.trim();if(!clean){alert("El nombre no puede quedar vacío.");return;}if(Object.keys(profileNames).some(id=>id!==activeProfile&&(profileNames[id]||id).trim().toLowerCase()===clean.toLowerCase())){alert("Ese nombre ya está en uso por otro perfil.");return;}profileNames[activeProfile]=clean;save();}
+function refreshProfileSelect(){const sel=document.getElementById("profile");sel.innerHTML="";Object.keys(profiles).forEach(id=>{const opt=document.createElement("option");opt.value=id;opt.textContent=profileLabel(id);sel.appendChild(opt);});if(!profiles[activeProfile])activeProfile=Object.keys(profiles)[0]||"nico";sel.value=activeProfile;const del=document.getElementById("deleteProfile");if(del)del.disabled=!canWrite||!activeProfile.startsWith("player_");}
+function addProfile(){if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el tracker.");return;}const name=prompt("¿Qué nombre usas en el juego?");if(name===null)return;const clean=name.trim();if(!clean){alert("Escribe un nombre para crear el perfil.");return;}if(Object.values(profileNames).some(n=>n.trim().toLowerCase()===clean.toLowerCase())){alert("Ya existe un perfil con ese nombre. Puedes cambiar el nombre de uno existente.");return;}let id="player_"+Date.now().toString(36);while(profiles[id])id+="_";profiles[id]={};profileNames[id]=clean;activeProfile=id;save();}
+function deleteProfile(){if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el tracker.");return;}if(!activeProfile.startsWith("player_")){alert("Solo puedes eliminar perfiles que hayas creado.");return;}const name=profileLabel(activeProfile);if(!confirm("¿Eliminar el perfil \""+name+"\" y todo su progreso compartido? Esta acción no se puede deshacer."))return;delete profiles[activeProfile];delete profileNames[activeProfile];activeProfile=profiles.nico?"nico":(profiles.pareja?"pareja":Object.keys(profiles)[0]);save();}
+function renameProfile(){if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el tracker.");return;}const oldName=profileLabel(activeProfile);const name=prompt("Nuevo nombre para este perfil:",oldName);if(name===null)return;const clean=name.trim();if(!clean){alert("El nombre no puede quedar vacío.");return;}if(Object.keys(profileNames).some(id=>id!==activeProfile&&(profileNames[id]||id).trim().toLowerCase()===clean.toLowerCase())){alert("Ese nombre ya está en uso por otro perfil.");return;}profileNames[activeProfile]=clean;save();}
 const dexIds={"Darumaka":554,"Darmanitan":555,"Heatmor":631,"Wingull":278,"Pelipper":279,"Cubchoo":613,"Beartic":614,"Shroomish":285,"Breloom":286,"Dwebble":557,"Crustle":558,"Joltik":595,"Galvantula":596,"Ferroseed":597,"Ferrothorn":598,"Ambipom":424,"Lickilicky":463,"Timburr":532,"Gurdurr":533,"Nosepass":299,"Hippopotas":449,"Hippowdon":450,"Probopass":476,"Drilbur":529,"Excadrill":530,"Emolga":587,"Axew":610,"Fraxure":611,"Haxorus":612,"Poochyena":261,"Mightyena":262,"Skorupi":451,"Drapion":452,"Pawniard":624,"Bisharp":625};
 const spriteUrl=name=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dexIds[name]||0}.png`;
 const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexIds[name]||0}.png`;
@@ -94,7 +86,7 @@ function createSafetyBackup(){
  try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
  return snapshot;
 }
-function save(){localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile}));refreshProfileSelect();render()}
+function save(){const payload={profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(canWrite&&cloudReady&&!applyingCloud){set(ref(db,"tracker"),payload).catch(err=>{console.error(err);setAuthStatus("No se pudo guardar en la nube. Revisa la conexión y las reglas de Firebase.");});}}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
