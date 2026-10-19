@@ -211,19 +211,19 @@ const clans = [
 ]
 const clanSymbolFiles={Volcanic:"Volcanic1.png",Seavell:"Seave1ll.png",Naturia:"Naturia1.png",Gardestrike:"Gardestrike1.png",Orebound:"Orebound.png",Raibolt:"Raibol1t.png",Wingeon:"Wingeon1.png",Psycraft:"Psycraft1.png",Malefic:"Malefi1c.png",Ironhard:"Ironhard1.png"};
 const clanRewards={
- Volcanic:{essence:"VolcanicEssence.png",egg:"Flame Egg.png",eggName:"Flame Egg"},
- Seavell:{essence:"SeavellEssence.png",egg:"Waterfall Egg.png",eggName:"Waterfall Egg"},
- Naturia:{essence:"NaturiaEssence.png",egg:"Sprout Egg.png",eggName:"Sprout Egg"},
- Gardestrike:{essence:"GardestrikeEssence.png",egg:"Champion Egg.png",eggName:"Champion Egg"},
- Orebound:{essence:"OreboundEssence.png",egg:"Sand Egg.png",eggName:"Sand Egg"},
- Raibolt:{essence:"RaiboltEssence.png",egg:"Eletrician Egg.png",eggName:"Eletrician Egg"},
- Wingeon:{essence:"WingeonEssence.png",egg:"Falcon Egg.png",eggName:"Falcon Egg"},
- Psycraft:{essence:"PsycraftEssence.png",egg:"Brain Egg.png",eggName:"Brain Egg"},
- Malefic:{essence:"MaleficEssence.png",egg:"Spectre Egg.png",eggName:"Spectre Egg"},
- Ironhard:{essence:"IronhardEssence.png",egg:"Smither Egg.png",eggName:"Smither Egg"}
+ Volcanic:{essence:"VolcanicEssence.png",egg:"Volcegg.png",essenceName:"Volcanic Essence",eggName:"Flame Egg"},
+ Seavell:{essence:"SeavellEssence.png",egg:"Seaegg.png",essenceName:"Seavell Essence",eggName:"Waterfall Egg"},
+ Naturia:{essence:"NaturiaEssence.png",egg:"Naturiaegg.png",essenceName:"Naturia Essence",eggName:"Sprout Egg"},
+ Gardestrike:{essence:"GardestrikeEssence.png",egg:"Gardeegg.png",essenceName:"Gardestrike Essence",eggName:"Champion Egg"},
+ Orebound:{essence:"OreboundEssence.png",egg:"Oreegg.png",essenceName:"Orebound Essence",eggName:"Sand Egg"},
+ Raibolt:{essence:"RaiboltEssence.png",egg:"Raiboltegg.png",essenceName:"Raibolt Essence",eggName:"Eletrician Egg"},
+ Wingeon:{essence:"WingeonEssence.png",egg:"Wingegg.png",essenceName:"Wingeon Essence",eggName:"Falcon Egg"},
+ Psycraft:{essence:"PsycraftEssence.png",egg:"Psyegg.png",essenceName:"Psycraft Essence",eggName:"Brain Egg"},
+ Malefic:{essence:"MaleficEssence.png",egg:"Maleficegg.png",essenceName:"Malefic Essence",eggName:"Spectre Egg"},
+ Ironhard:{essence:"IronhardEssence.png",egg:"Ironegg.png",essenceName:"Ironhard Essence",eggName:"Smither Egg"}
 };
 function rewardIcon(file,name){return '<span class="reward-item"><img src="https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/'+encodeURIComponent(file).replace(/%20/g,"_")+'" alt="" loading="lazy" onerror="this.hidden=true"><span>'+name+'</span></span>';}
-function clanRewardMarkup(clan){const r=clanRewards[clan];if(!r)return "";return '<div class="clan-reward-list">'+rewardIcon("GoldenKey.png","10×") + rewardIcon("SilverKey.png","10×") + rewardIcon(r.essence,"100×") + rewardIcon(r.egg,r.eggName)+'</div>';}
+function clanRewardMarkup(clan){const r=clanRewards[clan];if(!r)return "";return '<div class="clan-reward-list">'+rewardIcon("GoldenKey.png","10× Golden Key")+rewardIcon("SilverKey.png","10× Silver Key")+rewardIcon(r.essence,"100× "+r.essenceName)+rewardIcon(r.egg,"1× "+r.eggName)+'</div>';}
 const KEY="joeyQuestTrackerV2";
 let profiles={nico:{},pareja:{}};
 let profileNames={nico:"Nico",pareja:"Dani"};
