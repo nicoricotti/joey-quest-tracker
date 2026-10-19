@@ -498,6 +498,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   .dashboard-card{padding:14px 16px}
 }
 
+
+/* Corrección de alineación: el contenido debe comenzar junto al sidebar */
+@media(min-width:901px){
+  .app-shell{padding-left:252px}
+  #appMain,main#appMain{width:100%;max-width:none;margin:0;min-width:0;padding:20px 22px 40px}
+  .hero{margin-top:0}
+}
+@media(min-width:1200px){
+  #appMain,main#appMain{padding-left:24px;padding-right:24px}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
