@@ -585,6 +585,51 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   .stat span{max-width:58%;text-align:right}
 }
 
+
+/* Planificador integrado: agenda semanal + objetivos pendientes */
+.planner-panel[hidden]{display:none}
+.planner-panel{margin:12px 0 18px;animation:rowsIn .2s ease-out}
+.planner-hero{position:relative;overflow:hidden;padding:24px;border:1px solid #465b72;border-radius:22px;background:radial-gradient(circle at 100% 0,#7ce4dd15,transparent 38%),linear-gradient(130deg,#24374d,#171f2e 76%);box-shadow:0 15px 35px #0003}
+.planner-hero h2{font-size:clamp(25px,3vw,34px);letter-spacing:-.035em;margin:8px 0}
+.planner-hero p{max-width:760px;line-height:1.6}
+.planner-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:17px}
+.planner-stat{padding:12px 14px;border:1px solid #465873;border-radius:13px;background:#101925b8}
+.planner-stat strong{display:block;font-size:26px;line-height:1.2;letter-spacing:-.04em}
+.planner-stat span{display:block;margin-top:5px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aabbd2}
+.planner-layout{display:grid;grid-template-columns:minmax(280px,.82fr) minmax(0,1.18fr);gap:13px;margin-top:13px;align-items:start}
+.planner-card{min-width:0;padding:18px;border:1px solid #394a63;border-radius:18px;background:linear-gradient(145deg,#1b2637,#121925);box-shadow:0 10px 26px #0002}
+.planner-card-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.planner-eyebrow{font-size:10px;font-weight:850;letter-spacing:.14em;color:var(--accent)}
+.planner-card h3{font-size:19px;line-height:1.25;margin:4px 0 0;letter-spacing:-.025em}
+.planner-icon{display:grid;place-items:center;width:40px;height:40px;border:1px solid #4a6078;border-radius:12px;color:var(--accent2);background:#101925;font-size:21px}
+.planner-week-line{display:grid;gap:6px}
+.planner-week-line label{font-size:12px;color:#aabbd2}
+.planner-week-line select{width:100%;min-height:42px;background:#101724;color:var(--text);border:1px solid #40516b;border-radius:10px;padding:9px}
+.planner-muted{font-size:12px;color:#9eafc7;margin:10px 0}
+.planner-dungeons{display:grid;gap:7px;margin:12px 0}
+.planner-dungeon{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid #34445b;border-radius:12px;background:#101824}
+.planner-dungeon img{width:42px;height:42px;object-fit:contain;padding:3px;border-radius:9px;background:#202c3d;border:1px solid #3b4c63;flex-shrink:0}
+.planner-dungeon strong{display:block;font-size:13px}
+.planner-dungeon small{display:block;color:#9eafc7;font-size:11px;margin-top:2px}
+.planner-dungeon .planner-done-tag{margin-left:auto;font-size:10px;color:#bdf49e;border:1px solid #60854c;background:#1a2c20;border-radius:999px;padding:4px 7px;white-space:nowrap}
+.planner-card>.friendly-btn{width:100%;margin-top:3px}
+.planner-filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px;padding:4px;background:#101722;border:1px solid #303d52;border-radius:12px}
+.planner-filter{flex:1;padding:8px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#aabbd2;font-size:12px}
+.planner-filter.active{background:#29384b;border-color:#465873;color:#eaf2ff}
+.planner-tasks{display:grid;gap:7px}
+.planner-task{display:flex;align-items:center;gap:11px;min-width:0;padding:10px 11px;border:1px solid #34445b;border-radius:12px;background:#101824}
+.planner-task-icon{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;border-radius:10px;background:#202c3d;border:1px solid #3b4c63;font-size:18px}
+.planner-task-main{flex:1;min-width:0}
+.planner-task-main strong{display:block;font-size:13px;overflow-wrap:anywhere}
+.planner-task-main small{display:block;margin-top:3px;font-size:11px;color:#9eafc7;line-height:1.4}
+.planner-task-type{flex-shrink:0;font-size:10px;color:#c9d8ed;padding:4px 6px;border:1px solid #40516b;border-radius:7px}
+.planner-empty{padding:22px 14px;border:1px dashed #465873;border-radius:13px;text-align:center;color:#aabbd2;font-size:13px}
+.planner-footnote{padding:0 3px;font-size:11px;line-height:1.5}
+.side-link[data-nav="planner"] .side-count{font-size:10px}
+@media(max-width:900px){.planner-layout{grid-template-columns:1fr}.planner-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.planner-hero{padding:18px}.planner-card{padding:13px}.planner-summary{gap:6px}.planner-stat{padding:9px}.planner-stat strong{font-size:22px}.planner-stat span{font-size:9px;line-height:1.35}.planner-layout{gap:9px}.planner-task{gap:8px;padding:9px}.planner-task-icon{width:32px;height:32px}.planner-task-type{font-size:9px}}
+@media(max-width:370px){.planner-summary{grid-template-columns:1fr}.planner-stat{display:flex;justify-content:space-between;align-items:center;gap:10px}.planner-stat span{margin:0;text-align:right}}
+
 </style>
 </head>
 <body><div class="app-shell">
@@ -596,6 +641,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <button type="button" class="side-link" data-nav="joey"><span class="side-icon">◈</span><span>Joey Quest</span><span class="side-count" id="sideJoeyProgress">0%</span></button>
   <button type="button" class="side-link" data-nav="mountain"><span class="side-icon">△</span><span>Dimensional Mountain</span><span class="side-count" id="sideMountainProgress">0/12</span></button>
   <button type="button" class="side-link" data-nav="rotation"><span class="side-icon">▦</span><span>Rotación DZ</span></button>
+  <button type="button" class="side-link" data-nav="planner"><span class="side-icon">✓</span><span>Planificador</span><span class="side-count" id="sidePendingCount">—</span></button>
   <div class="sidebar-spacer"></div>
   <div class="sidebar-note"><span class="sidebar-note-dot"></span><span>Tu aventura,<br>tu progreso.</span></div>
   <button type="button" class="side-link side-settings" data-nav="settings"><span class="side-icon">⚙</span><span>Perfiles y acceso</span></button>
@@ -615,7 +661,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 </section>
 <section class="dashboard" aria-label="Resumen de misiones"><div class="kicker">Panel de progreso</div><h2 style="margin:5px 0 12px">Resumen de misiones · <span id="dashboardProfile">Perfil activo</span></h2><div class="dashboard-grid"><article class="dashboard-card"><h2>🎒 Joey Quest</h2><div class="dashboard-main" id="dashJoeyPercent">0%</div><div class="bar"><div id="dashJoeyBar" style="width:0%"></div></div><div class="dashboard-line"><span>Pokémon únicos</span><strong id="dashUnique">0/0</strong></div><div class="dashboard-line"><span>Clanes completados</span><strong id="dashClans">0/0</strong></div><div class="dashboard-line"><span>Poké Balls usadas (aprox.)</span><strong id="dashPokeballs">0</strong></div><div class="dashboard-missing" id="dashJoeyMissing">Pendientes por revisar.</div></article><article class="dashboard-card"><h2>⛰️ Dimensional Mountain</h2><div class="dashboard-main" id="dashMountainPercent">0%</div><div class="bar"><div id="dashMountainBar" style="width:0%"></div></div><div class="dashboard-line"><span>Objetos listos</span><strong id="dashReady">0/12</strong></div><div class="dashboard-line"><span>Dungeons acumuladas</span><strong id="dashRuns">0/180</strong></div><div class="dashboard-missing" id="dashMountainMissing">Pendientes por revisar.</div></article></div></section>
 <section class="dashboard" id="rotationPanel" aria-label="Rotación semanal Dimensional Zone"><div class="kicker">Calendario de dungeons</div><div class="rotation-heading"><div><h2 style="margin:5px 0 8px">Rotación Dimensional Zone</h2><p>Consulta las dungeons disponibles por semana. Las Golden Weeks incluyen las dungeons de las dos semanas normales del ciclo.</p></div><button type="button" id="toggleRotation" aria-expanded="false">Mostrar calendario ＋</button></div><div id="rotationContent" hidden><div class="controls" style="margin:10px 0"><label for="rotationWeek" style="align-self:center;color:var(--muted)">Semana:</label><select id="rotationWeek"><option value="1">Semana 1 · Ciclo 1</option><option value="2">Semana 2 · Ciclo 1</option><option value="3">Semana 3 · Golden Week</option><option value="4">Semana 4 · Ciclo 2</option><option value="5">Semana 5 · Ciclo 2</option><option value="6">Semana 6 · Golden Week</option><option value="7">Semana 7 · Ciclo 3</option><option value="8">Semana 8 · Ciclo 3</option><option value="9">Semana 9 · Golden Week</option></select></div><p id="rotationDateRange" class="dashboard-missing">Calculando semana actual…</p><div id="rotationCalendar" class="rotation-calendar" aria-label="Calendario de las nueve semanas"></div><div class="dashboard-grid"><article class="dashboard-card"><h2 id="rotationTitle">Semana 8</h2><div id="rotationGold" class="rotation-list"></div></article><article class="dashboard-card"><h2>Relación con tus misiones</h2><div id="rotationObjectives" class="rotation-list"></div></article></div><p class="dashboard-missing">La semana actual se calcula automáticamente usando como referencia la semana 8 del 16 al 23 de octubre de 2026. Puedes elegir otra semana manualmente para consultar sus dungeons.</p></div></section>
-<div class="tabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
+<section id="plannerPanel" class="planner-panel" hidden aria-label="Planificador de objetivos">
+  <div class="planner-hero">
+    <div class="kicker">Planificación de aventura</div>
+    <h2>Tu próxima sesión</h2>
+    <p>Combina las dungeons de la rotación con tus objetivos pendientes de Joey Quest y Dimensional Mountain.</p>
+    <div class="planner-summary" id="plannerSummary"></div>
+  </div>
+  <div class="planner-layout">
+    <section class="planner-card planner-calendar">
+      <div class="planner-card-heading"><div><span class="planner-eyebrow">CALENDARIO</span><h3>Rotación y semana activa</h3></div><span class="planner-icon">▦</span></div>
+      <div class="planner-week-line"><label for="plannerWeek">Semana a planificar</label><select id="plannerWeek"><option value="1">Semana 1</option><option value="2">Semana 2</option><option value="3">Semana 3 · Golden Week</option><option value="4">Semana 4</option><option value="5">Semana 5</option><option value="6">Semana 6 · Golden Week</option><option value="7">Semana 7</option><option value="8">Semana 8</option><option value="9">Semana 9 · Golden Week</option></select></div>
+      <p id="plannerDateRange" class="planner-muted">Calculando fechas…</p>
+      <div id="plannerDungeonList" class="planner-dungeons"></div>
+      <button type="button" class="friendly-btn secondary-btn" id="plannerOpenRotation">Ver calendario completo</button>
+    </section>
+    <section class="planner-card">
+      <div class="planner-card-heading"><div><span class="planner-eyebrow">LISTA DE TAREAS</span><h3>Objetivos pendientes</h3></div><span class="planner-icon">◎</span></div>
+      <div class="planner-filters" role="group" aria-label="Filtrar objetivos"><button type="button" class="planner-filter active" data-planner-filter="all">Todos</button><button type="button" class="planner-filter" data-planner-filter="joey">Joey Quest</button><button type="button" class="planner-filter" data-planner-filter="mountain">Mountain</button></div>
+      <div id="plannerTasks" class="planner-tasks"></div>
+    </section>
+  </div>
+  <p class="planner-footnote">Las tareas se calculan desde el perfil activo. Marcar un objetivo aquí no altera datos: usa los controles de la misión correspondiente para actualizar tu progreso.</p>
+</section>
+<div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
 <a href="https://wiki.pokexgames.com/Joey_Quest" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir wiki oficial ↗</a>
