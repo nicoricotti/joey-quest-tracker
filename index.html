@@ -1188,7 +1188,21 @@ function localHasMoreProgress(local,cloud){
  }
  return false;
 }
-function save(){const updatedAt=new Date().toISOString();const payload={profiles,profileNames,activeProfile,updatedAt};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){setAuthStatus("Guardando cambios en la nube…");}else if(canWrite&&syncSafetyBlocked){setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");}const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});}}
+function save(){
+ const updatedAt=new Date().toISOString();
+ const payload={profiles,profileNames,activeProfile,updatedAt};
+ try{localStorage.setItem(KEY,JSON.stringify(payload));}catch(e){setAuthStatus("No se pudo guardar en este navegador; revisa el espacio disponible.");}
+ refreshProfileSelect();render();
+ if(typeof renderPlanner==="function")renderPlanner();
+ if(typeof renderChosenQuest==="function")renderChosenQuest();
+ if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){
+  setAuthStatus("Guardando cambios en la nube…");
+  const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;
+  update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});
+ }else if(canWrite&&syncSafetyBlocked){
+  setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");
+ }
+}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
@@ -1537,8 +1551,9 @@ async function handleImport(e){const file=e.target.files[0];if(!file)return;try{
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
 document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
 document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+profileLabel(activeProfile)+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
-let cloudHasData=false;\nlet syncSafetyBlocked=false;
-function localHasProgress(data){if(!data||!data.profiles)return false;return Object.values(data.profiles).some(p=>p&&Object.entries(p).some(([k,v])=>k.startsWith("mountain-runs:")?Number(v)>0:k.startsWith("mountain-ready:")?v===true:v===true));}
+let cloudHasData=false;
+let syncSafetyBlocked=false;
+function localHasProgress(data){return trackerHasProgress(data);}
 function maybeMigrateLocal(){/* Migration automática desactivada para impedir que datos antiguos del navegador sobrescriban la nube después de un reinicio. */}
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
