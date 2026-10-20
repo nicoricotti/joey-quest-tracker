@@ -1219,6 +1219,75 @@ button:disabled{opacity:.48;cursor:not-allowed}
 }
 @media(prefers-reduced-motion:reduce){#panelChosen .chosen-chapter,#panelJoey .clan,#panelMountain .mountain-card{transition:none}}
 
+
+/* Pulido visual · Rotación DZ, planificador y navegación adaptable */
+#rotationPanel{padding:clamp(15px,2vw,24px);border:1px solid #34465c;border-radius:20px;background:linear-gradient(155deg,#182435,#111722 70%);box-shadow:0 12px 30px #0002}
+#rotationPanel>.kicker{color:#7ce4dd;font-weight:850;letter-spacing:.13em}
+#rotationPanel .rotation-heading p{max-width:760px;line-height:1.6;color:#aabbd0}
+#rotationContent>.controls{display:grid;grid-template-columns:auto minmax(0,260px);align-items:center;gap:10px;padding:12px;border:1px solid #34465c;border-radius:13px;background:#101824}
+#rotationWeek{width:100%;min-width:0;min-height:42px;border:1px solid #40516b;border-radius:10px;background:#101724;color:var(--text);padding:9px 12px}
+#rotationDateRange{padding:10px 12px;border:1px solid #34465c;border-radius:10px;background:#172333}
+#rotationCalendar{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#rotationPanel .rotation-week-card{position:relative;overflow:hidden;padding:15px;background:linear-gradient(150deg,#1b2738,#111722);border-color:#34465c;transition:transform .16s,border-color .16s,box-shadow .16s}
+#rotationPanel .rotation-week-card.current:before{content:"SEMANA ACTUAL";display:block;margin:-2px 0 8px;color:#b9f58b;font-size:9px;font-weight:900;letter-spacing:.12em}
+#rotationPanel .rotation-week-card.current{border-color:#83b96d;background:linear-gradient(145deg,#263a30,#111722)}
+#rotationPanel .rotation-week-card.selected{border-color:#7ce4dd;box-shadow:0 0 0 2px #7ce4dd38,0 8px 22px #0002}
+#rotationPanel .rotation-week-card:hover{transform:translateY(-2px);box-shadow:0 9px 22px #0003}
+#rotationPanel .dashboard-grid{gap:12px}
+#rotationPanel .dashboard-card{border-color:#34465c;background:linear-gradient(145deg,#1b2637,#121925)}
+#rotationPanel .dashboard-card h2{font-size:17px}
+#rotationPanel .rotation-item{padding:11px 12px;background:#101824;border-color:#34465c;line-height:1.4}
+#rotationPanel .rotation-item strong{font-size:13px}
+#rotationPanel .rotation-item span{display:block;margin-top:3px;line-height:1.45}
+.planner-panel{min-width:0}
+.planner-hero{border-color:#456077;background:radial-gradient(circle at 100% 0,#7ce4dd20,transparent 40%),radial-gradient(circle at 0 100%,#a6ef7010,transparent 40%),linear-gradient(130deg,#24374d,#171f2e 76%)}
+.planner-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+.planner-stat{transition:border-color .16s,background .16s}
+.planner-stat:hover{border-color:#6c8b9e;background:#152233}
+.planner-layout{gap:15px}
+.planner-card{border-color:#3d5069}
+.planner-card-heading{padding-bottom:11px;border-bottom:1px solid #34445b}
+.planner-dungeon{transition:border-color .16s,transform .16s}
+.planner-dungeon:hover{border-color:#63839a;transform:translateY(-1px)}
+.planner-tasks{min-width:0}
+.planner-footnote{max-width:900px;line-height:1.55;padding:10px 12px;border-left:2px solid #7ce4dd;background:#121b28;border-radius:0 9px 9px 0}
+.side-link:focus-visible,.rotation-week-card:focus-visible,.planner-filter:focus-visible,#toggleRotation:focus-visible{outline:2px solid #7ce4dd;outline-offset:3px}
+@media(max-width:900px){
+ #rotationCalendar{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .planner-layout{grid-template-columns:minmax(0,1fr)}
+ .planner-calendar{order:0}
+}
+@media(max-width:700px){
+ #rotationPanel{padding:13px;border-radius:15px}
+ #rotationContent>.controls{grid-template-columns:1fr;gap:7px}
+ #rotationContent>.controls label{align-self:auto!important}
+ #rotationCalendar{grid-template-columns:1fr;gap:8px}
+ #rotationPanel .rotation-week-card{padding:13px}
+ #rotationPanel .dashboard-grid{grid-template-columns:1fr}
+ .planner-hero{padding:18px;border-radius:17px}
+ .planner-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .planner-stat{padding:10px 8px}
+ .planner-stat strong{font-size:clamp(18px,6vw,25px)}
+ .planner-stat span{font-size:9px;letter-spacing:.02em}
+ .planner-card{padding:13px;border-radius:15px}
+ .planner-dungeon{align-items:flex-start;flex-wrap:wrap}
+ .planner-dungeon .planner-done-tag{margin-left:52px}
+ .weekly-group-head{gap:8px}
+ .app-sidebar{scrollbar-width:thin;scrollbar-color:#40516b transparent}
+ .sidebar-brand{position:sticky;left:0;z-index:2;background:#111925f5}
+ .side-link{min-height:42px}
+}
+@media(max-width:420px){
+ .planner-summary{grid-template-columns:1fr}
+ .planner-stat{display:flex;align-items:center;justify-content:space-between;gap:10px}
+ .planner-stat span{margin-top:0;text-align:right}
+ #rotationPanel .rotation-week-top{align-items:flex-start;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+ .planner-stat,.planner-dungeon,#rotationPanel .rotation-week-card{transition:none}
+ #rotationPanel .rotation-week-card:hover,.planner-dungeon:hover{transform:none}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
