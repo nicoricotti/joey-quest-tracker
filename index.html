@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-L</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-M</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1057,7 +1057,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-L · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-M · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -1065,19 +1065,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-10-20-L · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-10-20-L · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-10-20-L · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-10-20-M · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -1149,7 +1149,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-L · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -1461,7 +1461,7 @@ function chosenCraftProfession(groupId,recipeName){
  if(["toolbox","smartphone","macbook","translator"].includes(groupId)||/Tool Box|Smartphone|Red Dye|Gear|Macbook/i.test(recipeName))return {name:"Ingeniero",url:"https://wiki.pokexgames.com/index.php?title=Craft_Profiss%C3%B5es_-_Engenheiro"};
  return {name:"Ver en wiki",url:"https://wiki.pokexgames.com/index.php?title=Craft_de_Profiss%C3%B5es"};
 }
-function chosenComponentRequired(item){const match=String(item).match(/^([\d.,]+)\s+(.+)$/);return match?{amount:Number(match[1].replace(/[.,]/g,"")),name:match[2]}:null}
+
 function renderChosenCrafts(){
  const renderGroup=(rootId,groups)=>{const root=document.getElementById(rootId);root.innerHTML=groups.map(g=>{const ready=!!profiles[activeProfile][chosenKey("craft:"+g.id)];return '<section class="chosen-craft-group"><div class="chosen-craft-head">'+chosenImageTag(g.name,48)+'<div style="flex:1"><strong>'+g.name+'</strong><small>'+g.profession+'</small><small>'+g.note+'</small></div><label class="chosen-craft-ready"><input type="checkbox" data-chosen-craft="'+g.id+'" '+(ready?'checked':'')+' '+(!canWrite?'disabled':'')+'> Objeto listo</label></div><div class="chosen-craft-body">'+g.recipes.map((r,i)=>{const prof=chosenCraftProfession(g.id,r.name);return '<div class="chosen-recipe"><div class="chosen-recipe-title"><span>'+r.name+'</span></div><div class="chosen-profession">Profesión: <strong>'+prof.name+'</strong> · <a href="'+prof.url+'" target="_blank" rel="noopener">ver craft en la wiki ↗</a></div><ul>'+r.items.map((item,j)=>{const parsed=chosenComponentRequired(item),key=g.id+":"+i+":"+j,have=Math.max(0,Number(profiles[activeProfile][chosenKey("component:"+key)]||0)),obtained=!!profiles[activeProfile][chosenKey("componentDone:"+key)],pct=parsed?Math.min(100,have/Math.max(1,parsed.amount)*100):0;return '<li class="chosen-component '+(obtained?'chosen-component-obtained':'')+'">'+chosenImageTag(item,30)+'<div class="chosen-component-main"><span>'+(parsed?parsed.name:item)+'</span>'+(parsed?'<div class="chosen-component-count"><label>Disponible <input type="number" min="0" max="9999999" step="1" inputmode="numeric" value="'+have+'" data-chosen-component="'+key+'" aria-label="Cantidad disponible de '+parsed.name+'" '+(!canWrite?'disabled':'')+'></label><span>/ '+parsed.amount.toLocaleString("es-CL")+' requeridos</span></div><div class="chosen-bar"><span style="width:'+pct+'%;background:'+(have>=parsed.amount?'#75d99b':'linear-gradient(90deg,#b58bff,#65d8d3)')+'"></span></div>':'')+'<label class="chosen-item-obtained"><input type="checkbox" data-chosen-item-done="'+key+'" '+(obtained?'checked':'')+' '+(!canWrite?'disabled':'')+'> Conseguido</label></div></li>'}).join("")+'</ul><div class="chosen-craft-note">'+r.profession+'</div><label><input type="checkbox" data-chosen-subcraft="'+g.id+":"+i+'" '+(profiles[activeProfile][chosenKey("subcraft:"+g.id+":"+i)]?'checked':'')+' '+(!canWrite?'disabled':'')+'> Componentes de esta receta reunidos / craft completado</label></div>'}).join("")+'</div></section>'}).join("");root.querySelectorAll("[data-chosen-craft]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][chosenKey("craft:"+el.dataset.chosenCraft)]=el.checked;save()}));root.querySelectorAll("[data-chosen-subcraft]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][chosenKey("subcraft:"+el.dataset.chosenSubcraft)]=el.checked;save()}));root.querySelectorAll("[data-chosen-component]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][chosenKey("component:"+el.dataset.chosenComponent)]=Math.max(0,Math.min(9999999,Math.floor(Number(el.value)||0)));save()}));root.querySelectorAll("[data-chosen-item-done]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][chosenKey("componentDone:"+el.dataset.chosenItemDone)]=el.checked;save()}));};
  renderGroup("chosenShipCrafts",chosenShipCrafts);renderGroup("chosenOutfitCrafts",chosenOutfitCrafts);
@@ -1674,15 +1674,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-L · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-L · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-L · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · error de conectividad Firebase: "+authErrorMessage(err);
 });
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
@@ -1693,7 +1693,7 @@ onValue(ref(db,"tracker"),snapshot=>{
  if(stamp){
   let profileCount=0,progressCount=0;
   for(const values of Object.values(cloud?.profiles||{})){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}
-  stamp.textContent="Diagnóstico de versión: 2026-10-20-L · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
+  stamp.textContent="Diagnóstico de versión: 2026-10-20-M · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
  }
  let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
  if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
@@ -1720,7 +1720,7 @@ onValue(ref(db,"tracker"),snapshot=>{
    setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
   }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  }
-},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-L · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
+},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
 document.getElementById("googleLogin").addEventListener("click",async()=>{const button=document.getElementById("googleLogin");button.disabled=true;setAuthStatus("Abriendo acceso seguro de Google…");googleProvider.setCustomParameters({prompt:"select_account"});try{await signInWithPopup(auth,googleProvider,browserPopupRedirectResolver);setAuthStatus("Acceso con Google completado. Sincronizando…");}catch(e){console.error("Error de inicio de sesión con Google:",e);if(e?.code==="auth/popup-blocked"||e?.code==="auth/operation-not-supported-in-this-environment"){try{setAuthStatus("El navegador bloqueó la ventana. Continuando en esta pestaña…");await signInWithRedirect(auth,googleProvider);}catch(redirectError){console.error(redirectError);setAuthStatus("No se pudo abrir Google: "+authErrorMessage(redirectError));button.disabled=false;}}else{setAuthStatus("No se pudo iniciar sesión: "+authErrorMessage(e));button.disabled=false;}}});
 getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con Google completado. Sincronizando…");}).catch(e=>{console.error("Error al volver del acceso de Google:",e);setAuthStatus("No se pudo completar el acceso: "+authErrorMessage(e));});
