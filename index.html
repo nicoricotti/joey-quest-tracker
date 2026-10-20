@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-Z</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-AA</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1355,6 +1355,41 @@ input[type=checkbox]{accent-color:#65d4b7}
 ::selection{background:#7ed8d044;color:#fff}
 @media(max-width:700px){main{padding:16px 12px 44px}.hero{padding:20px;border-radius:18px}.dashboard-home{border-radius:18px}.weekly-accordion>summary,.weekly-clones-accordion>summary{min-height:66px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Identidad visual por modo de juego: acentos distintos, misma interfaz */
+:root{--joey-accent:#9be564;--chosen-accent:#c5a4ff;--mountain-accent:#7ed8d0;--rotation-accent:#ffd166;--planner-accent:#8fbaff}
+#panelJoey{--section-accent:var(--joey-accent);--section-glow:#9be56412}
+#panelChosen{--section-accent:var(--chosen-accent);--section-glow:#c5a4ff14}
+#panelMountain{--section-accent:var(--mountain-accent);--section-glow:#7ed8d012}
+#rotationPanel{--section-accent:var(--rotation-accent);--section-glow:#ffd16612}
+#plannerPanel{--section-accent:var(--planner-accent);--section-glow:#8fbaff12}
+#weeklyPanel{--section-accent:var(--mountain-accent);--section-glow:#7ed8d012}
+#panelJoey,#panelChosen,#panelMountain,#rotationPanel,#plannerPanel,#weeklyPanel{position:relative;isolation:isolate}
+#panelJoey:before,#panelChosen:before,#panelMountain:before,#rotationPanel:before,#plannerPanel:before,#weeklyPanel:before{content:"";position:absolute;z-index:-1;inset:0;border-radius:inherit;background:radial-gradient(ellipse at 0 0,var(--section-glow),transparent 52%);pointer-events:none}
+#panelJoey .clan-head,#panelMountain .clan-head{border-left:3px solid var(--section-accent)}
+#panelJoey .clan-head .pill,#panelMountain .clan-head .pill{color:var(--section-accent);border-color:color-mix(in srgb,var(--section-accent) 42%,transparent);background:color-mix(in srgb,var(--section-accent) 7%,transparent)}
+#panelJoey .mission-controls,#panelMountain>.mission-controls{box-shadow:inset 3px 0 0 var(--section-accent)}
+#panelJoey .clan,#panelMountain .mountain-card{border-color:color-mix(in srgb,var(--section-accent) 23%,#34465d);transition:border-color .18s ease,box-shadow .18s ease}
+#panelJoey .clan:hover,#panelMountain .mountain-card:hover{border-color:color-mix(in srgb,var(--section-accent) 55%,#34465d);box-shadow:0 10px 26px #03070d35}
+#panelChosen .chosen-hero{border-color:#665486;background:radial-gradient(circle at 100% 0,#c5a4ff28,transparent 40%),linear-gradient(135deg,#1b2a40,#29213d 58%,#172f3a)}
+#panelChosen .chosen-chapter{border-color:#4b4267}
+#panelChosen .chosen-chapter-head{background:linear-gradient(110deg,#292442,#1a2939)}
+#panelChosen .chosen-chapter-number{color:#d8c5ff;border-color:#76649c;background:#352c50}
+#panelChosen .chosen-chapter-body{background:linear-gradient(145deg,#171b2b,#111925)}
+#panelMountain .mountain-card .mountain-card-head{border-bottom-color:#2d5558}
+#panelMountain .mountain-card .mountain-progress{accent-color:var(--mountain-accent)}
+#rotationPanel .rotation-week-card{border-top:2px solid color-mix(in srgb,var(--rotation-accent) 38%,#34465d)}
+#rotationPanel .rotation-week-card.current{border-color:var(--rotation-accent);background:radial-gradient(circle at 100% 0,#ffd16618,transparent 45%),linear-gradient(145deg,#2a2b2a,#111722)}
+#rotationPanel .rotation-week-card.selected{box-shadow:inset 0 0 0 2px #ffd16655,0 8px 20px #03070d25}
+#rotationPanel .rotation-week-date{color:#ffe09a}
+#plannerPanel .planner-stat{border-top:2px solid #8fbaff88;background:linear-gradient(145deg,#1c2b42,#111a27)}
+#plannerPanel .planner-task-type{border-color:#526d91;color:#b7d1ff;background:#192a41}
+#weeklyPanel .weekly-accordion>summary,#weeklyPanel .weekly-clones-accordion>summary{border-left:3px solid #7ed8d0}
+#weeklyPanel .weekly-clones-content .weekly-clone-accordion[open]{border-color:#568a87}
+/* Progreso y estados con una codificación de color común */
+.bar,.progress-track{overflow:hidden}
+.bar>span,.progress-fill{transition:width .25s ease}
+@media(prefers-reduced-motion:reduce){.bar>span,.progress-fill{transition:none}}
 </style>
 </head>
 <body><div class="app-shell">
