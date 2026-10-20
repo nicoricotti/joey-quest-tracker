@@ -1553,6 +1553,24 @@ img{image-rendering:auto}
  html{scroll-behavior:auto!important}
  .side-link,.tab,.dashboard-pending-action{transition:none!important}
 }
+
+/* Tarjetas de objetivos: identidad visual por sección, sin alterar el estado de las misiones. */
+.dashboard-pending-item{position:relative;overflow:hidden;text-align:left;transition:border-color .16s ease,background .16s ease,transform .16s ease}
+.dashboard-pending-item:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--pending-accent,#8b9bb0)}
+.dashboard-pending-item--weekly{--pending-accent:#c6a5ff;background:linear-gradient(110deg,#211b31,#101a27)}
+.dashboard-pending-item--mountain{--pending-accent:#70d7c9;background:linear-gradient(110deg,#132a2c,#101a27)}
+.dashboard-pending-item--joey{--pending-accent:#f2c56c;background:linear-gradient(110deg,#30291a,#101a27)}
+.dashboard-pending-item--chosen{--pending-accent:#a8a0ff;background:linear-gradient(110deg,#22203a,#101a27)}
+.dashboard-pending-kind{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:11px;background:color-mix(in srgb,var(--pending-accent) 15%,#101a27);border:1px solid color-mix(in srgb,var(--pending-accent) 45%,transparent);color:var(--pending-accent);font-size:25px;font-weight:800}
+.dashboard-pending-copy{flex:1;min-width:0}
+.dashboard-pending-item strong{font-size:12px;overflow-wrap:anywhere}
+.dashboard-pending-item small{line-height:1.35}
+.dashboard-pending-arrow{color:var(--pending-accent,#9daec2);font-size:17px;flex-shrink:0;opacity:.8}
+.dashboard-pending-item:hover{transform:translateY(-1px);border-color:var(--pending-accent,#8b9bb0)}
+.dashboard-pending-item:focus-visible{outline:2px solid var(--pending-accent,#8b9bb0);outline-offset:2px}
+@media(max-width:430px){.dashboard-pending-item{gap:8px;padding:8px}.dashboard-pending-item img,.dashboard-pending-kind{width:38px;height:38px}.dashboard-pending-kind{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.dashboard-pending-item{transition:none}}
+
 </style>
 </head>
 <body><div class="app-shell">
@@ -1895,7 +1913,7 @@ const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)
  // Intercalar categorías: las misiones mensuales/semana aparecen pronto, sin desplazar por completo las demás.
  const taskGroups=[weeklyPending,mountainPending,joeyPending,chosenPending];
  for(let round=0;round<2;round++)taskGroups.forEach(group=>{if(group[round])tasks.push(group[round]);});
- document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action" data-dashboard-target="'+t.target+'" aria-label="Ir a '+t.name+' en '+t.destination+'">'+(t.src?'<img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.target==="mountain"?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\\'1\\';this.src=\\'"+t.fallback+"\\';}else{this.style.visibility=\\'hidden\\';}":"this.style.visibility=\\'hidden\\'"))+'">':'')+'<span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
+ document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action dashboard-pending-item--'+t.target+'" data-dashboard-target="'+t.target+'" aria-label="Ir a '+t.name+' en '+t.destination+'">'+(t.src?'<img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.target==="mountain"?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\\'1\\';this.src=\\'"+t.fallback+"\\';}else{this.style.visibility=\\'hidden\\';}":"this.style.visibility=\\'hidden\\'"))+'">':'<span class="dashboard-pending-kind" aria-hidden="true">'+(t.target==="weekly"?"◷":"✦")+'</span>')+'<span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
  document.getElementById("dashPendingCount").textContent=String(tasks.length);
  applyDashboardPreferences();
 }
