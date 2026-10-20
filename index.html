@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-M</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-N</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1057,7 +1057,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-M · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-N · esperando respuesta de Firebase…</p>
 <script>
 (function(){
  window.addEventListener("error",function(event){
@@ -1065,19 +1065,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-10-20-N · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-10-20-N · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-10-20-M · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-10-20-N · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -1149,7 +1149,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-N · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -1315,7 +1315,7 @@ const rotationWeeks={1:["Bisharp","Darmanitan","Shiny Bronzong","Shiny Sylveon"]
 const ROTATION_ANCHOR=Date.parse("2026-10-16T10:40:00Z"); // 16/10/2026 07:40 en Chile continental
 function currentRotation(){const elapsed=Math.floor((Date.now()-ROTATION_ANCHOR)/(7*24*60*60*1000));const week=((7+elapsed)%9+9)%9+1;const start=new Date(ROTATION_ANCHOR+elapsed*7*24*60*60*1000);const end=new Date(start.getTime()+7*24*60*60*1000);const fmt=d=>new Intl.DateTimeFormat("es-CL",{timeZone:"America/Santiago",day:"2-digit",month:"2-digit"}).format(d);return {week,start,end,range:fmt(start)+" – "+fmt(end)};}
 const rotationDex={"Bisharp":625,"Darmanitan":555,"Shiny Bronzong":437,"Shiny Sylveon":700,"Shiny Ferrothorn":598,"Excadrill":530,"Mega Absol":359,"Mega Excadrill":530,"Heatmor":631,"Lickilicky":463,"Mega Altaria":334,"Mega Steelix":208,"Emolga":587,"Drapion":452,"Conkeldurr":534,"Shiny Glaceon":471,"Breloom":286,"Ambipom":424,"Giant Galvantula":596,"Shiny Leafeon":470,"Crustle":558,"Probopass":476,"Heatran":485,"Shiny Manectric":310};
-function rotationPokemonImage(name){const id=rotationDex[name];const base=name.replace(/^(Shiny |Mega |Giant )/,"");const file=(id?id+"-"+base:base)+".png";return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(file).replace(/%20/g,"_");}
+function rotationPokemonImage(name){if(!/^(Shiny |Mega |Giant )/.test(name))return rotationArtworkImage(name);const id=rotationDex[name];const base=name.replace(/^(Shiny |Mega |Giant )/,"");const file=(id?id+"-"+base:base)+".png";return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(file).replace(/%20/g,"_");}
 function rotationArtworkImage(name){const base=name.replace(/^(Shiny |Mega |Giant )/,"");const id=rotationDex[name]||dexIds[base]||dexIds[name]||0;return "https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/"+id+".png";}
 function rotationImageError(img){const name=img.dataset.pokemon||"";const stage=Number(img.dataset.fallbackStage||0);if(stage===0){img.dataset.fallbackStage="1";img.src=img.src.replace(/\.png(?:\?.*)?$/i,".gif");return;}if(stage===1){img.dataset.fallbackStage="2";img.src=rotationArtworkImage(name);return;}if(stage===2){img.dataset.fallbackStage="3";const base=name.replace(/^(Shiny |Mega |Giant )/,"");img.src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+(rotationDex[name]||dexIds[base]||dexIds[name]||0)+".png";return;}img.onerror=null;img.style.visibility="hidden";}
 function rotationImageMarkup(name){const obj=mountainItems.find(x=>x[0].replace(/^DZ /,"")===name);const url=rotationPokemonImage(name);const item=obj?'<img class="rotation-item-icon" src="'+itemImageUrl(obj[1])+'" alt="'+obj[1]+'" loading="lazy" onerror="if(!this.dataset.gifTried){this.dataset.gifTried=\'1\';this.src=this.src.replace(\'.png\',\'.gif\')}else{this.style.display=\'none\'}" title="Item: '+obj[1]+'">':"";return '<div class="rotation-mini"><img src="'+url+'" data-pokemon="'+name+'" alt="'+name+'" loading="lazy" onerror="rotationImageError(this)" title="'+name+'"><span>'+name+'</span>'+item+'</div>';}
@@ -1385,7 +1385,7 @@ function render(){
  root.querySelectorAll('input[type=checkbox]').forEach(el=>{el.disabled=!canWrite;el.addEventListener("change",e=>{
   if(!canWrite)return;
   const id=e.target.dataset.id, selected=items.find(x=>x.id===id);
-  if(selected)items.filter(x=>x.name===selected.name).forEach(x=>{if(e.target.checked)profiles[activeProfile][x.id]=true;else delete profiles[activeProfile][x.id];});
+  if(selected)items.filter(x=>x.name===selected.name).forEach(x=>{profiles[activeProfile][x.id]=!!e.target.checked;});
   save();
   if(selected&&e.target.checked){const unique=[...new Set(all().map(x=>x.name))];const captured=unique.filter(name=>all().some(x=>x.name===name&&state(x.id))).length;if(captured===unique.length)showAchievement("🎉 ¡Todas las capturas únicas de Joey Quest están completadas!");}
  });});
@@ -1674,15 +1674,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-N · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-N · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-M · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-N · error de conectividad Firebase: "+authErrorMessage(err);
 });
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
@@ -1693,7 +1693,7 @@ onValue(ref(db,"tracker"),snapshot=>{
  if(stamp){
   let profileCount=0,progressCount=0;
   for(const values of Object.values(cloud?.profiles||{})){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}
-  stamp.textContent="Diagnóstico de versión: 2026-10-20-M · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
+  stamp.textContent="Diagnóstico de versión: 2026-10-20-N · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
  }
  let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
  if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
@@ -1720,7 +1720,7 @@ onValue(ref(db,"tracker"),snapshot=>{
    setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
   }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  }
-},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-M · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
+},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-N · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
 document.getElementById("googleLogin").addEventListener("click",async()=>{const button=document.getElementById("googleLogin");button.disabled=true;setAuthStatus("Abriendo acceso seguro de Google…");googleProvider.setCustomParameters({prompt:"select_account"});try{await signInWithPopup(auth,googleProvider,browserPopupRedirectResolver);setAuthStatus("Acceso con Google completado. Sincronizando…");}catch(e){console.error("Error de inicio de sesión con Google:",e);if(e?.code==="auth/popup-blocked"||e?.code==="auth/operation-not-supported-in-this-environment"){try{setAuthStatus("El navegador bloqueó la ventana. Continuando en esta pestaña…");await signInWithRedirect(auth,googleProvider);}catch(redirectError){console.error(redirectError);setAuthStatus("No se pudo abrir Google: "+authErrorMessage(redirectError));button.disabled=false;}}else{setAuthStatus("No se pudo iniciar sesión: "+authErrorMessage(e));button.disabled=false;}}});
 getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con Google completado. Sincronizando…");}).catch(e=>{console.error("Error al volver del acceso de Google:",e);setAuthStatus("No se pudo completar el acceso: "+authErrorMessage(e));});
