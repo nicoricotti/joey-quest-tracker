@@ -1215,7 +1215,7 @@ function save(options={}){
    const keys=Object.keys(profile);
    if(keys.length){
     for(const key of keys)updates["profiles/"+activeProfile+"/"+key]=profile[key];
-   }else if(!cloudHasData){
+   }else{
     // Permite crear un perfil vacío sin reemplazar perfiles existentes.
     updates["profiles/"+activeProfile]={};
    }
@@ -1570,7 +1570,7 @@ document.getElementById("renameProfile").addEventListener("click",renameProfile)
 document.getElementById("deleteProfile").addEventListener("click",deleteProfile);
 function exportProgress(){const blob=new Blob([JSON.stringify({profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pxg-mission-tracker-progreso.json";a.click();URL.revokeObjectURL(a.href);}
 function importProgress(fileInput){fileInput.click();}
-async function handleImport(e){const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Importar puede reemplazar el progreso actual. Guardaré una copia de seguridad antes de continuar. ¿Quieres seguir?"))return;createSafetyBackup();if(obj.profiles){profiles=obj.profiles;Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});profileNames={...profileNames,...(obj.profileNames||{})};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save();alert("Progreso importado. Guardé una copia de seguridad local previa por si necesitas recuperar el estado anterior.")}catch(err){alert("No pude leer ese archivo de progreso.")}finally{e.target.value="";}}
+async function handleImport(e){const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Importar puede reemplazar el progreso actual. Guardaré una copia de seguridad antes de continuar. ¿Quieres seguir?"))return;createSafetyBackup();if(obj.profiles){profiles=obj.profiles;Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});profileNames={...profileNames,...(obj.profileNames||{})};activeProfile=obj.activeProfile||activeProfile;}else if(obj.progress){Object.keys(obj.progress).forEach(id=>{const x=obj.progress[id];if(x?.me)profiles.nico[id]=true;if(x?.partner)profiles.pareja[id]=true;});}else{profiles[activeProfile]=obj;}save({replaceActiveProfile:true});alert("Progreso importado. Guardé una copia de seguridad local previa por si necesitas recuperar el estado anterior.")}catch(err){alert("No pude leer ese archivo de progreso.")}finally{e.target.value="";}}
 ["exportJoey","exportMountain"].forEach(id=>document.getElementById(id).addEventListener("click",exportProgress));
 [["importBtnJoey","importFileJoey"],["importBtnMountain","importFileMountain"]].forEach(([buttonId,fileId])=>{const file=document.getElementById(fileId);document.getElementById(buttonId).addEventListener("click",()=>importProgress(file));file.addEventListener("change",handleImport);});
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
