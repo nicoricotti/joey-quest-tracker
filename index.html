@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-AE</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-AF</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1522,6 +1522,14 @@ img{image-rendering:auto}
 @media(prefers-reduced-motion:reduce){
  .dashboard-home-grid>.dashboard-card,.dashboard-card .bar>div,.dashboard-pokemon-mini,.dashboard-pending-item{transition:none}
 }
+
+/* Objetivos del resumen como accesos directos reales */
+.dashboard-pending-action{width:100%;text-align:left;color:var(--text);font:inherit;cursor:pointer;appearance:none}
+.dashboard-pending-action .dashboard-pending-copy{display:block;flex:1;min-width:0}
+.dashboard-pending-action .dashboard-pending-arrow{display:grid;place-items:center;flex-shrink:0;width:27px;height:27px;border:1px solid #3c5066;border-radius:8px;color:#9be564;font-size:15px;transition:transform .16s ease,background .16s ease}
+.dashboard-pending-action:hover .dashboard-pending-arrow{transform:translate(2px,-2px);background:#263a30}
+.dashboard-pending-action:focus-visible{outline:2px solid #9be564;outline-offset:2px}
+@media(max-width:430px){.dashboard-pending-action .dashboard-pending-arrow{width:23px;height:23px}}
 </style>
 </head>
 <body><div class="app-shell">
@@ -1858,10 +1866,22 @@ const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)
  const tasks=[];
  pending.slice(0,4).forEach(x=>tasks.push({name:x.name,detail:"Joey Quest · Captura pendiente",src:spriteUrl(x.name),fallback:spriteFallback(x.name)}));
  mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15).slice(0,2).forEach(([d,item])=>{const name=d.replace(/^DZ /,"");tasks.push({name,detail:"Mountain · "+item,src:rotationPokemonImage(name),fallback:rotationArtworkImage(name)});});
- document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<div class="dashboard-pending-item"><img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.detail.startsWith("Mountain")?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.visibility=\'hidden\';}":"this.style.visibility=\'hidden\'"))+'"><div><strong>'+t.name+'</strong><small>'+t.detail+'</small></div></div>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
+ document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action" data-dashboard-target="'+(t.detail.startsWith("Mountain")?"mountain":"joey")+'" aria-label="Ir a '+t.name+' en '+(t.detail.startsWith("Mountain")?"Dimensional Mountain":"Joey Quest")+'"><img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.detail.startsWith("Mountain")?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.visibility=\'hidden\';}":"this.style.visibility=\'hidden\'"))+'"><span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
  document.getElementById("dashPendingCount").textContent=String(tasks.length);
  applyDashboardPreferences();
 }
+
+/* Accesos directos desde objetivos pendientes del resumen */
+document.getElementById("dashPendingList").addEventListener("click",e=>{
+ const button=e.target.closest("[data-dashboard-target]");
+ if(!button)return;
+ const target=button.dataset.dashboardTarget;
+ if(target==="mountain"){plannerSetView("mountain");setTab("mountain");}
+ else{plannerSetView("joey");setTab("joey");}
+ document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===target));
+ const destination=target==="mountain"?document.getElementById("panelMountain"):document.getElementById("panelJoey");
+ destination?.scrollIntoView({behavior:"smooth",block:"start"});
+});
 function render(){
  const q=document.getElementById("searchJoey").value.trim().toLowerCase(),f=document.getElementById("filterJoey").value;
  const items=all();
