@@ -976,6 +976,53 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none}
  .side-link,.sidebar-brand{transition:none!important}
 }
 
+
+/* PXG Tracker — final polish: dashboard, inventory and planner */
+#appMain>.dashboard{gap:16px}
+.dashboard-grid,.dashboard-quests{gap:14px}
+.dashboard-card{min-width:0;border:1px solid #2d4054;border-radius:16px;background:linear-gradient(145deg,#182433,#131c28)}
+.dashboard-section-title{gap:12px}
+.dashboard-chip{border:1px solid #35534f;background:#122b2b;color:#b6f4df;font-variant-numeric:tabular-nums}
+.dashboard-collection-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px}
+.dashboard-sprite-group{min-width:0}
+.dashboard-sprite-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dashboard-sprite-heading span{font-variant-numeric:tabular-nums}
+.dashboard-missing{border:1px solid #293a4b;line-height:1.5}
+#dashCollectionPreview>*,#dashWeeklyPreview>*{min-width:0}
+.planner-panel{min-width:0}
+.planner-hero{border:1px solid #34495e;background:radial-gradient(ellipse at 100% 0%,#52dfc014,transparent 42%),linear-gradient(135deg,#1d2b3d,#141d29);box-shadow:0 12px 30px #0002}
+.planner-summary{display:flex;flex-wrap:wrap;gap:10px}
+.planner-layout{align-items:start;gap:14px}
+.planner-card{min-width:0;border:1px solid #2e4357;border-radius:15px;background:linear-gradient(145deg,#182433,#131c28);box-shadow:0 7px 22px #0002}
+.planner-card-heading{gap:12px}
+.planner-week-line{gap:10px}
+.planner-week-line select,.weekly-controls input,.weekly-controls select{min-width:0;max-width:100%}
+.planner-dungeons,.planner-tasks,.weekly-groups{min-width:0}
+.planner-filter{border-radius:9px}
+.planner-filter.active{border-color:#3e8278;background:#173a39;color:#d8fff5}
+.weekly-summary{display:flex;flex-wrap:wrap;gap:8px}
+.weekly-checklist-card{overflow:hidden}
+#rotationPanel .rotation-calendar{gap:9px}
+#rotationPanel .rotation-list,#panelJoey #clans,#panelMountain .mountain-grid,#panelJoey .clan,#panelMountain .mountain-card{min-width:0}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #52dfc0;outline-offset:2px}
+@media(max-width:700px){
+ .dashboard-grid,.dashboard-quests{gap:10px}
+ .dashboard-card,.planner-card{border-radius:13px}
+ .dashboard-collection-preview{grid-template-columns:repeat(auto-fit,minmax(62px,1fr));gap:6px}
+ .planner-layout{gap:10px}
+ .planner-hero{padding:17px}
+ .planner-card{padding:14px}
+ .weekly-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+ .weekly-controls input,.weekly-controls select{width:100%}
+ #rotationPanel .rotation-calendar{gap:6px}
+}
+@media(max-width:390px){
+ .dashboard-collection-preview{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .planner-card-heading{align-items:flex-start}
+ .planner-summary{gap:7px}
+}
+@media(prefers-reduced-motion:reduce){.dashboard-card,.bar div{transition:none!important}}
+
 </style>
 </head>
 <body><div class="app-shell">
