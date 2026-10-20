@@ -616,6 +616,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .planner-filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px;padding:4px;background:#101722;border:1px solid #303d52;border-radius:12px}
 .planner-filter{flex:1;padding:8px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#aabbd2;font-size:12px}
 .planner-filter.active{background:#29384b;border-color:#465873;color:#eaf2ff}
+.weekly-checklist-card{margin-top:13px}
+.weekly-controls{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:8px;margin:12px 0}
+.weekly-controls input,.weekly-controls select{width:100%;min-width:0;min-height:42px;border:1px solid #40516b;border-radius:10px;background:#101724;color:var(--text);padding:10px 12px;font:inherit}
+.weekly-summary{font-size:12px;color:#aabbd2;margin:0 0 10px}
+.weekly-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.weekly-group{min-width:0;border:1px solid #394a63;border-radius:14px;background:#101824;overflow:hidden}
+.weekly-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border-bottom:1px solid #34445b;background:#1b293b}
+.weekly-group-head h4{margin:0;font-size:14px}
+.weekly-group-actions{display:flex;gap:5px;flex-wrap:wrap}
+.weekly-group-actions button{font-size:11px;padding:6px 8px;border-radius:8px}
+.weekly-group-rows{padding:5px 11px}
+.weekly-task{display:flex;align-items:flex-start;gap:9px;padding:10px 1px;border-bottom:1px solid #34445b99;min-width:0}
+.weekly-task:last-child{border-bottom:0}
+.weekly-task input{width:18px;height:18px;flex-shrink:0;margin:2px 0 0;accent-color:var(--accent);cursor:pointer}
+.weekly-task-main{min-width:0;flex:1}
+.weekly-task-main strong{display:block;font-size:13px;line-height:1.35}
+.weekly-task-main small{display:block;color:#9eafc7;font-size:11px;line-height:1.45;margin-top:3px}
+.weekly-task-main a{color:var(--accent2);font-size:11px;text-decoration:none}
+.weekly-task-main a:hover{text-decoration:underline}
+.weekly-task.is-done .weekly-task-main strong{text-decoration:line-through;color:#a5b69a}
+.weekly-task.is-done{opacity:.78}
+.weekly-monthly{color:var(--warn);font-size:10px;border:1px solid #806a3a;border-radius:999px;padding:3px 6px;white-space:nowrap}
+.weekly-empty{padding:16px;text-align:center;color:#9eafc7;font-size:12px;grid-column:1/-1}
+@media(max-width:760px){.weekly-groups{grid-template-columns:1fr}.weekly-controls{grid-template-columns:1fr}.weekly-group-head{align-items:flex-start;flex-direction:column}}
 .planner-tasks{display:grid;gap:7px}
 .planner-task{display:flex;align-items:center;gap:11px;min-width:0;padding:10px 11px;border:1px solid #34445b;border-radius:12px;background:#101824}
 .planner-task-icon{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;border-radius:10px;background:#202c3d;border:1px solid #3b4c63;font-size:18px}
@@ -682,7 +706,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div id="plannerTasks" class="planner-tasks"></div>
     </section>
   </div>
-  <p class="planner-footnote">Las tareas se calculan desde el perfil activo. Marcar un objetivo aquí no altera datos: usa los controles de la misión correspondiente para actualizar tu progreso.</p>
+  <section class="planner-card weekly-checklist-card" aria-label="Misiones semanales de Nightmare World">
+    <div class="planner-card-heading"><div><span class="planner-eyebrow">RESET SEMANAL · LUNES 07:40 BRT</span><h3>Checklist semanal de Nightmare World</h3></div><span class="planner-icon">☑</span></div>
+    <p class="planner-muted">Marca cada objetivo individualmente o completa una categoría con un solo botón. El progreso se guarda en el perfil activo y se separa por semana.</p>
+    <div class="weekly-controls">
+      <input id="weeklySearch" type="search" placeholder="Buscar NPC, Pokémon o misión…" aria-label="Buscar misiones semanales">
+      <select id="weeklyFilter" aria-label="Filtrar misiones semanales"><option value="all">Todas las tareas</option><option value="pending">Pendientes</option><option value="done">Completadas</option></select>
+    </div>
+    <div class="weekly-summary" id="weeklySummary"></div>
+    <div id="weeklyChecklist" class="weekly-groups"></div>
+  </section>
+  <p class="planner-footnote">Las tareas de capturas y Mountain se calculan desde el perfil activo. La checklist semanal guarda su propio progreso y se reinicia al comenzar una nueva semana de juego.</p>
 </section>
 <div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
 <div class="footer">
@@ -867,6 +901,82 @@ function plannerSetView(name){
  document.getElementById("panelJoey").hidden=planner||name==="mountain";
  document.getElementById("panelMountain").hidden=planner||name!=="mountain";
 }
+const weeklyTaskGroups=[
+ {id:"nw-hunts",title:"Misiones semanales NW",tasks:[
+  {id:"misty",name:"Misty",objective:"Completar la misión semanal y derrotar al jefe que protege la mochila.",requirements:"Nivel 300+; zona asignada según nivel.",url:"https://wiki.pokexgames.com/Nightmare_Misty"},
+  {id:"lorelei",name:"Lorelei",objective:"Derrotar 360 Pokémon del tipo elemental elegido.",requirements:"Nivel 400+ · Nightmare Level 35+.",url:"https://wiki.pokexgames.com/Nightmare_Lorelei"},
+  {id:"barry",name:"Barry",objective:"Derrotar 250 Pokémon Mecha.",requirements:"Nivel 400+ · Nightmare Level 50+ · Mecha Outfit.",url:"https://wiki.pokexgames.com/Nightmare_Barry"},
+  {id:"zedd",name:"Zedd",objective:"Completar las tareas de la ruta semanal y derrotar a los soldados asignados.",requirements:"Nivel 500+ · Nightmare Level 60+ · Sarkies Quest.",url:"https://wiki.pokexgames.com/Miss%C3%A3o_Semanal_NPC_Zedd"},
+  {id:"sidis",name:"Sidis S-3",objective:"Derrotar 75 Alpha Subjects.",requirements:"Nivel 550+ · Nightmare Level 60+ · requisito de Sarkies Quest.",url:"https://wiki.pokexgames.com/NPC_Sidis_S-3"}
+ ]},
+ {id:"terrors",title:"Nightmare Terrors",tasks:[
+  {id:"terror-riza",name:"Nightmare Terror — Riza",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Riza"},
+  {id:"terror-gyakkyo",name:"Nightmare Terror — Gyakkyo",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Gyakkyo"},
+  {id:"terror-gama",name:"Nightmare Terror — Gama",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Gama"},
+  {id:"terror-ptera",name:"Nightmare Terror — Ptera",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Ptera"},
+  {id:"terror-kitsune",name:"Nightmare Terror — Kitsune",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Kitsune"},
+  {id:"terror-kame",name:"Nightmare Terror — Kame",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Kame"},
+  {id:"terror-kairiki",name:"Nightmare Terror — Kairiki",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Kairiki"},
+  {id:"terror-seishin-yurei",name:"Nightmare Terror — Seishin & Yurei",objective:"Derrotar a Seishin & Yurei.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Seishin_%26_Yurei"},
+  {id:"terror-raito",name:"Nightmare Terror — Raito",objective:"Derrotar al Nightmare Terror.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror_-_Raito"}
+ ]},
+ {id:"archaeologist",title:"Arqueólogo",tasks:[
+  {id:"archaeologist-weekly",name:"Semanal de Arqueólogo",objective:"Completar las dungeons semanales y reunir 5 Professor Oak's Research Journals.",requirements:"Revisar requisitos y rotación de dungeons en la wiki.",url:"https://wiki.pokexgames.com/index.php/Arque%C3%B3logo"}
+ ]}
+];
+const monthlyTerror={id:"terror-unknown",name:"Nightmare Terror — Desconocido",objective:"Derrotar al Terror mensual.",requirements:"Misión mensual; no se reinicia con las semanales.",url:"https://wiki.pokexgames.com/index.php/Nightmare_Terror"};
+function weeklyResetKey(monthly=false){
+ const now=new Date(),parts=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(now);
+ const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+ let reset=new Date(Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day),Number(p.hour),Number(p.minute)));
+ if(monthly){reset.setUTCDate(1);if(Number(p.day)<1)reset.setUTCMonth(reset.getUTCMonth()-1);return "monthly:"+reset.toISOString().slice(0,7);}
+ const weekday=reset.getUTCDay();reset.setUTCDate(reset.getUTCDate()-((weekday+6)%7));
+ if(Number(p.hour)<7||(Number(p.hour)===7&&Number(p.minute)<40))reset.setUTCDate(reset.getUTCDate()-7);
+ reset.setUTCHours(7,40,0,0);
+ return "weekly:"+reset.toISOString().slice(0,10);
+}
+function weeklyStateKey(taskId){return "weekly-check:"+weeklyResetKey(taskId==="terror-unknown")+":"+taskId;}
+function renderWeeklyChecklist(){
+ const root=document.getElementById("weeklyChecklist");if(!root)return;
+ const q=(document.getElementById("weeklySearch").value||"").trim().toLocaleLowerCase("es");
+ const filter=document.getElementById("weeklyFilter").value;
+ const groups=weeklyTaskGroups.map(g=>({...g,tasks:g.tasks.filter(t=>{
+  const done=!!profiles[activeProfile][weeklyStateKey(t.id)];
+  const hay=(t.name+" "+t.objective+" "+(t.requirements||"")).toLocaleLowerCase("es");
+  return (!q||hay.includes(q))&&(filter==="all"||(filter==="done"&&done)||(filter==="pending"&&!done));
+ })})).filter(g=>g.tasks.length);
+ const monthlyDone=!!profiles[activeProfile][weeklyStateKey(monthlyTerror.id)];
+ const monthlyHay=(monthlyTerror.name+" "+monthlyTerror.objective+" "+monthlyTerror.requirements).toLocaleLowerCase("es");
+ if((!q||monthlyHay.includes(q))&&(filter==="all"||(filter==="done"&&monthlyDone)||(filter==="pending"&&!monthlyDone))){
+  let g=groups.find(x=>x.id==="terrors");if(!g){g={id:"terrors",title:"Nightmare Terrors",tasks:[]};groups.push(g);}
+  g.tasks.push(monthlyTerror);
+ }
+ const allTasks=weeklyTaskGroups.flatMap(g=>g.tasks).concat(monthlyTerror);
+ const weeklyTasks=allTasks.filter(t=>t.id!==monthlyTerror.id);
+ const weeklyDone=weeklyTasks.filter(t=>!!profiles[activeProfile][weeklyStateKey(t.id)]).length;
+ document.getElementById("weeklySummary").textContent=weeklyDone+" / "+weeklyTasks.length+" tareas semanales completadas · Terror mensual: "+(monthlyDone?"completado":"pendiente");
+ root.innerHTML=groups.map(g=>{
+  const total=g.tasks.length,done=g.tasks.filter(t=>!!profiles[activeProfile][weeklyStateKey(t.id)]).length;
+  const controls='<div class="weekly-group-actions"><button type="button" data-weekly-group="'+g.id+'" data-weekly-action="complete">Marcar todos</button><button type="button" data-weekly-group="'+g.id+'" data-weekly-action="clear">Desmarcar</button></div>';
+  return '<section class="weekly-group"><div class="weekly-group-head"><div><h4>'+g.title+'</h4><small class="planner-muted">'+done+' / '+total+' completadas</small></div>'+controls+'</div><div class="weekly-group-rows">'+g.tasks.map(t=>{
+   const key=weeklyStateKey(t.id),isDone=!!profiles[activeProfile][key];
+   return '<label class="weekly-task'+(isDone?' is-done':'')+'"><input type="checkbox" data-weekly-task="'+t.id+'" '+(isDone?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="weekly-task-main"><strong>'+t.name+'</strong><small>'+t.objective+(t.requirements?' · '+t.requirements:'')+'</small><a href="'+t.url+'" target="_blank" rel="noopener noreferrer">Consultar wiki ↗</a></span>'+(t.id===monthlyTerror.id?'<span class="weekly-monthly">Mensual</span>':'')+'</label>';
+  }).join("")+'</div></section>';
+ }).join("")||'<div class="weekly-empty">No hay tareas que coincidan con la búsqueda y el filtro.</div>';
+ root.querySelectorAll("[data-weekly-task]").forEach(el=>el.addEventListener("change",()=>{
+  if(!canWrite){el.checked=!el.checked;return;}
+  const key=weeklyStateKey(el.dataset.weeklyTask);
+  if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];
+  save();
+ }));
+ root.querySelectorAll("[data-weekly-action]").forEach(btn=>btn.addEventListener("click",()=>{
+  if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}
+  const group=weeklyTaskGroups.find(g=>g.id===btn.dataset.weeklyGroup);
+  const tasks=(group?group.tasks:[]).concat(btn.dataset.weeklyGroup==="terrors"?[monthlyTerror]:[]);
+  tasks.forEach(t=>{const key=weeklyStateKey(t.id);if(btn.dataset.weeklyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});
+  save();
+ }));
+}
 function renderPlanner(){
  const current=currentRotation(),weekSelect=document.getElementById("plannerWeek");
  if(!weekSelect.dataset.manual)weekSelect.value=String(current.week);
@@ -896,6 +1006,7 @@ function renderPlanner(){
  missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]["mountain-ready:"+d];tasks.push({type:"mountain",icon:"⛰️",name:d.replace(/^DZ /,""),detail:item+" · Dungeon "+runs+"/15 · Objeto "+(ready?"marcado listo":"pendiente"),tag:"Mountain"});});
  const shown=tasks.filter(t=>filter==="all"||t.type===filter);
  document.getElementById("plannerTasks").innerHTML=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon">'+t.icon+'</span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join("")||(filter==="all"?"<div class=\"planner-empty\">¡No tienes objetivos pendientes! Buen trabajo.</div>":"<div class=\"planner-empty\">No hay tareas pendientes en esta categoría.</div>");
+ renderWeeklyChecklist();
 }
 function activateSidebar(name){
  document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));
@@ -910,6 +1021,8 @@ function activateSidebar(name){
 
 document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.addEventListener("click",()=>activateSidebar(b.dataset.nav)));
 
+document.getElementById("weeklySearch").addEventListener("input",renderWeeklyChecklist);
+document.getElementById("weeklyFilter").addEventListener("change",renderWeeklyChecklist);
 document.getElementById("plannerWeek").addEventListener("change",e=>{e.target.dataset.manual="1";renderPlanner();});
 document.querySelectorAll("[data-planner-filter]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("[data-planner-filter]").forEach(b=>b.classList.toggle("active",b===btn));renderPlanner();}));
 document.getElementById("plannerOpenRotation").addEventListener("click",()=>{activateSidebar("rotation");document.getElementById("rotationContent").hidden=false;document.getElementById("toggleRotation").setAttribute("aria-expanded","true");document.getElementById("toggleRotation").textContent="Ocultar calendario −";});
