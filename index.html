@@ -1530,6 +1530,29 @@ img{image-rendering:auto}
 .dashboard-pending-action:hover .dashboard-pending-arrow{transform:translate(2px,-2px);background:#263a30}
 .dashboard-pending-action:focus-visible{outline:2px solid #9be564;outline-offset:2px}
 @media(max-width:430px){.dashboard-pending-action .dashboard-pending-arrow{width:23px;height:23px}}
+
+/* Navegación activa y accesible: refuerzo de feedback sin cambiar el flujo de vistas. */
+.side-link:focus-visible,.tab:focus-visible,.dashboard-pending-action:focus-visible{
+ outline:2px solid #7ce4dd;
+ outline-offset:3px;
+}
+.side-link[aria-current="page"]{
+ background:linear-gradient(100deg,#273c32,#202d36);
+ border-color:#45664b;
+ color:#d8ffc3;
+ box-shadow:inset 3px 0 #a6ef70;
+}
+.side-link[aria-current="page"] .side-icon{color:#b9f58b}
+@media(max-width:700px){
+ .app-sidebar{scrollbar-width:thin;scrollbar-color:#42536b transparent}
+ .side-link{scroll-snap-align:start}
+ .app-sidebar{scroll-snap-type:x proximity}
+ .side-link[aria-current="page"]{box-shadow:inset 0 -3px #a6ef70}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ .side-link,.tab,.dashboard-pending-action{transition:none!important}
+}
 </style>
 </head>
 <body><div class="app-shell">
