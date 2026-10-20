@@ -749,7 +749,7 @@ function createSafetyBackup(){
  try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
  return snapshot;
 }
-function save(){const payload={profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(canWrite&&cloudReady&&!applyingCloud){set(ref(db,"tracker"),payload).catch(err=>{console.error(err);setAuthStatus("");});}}
+function save(){const payload={profiles,profileNames,activeProfile,updatedAt:new Date().toISOString()};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(canWrite&&cloudReady&&!applyingCloud){set(ref(db,"tracker"),payload).catch(err=>{console.error(err);setAuthStatus("");});}}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
