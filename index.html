@@ -815,6 +815,98 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none}
  *,*::before,*::after{transition:none!important;animation:none!important}
 }
 
+
+/* PXG Tracker — second pass: mission cards, collections and weekly planner */
+#missionTabs{position:relative;padding:5px;border:1px solid #293e4c;border-radius:17px;background:#0f1922;box-shadow:inset 0 1px 0 #ffffff08}
+#missionTabs .tab{position:relative;min-height:54px}
+#missionTabs .tab.active{background:linear-gradient(135deg,#68e7c8,#9af0dd);box-shadow:0 5px 18px #52dfc022,inset 0 1px 0 #ffffff70}
+#panelJoey .mission-controls,#panelMountain .mission-controls{padding:10px;margin:0 0 12px;border:1px solid #293d4a;border-radius:15px;background:#0e1720}
+#panelJoey .mission-controls input[type=search],#panelMountain .mission-controls input[type=search]{flex:1 1 220px}
+#panelJoey .mission-controls select,#panelMountain .mission-controls select{flex:0 1 220px}
+#clans .clan{margin:12px 0;border-radius:16px;overflow:hidden}
+#clans .clan-head{position:relative;padding:16px 18px;background:linear-gradient(110deg,#1c2b38,#17232e);border-bottom:1px solid #2a3d4b}
+#clans .clan-head::after{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:4px;background:#52dfc0;opacity:.8}
+#clans .clan-head h2{font-size:16px;line-height:1.35}
+#clans .clan-meta{font-size:12px;color:#a8bbc8}
+#clans .clan-head .pill{background:#15312f;border-color:#2d625b;color:#9af0dd}
+#clans .rows{background:#111a23;padding:5px 17px 9px}
+#clans .pokemon{grid-template-columns:minmax(0,1fr) 112px 88px;gap:12px;padding:13px 5px;border-bottom:1px solid #273844}
+#clans .poke-info{min-width:0}
+#clans .poke-img{width:46px;height:46px;border-radius:12px;padding:3px}
+#clans .poke-name{display:block;font-size:14px;line-height:1.35}
+#clans .poke-sub{font-size:11px;margin-top:3px}
+#clans .ball-count{font-size:11px;gap:5px}
+#clans .ball-count input{min-height:36px;text-align:center;font-variant-numeric:tabular-nums}
+#clans .check{font-size:11px;line-height:1.35}
+#clans .check input{width:18px;height:18px}
+#clans .pokemon.done{background:linear-gradient(90deg,#15302b35,transparent)}
+#clans .pokemon.done .poke-img{border-color:#3e7669}
+.dashboard-home .dashboard-section-title{align-items:flex-start}
+.dashboard-collection-preview{gap:6px}
+.dashboard-pokemon-mini{position:relative;border-radius:11px;transition:transform .16s ease,border-color .16s ease,background .16s ease}
+.dashboard-pokemon-mini:hover{transform:translateY(-2px);border-color:#52dfc0}
+.dashboard-pokemon-mini.pending{opacity:.72;filter:grayscale(.55)}
+.dashboard-pokemon-mini.captured{box-shadow:inset 0 0 0 1px #52dfc035}
+.dashboard-pending-item{padding:10px;border-radius:13px;transition:border-color .16s ease,transform .16s ease}
+.dashboard-pending-item:hover{transform:translateY(-1px);border-color:#4b8983}
+.rotation-heading{margin-bottom:12px}
+.rotation-calendar{gap:11px}
+.rotation-week-card{padding:13px;min-height:145px}
+.rotation-week-top{align-items:flex-start}
+.rotation-week-number{font-size:14px}
+.rotation-week-tag{border:1px solid #4c6252;border-radius:999px;padding:3px 6px;background:#1b2e27}
+.rotation-week-card.current .rotation-week-tag{color:#b5f3a1}
+.rotation-week-images{align-items:flex-start}
+.rotation-mini{width:clamp(42px,5vw,58px)}
+.rotation-mini img:not(.rotation-item-icon){width:100%;height:auto;aspect-ratio:1}
+.planner-summary{gap:10px}
+.planner-stat{padding:14px 15px}
+.planner-stat strong{font-size:25px;letter-spacing:-.035em}
+.planner-stat span{font-size:11px;line-height:1.45}
+.planner-layout{gap:13px}
+.planner-card{padding:16px}
+.planner-card-heading{margin-bottom:12px}
+.planner-card-heading h3,.planner-card-heading h2{letter-spacing:-.02em}
+.planner-week-line{padding:10px 12px;border-radius:11px;background:#101a23;border:1px solid #2a404c}
+.planner-dungeons{gap:8px}
+.planner-dungeon{padding:10px 12px;background:#101a23}
+.planner-task{padding:11px 12px;background:#101a23}
+.planner-task:hover,.planner-dungeon:hover{border-color:#4b8983}
+.planner-task-icon{border-radius:10px}
+.weekly-controls{padding:10px;border:1px solid #293d4a;border-radius:14px;background:#0e1720}
+.weekly-summary .planner-stat,.weekly-summary>div{border-radius:13px}
+.weekly-groups{margin-top:12px}
+.weekly-group{border-radius:15px}
+.weekly-group-head{padding:13px 15px;background:linear-gradient(100deg,#1d303c,#192833)}
+.weekly-group-rows{padding:8px}
+.weekly-task{padding:11px 12px;background:#101a23}
+.weekly-task-main{gap:10px}
+.planner-footnote{padding:0 3px}
+@media(max-width:700px){
+ #panelJoey .mission-controls,#panelMountain .mission-controls{padding:8px}
+ #panelJoey .mission-controls select,#panelMountain .mission-controls select{flex:1 1 100%;width:100%}
+ #clans .rows{padding:4px 10px 8px}
+ #clans .pokemon{grid-template-columns:minmax(0,1fr) 82px 68px;gap:7px;padding:11px 1px}
+ #clans .poke-img{width:40px;height:40px}
+ #clans .poke-name{font-size:12px}
+ #clans .poke-sub{font-size:10px}
+ #clans .ball-count{font-size:10px}
+ #clans .ball-count input{padding:6px 3px}
+ #missionTabs .tab{min-height:50px}
+ .rotation-week-card{padding:10px;min-height:unset}
+ .planner-card{padding:12px}
+ .weekly-controls{padding:8px}
+}
+@media(max-width:390px){
+ #clans .pokemon{grid-template-columns:minmax(0,1fr) 66px 60px;gap:5px}
+ #clans .poke-img{width:34px;height:34px}
+ #clans .poke-info{gap:6px}
+ #clans .check{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ #clans .clan-head,#clans .pokemon,.dashboard-pokemon-mini,.dashboard-pending-item{transition:none}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
