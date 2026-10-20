@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-V</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-W</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1074,8 +1074,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 #panelChosen .chosen-component>img{width:27px!important;height:27px!important;padding:2px;border-radius:7px;background:#202c3e;border:1px solid #34455d}
 #panelChosen .chosen-component-count{gap:5px}
 #panelChosen .chosen-component-count input{width:62px}
-#panelChosen #chosenMaterials{gap:10px}
-#panelChosen .chosen-material{border-radius:14px;background:linear-gradient(145deg,#1b2738,#141b28);border-color:#35465c}
+#panelChosen #chosenMaterials{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+#panelChosen .chosen-material{min-width:0;border-radius:15px;padding:13px;background:linear-gradient(145deg,#1b2738,#141b28);border-color:#35465c;display:flex;flex-direction:column;gap:10px;box-shadow:inset 0 1px #ffffff08}
+#panelChosen .chosen-material-top{display:flex;align-items:flex-start;gap:9px;min-height:56px}
+#panelChosen .chosen-material-icon{width:54px;height:54px;display:grid;place-items:center;flex:0 0 54px;background:#0f1521;border:1px solid #ffffff12;border-radius:12px}
+#panelChosen .chosen-material-title{flex:1;min-width:0}
+#panelChosen .chosen-material-title label{display:block;font-size:13px;line-height:1.35;font-weight:750;margin:2px 0 0;overflow-wrap:anywhere}
+#panelChosen .chosen-material-title small{display:block;font-size:10px;line-height:1.35;color:var(--muted);margin-top:5px}
+#panelChosen .chosen-material-status{font-size:9px;font-weight:800;letter-spacing:.04em;padding:4px 6px;border-radius:6px;white-space:nowrap}
+#panelChosen .status-ready{color:#a8f0bf;background:#1d4936}
+#panelChosen .status-priority{color:#ffd99a;background:#4b3923}
+#panelChosen .status-pending{color:#c7d1e2;background:#30394a}
+#panelChosen .chosen-material-quantity{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#panelChosen .chosen-material-quantity strong{display:block;font-size:13px;color:#ffcf8b}
+#panelChosen .chosen-material.is-ready .chosen-material-quantity strong{color:#8de4aa}
+#panelChosen .chosen-material-quantity small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+#panelChosen .chosen-have-input{display:flex;flex-direction:column;gap:4px;font-size:10px;color:var(--muted);margin:0}
+#panelChosen .chosen-have-input input{width:76px;min-width:0;padding:7px 8px;border-radius:8px;background:#101622;border:1px solid #46516a;color:var(--text);font:inherit;font-size:13px;font-weight:700}
+#panelChosen .chosen-material .chosen-bar{margin-top:0}
+#panelChosen .chosen-material-ready{margin-top:auto;padding-top:7px;border-top:1px solid #ffffff10}
+@media(max-width:900px){#panelChosen #chosenMaterials{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#panelChosen #chosenMaterials{grid-template-columns:1fr}#panelChosen .chosen-material{padding:12px}#panelChosen .chosen-material-top{min-height:unset}}
 @media(max-width:680px){#panelChosen #chosenChapters,#panelChosen #chosenShipCrafts,#panelChosen #chosenOutfitCrafts{grid-template-columns:1fr;gap:9px}#panelChosen .chosen-chapter-head{min-height:88px;padding:12px}#panelChosen .chosen-craft-head{min-height:84px;padding:11px}#panelChosen .chosen-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#panelChosen .chosen-stat{padding:10px 8px}#panelChosen .chosen-stat strong{font-size:18px}#panelChosen .chosen-hero{padding:16px}}
 </style>
 </head>
@@ -1515,7 +1534,10 @@ function renderChosenQuest(){
  root.innerHTML=chosenChapters.map(c=>{total+=c.tasks.length;done+=c.tasks.filter(t=>chosenDone(t[0])).length;if(c.tasks.every(t=>chosenDone(t[0])))chaptersDone++;const tasks=c.tasks.filter(t=>(!q||(c.title+" "+t[1]+" "+t[2]).toLowerCase().includes(q))&&(filter==="all"||(filter==="done"&&chosenDone(t[0]))||(filter==="pending"&&!chosenDone(t[0]))));if(!tasks.length&&q)return "";return '<section class="chosen-chapter"><div class="chosen-chapter-head" role="button" tabindex="0" data-chosen-toggle="'+c.id+'"><span class="chosen-chapter-number">'+c.id.replace(/[^0-9]/g,"").padStart(2,"0")+'</span><div class="chosen-chapter-heading"><h3>'+c.title+'</h3><p>'+c.summary+'</p></div><span class="chosen-count">'+c.tasks.filter(t=>chosenDone(t[0])).length+' / '+c.tasks.length+'</span><span class="chosen-chapter-chevron">⌄</span></div><div class="chosen-chapter-body" id="chosen-body-'+c.id+'" hidden>'+tasks.map(t=>'<label class="chosen-task"><input type="checkbox" data-chosen-task="'+t[0]+'" '+(chosenDone(t[0])?'checked':'')+' '+(!canWrite?'disabled':'')+'><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span></label>').join("")+'<a href="'+c.url+'" target="_blank" rel="noopener" style="color:var(--accent2);font-size:12px">Guía oficial de este capítulo ↗</a></div></section>'}).join("")||'<div class="empty">No hay tareas que coincidan con el filtro.</div>';
  document.getElementById("chosenTasksStat").textContent=done+"/"+total;document.getElementById("chosenTasksBar").style.width=(done/Math.max(1,total)*100)+"%";document.getElementById("chosenChaptersStat").textContent=chaptersDone+"/5";document.getElementById("chosenChaptersBar").style.width=(chaptersDone/5*100)+"%";document.getElementById("sideChosenProgress").textContent=Math.round(done/Math.max(1,total)*100)+"%";
  renderChosenCrafts();
- const mr=document.getElementById("chosenMaterials");mr.innerHTML=chosenMaterials.filter(m=>!q||(m[1]+" "+m[3]).toLowerCase().includes(q)).map(m=>{const have=chosenHave(m[0]),ready=have>=m[2],marked=!!profiles[activeProfile][chosenKey("matready:"+m[0])];return '<div class="chosen-material"><div style="display:flex;align-items:center;gap:8px">'+chosenImageTag(m[1],40)+'<label>'+m[1]+'</label></div><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap"><input type="number" min="0" max="999999" step="1" value="'+have+'" data-chosen-material="'+m[0]+'" '+(!canWrite?'disabled':'')+'> / '+m[2]+' <span class="chosen-tag">'+(ready?'Cantidad alcanzada':'Faltan '+(m[2]-have))+'</span></div><div class="chosen-bar"><span style="width:'+Math.min(100,have/m[2]*100)+'%;background:'+(ready?'#75d99b':'linear-gradient(90deg,#b58bff,#65d8d3)')+'"></span></div><label class="chosen-material-ready"><input type="checkbox" data-chosen-material-ready="'+m[0]+'" '+(marked?'checked':'')+' '+(!canWrite?'disabled':'')+'> Material verificado / listo</label><small>'+m[3]+'</small></div>'}).join("");
+ const priorityKeys=new Set(["microphones","gears","toolbox","smartphone","red-dyes","macbook","pokedex1","pokedex2","pokedex3","pokedex4","pokedex5","pokedex6","chip2","chip3","diamonds","hammer"]);
+ const mr=document.getElementById("chosenMaterials");
+ const materialRows=chosenMaterials.map(m=>({m,have:chosenHave(m[0]),marked:!!profiles[activeProfile][chosenKey("matready:"+m[0])]})).filter(x=>!q||(x.m[1]+" "+x.m[3]).toLowerCase().includes(q)).sort((a,b)=>{const ar=a.have>=a.m[2]||a.marked?1:0,br=b.have>=b.m[2]||b.marked?1:0;return ar-br||Number(priorityKeys.has(b.m[0]))-Number(priorityKeys.has(a.m[0]))||(a.m[2]-a.have)-(b.m[2]-b.have)});
+ mr.innerHTML=materialRows.map(({m,have,marked})=>{const ready=have>=m[2],missing=Math.max(0,m[2]-have),priority=priorityKeys.has(m[0]);return '<article class="chosen-material '+(ready||marked?'is-ready':'')+'"><div class="chosen-material-top"><div class="chosen-material-icon">'+chosenImageTag(m[1],44)+'</div><div class="chosen-material-title"><label>'+m[1]+'</label><small>'+m[3]+'</small></div><span class="chosen-material-status '+(ready||marked?'status-ready':priority?'status-priority':'status-pending')+'">'+(ready||marked?'LISTO':priority?'PRIORIDAD':'PENDIENTE')+'</span></div><div class="chosen-material-quantity"><div><strong>'+(ready?'Objetivo alcanzado':missing+' por reunir')+'</strong><small>Meta: '+m[2]+'</small></div><label class="chosen-have-input"><span>Tengo</span><input aria-label="Cantidad de '+m[1]+' que tengo" type="number" min="0" max="999999" step="1" value="'+have+'" data-chosen-material="'+m[0]+'" '+(!canWrite?'disabled':'')+'></label></div><div class="chosen-bar"><span style="width:'+Math.min(100,have/m[2]*100)+'%;background:'+(ready?'#75d99b':'linear-gradient(90deg,#b58bff,#65d8d3)')+'"></span></div><label class="chosen-material-ready"><input type="checkbox" data-chosen-material-ready="'+m[0]+'" '+(marked?'checked':'')+' '+(!canWrite?'disabled':'')+'> Confirmar que ya lo tengo</label></article>'}).join("");
  const ready=chosenMaterials.filter(m=>chosenHave(m[0])>=m[2]).length;document.getElementById("chosenMaterialsStat").textContent=ready+"/"+chosenMaterials.length;document.getElementById("chosenMaterialsBar").style.width=ready/chosenMaterials.length*100+"%";
  document.getElementById("chosenTips").innerHTML=chosenTips.map(t=>'<div class="chosen-tip"><strong>'+t[0]+'</strong><p>'+t[1]+'</p></div>').join("");
  root.querySelectorAll("[data-chosen-toggle]").forEach(el=>{const fn=()=>{const b=document.getElementById("chosen-body-"+el.dataset.chosenToggle);b.hidden=!b.hidden;el.classList.toggle("is-open",!b.hidden)};el.addEventListener("click",fn);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})});
