@@ -1886,14 +1886,14 @@ const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)
  document.getElementById("dashWeeklyTitle").textContent="Disponibles esta semana · Semana "+current.week;
  document.getElementById("dashWeeklyCount").textContent=String(weeklyAvailable.length);
  document.getElementById("dashWeeklyPreview").innerHTML=weeklyNames.map(name=>'<div class="dashboard-pokemon-mini '+(capturedUnique.some(x=>x.name===name)?"captured":"pending")+'" title="'+name+'"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="'+name+'" loading="lazy" onerror="rotationImageError(this)"></div>').join("")||'<div class="dashboard-empty">No hay Pokémon en la rotación actual.</div>';
- const tasks=[];
- pending.slice(0,3).forEach(x=>tasks.push({name:x.name,detail:"Joey Quest · Captura pendiente",target:"joey",destination:"Joey Quest",src:spriteUrl(x.name),fallback:spriteFallback(x.name)}));
- mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15).slice(0,2).forEach(([d,item])=>{const name=d.replace(/^DZ /,"");tasks.push({name,detail:"Mountain · "+item,target:"mountain",destination:"Dimensional Mountain",src:rotationPokemonImage(name),fallback:rotationArtworkImage(name)});});
+ const joeyPending=pending.slice(0,2).map(x=>({name:x.name,detail:"Joey Quest · Captura pendiente",target:"joey",destination:"Joey Quest",src:spriteUrl(x.name),fallback:spriteFallback(x.name)}));
+ const mountainPending=mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15).slice(0,2).map(([d,item])=>{const name=d.replace(/^DZ /,"");return {name,detail:"Mountain · "+item,target:"mountain",destination:"Dimensional Mountain",src:rotationPokemonImage(name),fallback:rotationArtworkImage(name)};});
  const chosenPending=chosenChapters.flatMap(chapter=>chapter.tasks.filter(task=>!chosenDone(task[0])).map(task=>({name:task[1],detail:"The Chosen One · "+chapter.id.toUpperCase(),target:"chosen",destination:"The Chosen One"}))).slice(0,2);
- tasks.push(...chosenPending);
  const weeklyPending=weeklyTaskGroups.flatMap(group=>group.tasks.filter(task=>!profiles[activeProfile][weeklyStateKey(task.id)]).map(task=>({name:task.name,detail:"Misiones recurrentes · "+group.title,target:"weekly",destination:"Misiones semanales y mensuales"}))).slice(0,1);
- if(!profiles[activeProfile][weeklyStateKey(monthlyTerror.id)])weeklyPending.push({name:monthlyTerror.name,detail:"Misión mensual · Nightmare World",target:"weekly",destination:"Misiones semanales y mensuales"});
- tasks.push(...weeklyPending.slice(0,2));
+ if(!profiles[activeProfile][weeklyStateKey(monthlyTerror.id)])weeklyPending.unshift({name:monthlyTerror.name,detail:"Misión mensual · Nightmare World",target:"weekly",destination:"Misiones semanales y mensuales"});
+ // Intercalar categorías: las misiones mensuales/semana aparecen pronto, sin desplazar por completo las demás.
+ const taskGroups=[weeklyPending,mountainPending,joeyPending,chosenPending];
+ for(let round=0;round<2;round++)taskGroups.forEach(group=>{if(group[round])tasks.push(group[round]);});
  document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action" data-dashboard-target="'+t.target+'" aria-label="Ir a '+t.name+' en '+t.destination+'">'+(t.src?'<img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.target==="mountain"?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\\'1\\';this.src=\\'"+t.fallback+"\\';}else{this.style.visibility=\\'hidden\\';}":"this.style.visibility=\\'hidden\\'"))+'">':'')+'<span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
  document.getElementById("dashPendingCount").textContent=String(tasks.length);
  applyDashboardPreferences();
