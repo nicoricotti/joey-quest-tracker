@@ -1453,6 +1453,7 @@ function chosenItemImage(name){const clean=String(name).replace(/^\s*[\d.,]+\s+/
 function chosenImageTag(name,size=38){return '<img src="'+chosenItemImage(name)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:'+size+'px;height:'+size+'px;object-fit:contain;flex:0 0 auto" title="'+name.replace(/"/g,"&quot;")+'">'}
 function chosenComponentRequired(item){const match=String(item).match(/^([\d.,]+)\s+(.+)$/);return match?{amount:Number(match[1].replace(/[.,]/g,"")),name:match[2]}:null}
 function chosenCraftProfession(groupId,recipeName){
+ if(/Entrega directa/i.test(recipeName))return {name:"Entrega a Eric (no es craft)",url:"https://wiki.pokexgames.com/index.php?title=The_Chosen_One_-_Cap%C3%ADtulo_2_ESP"};
  if(/Pokédex|Pokedex|Chip 2\.0|Chip 3\.0/i.test(recipeName))return {name:"Profesor",url:"https://wiki.pokexgames.com/index.php?title=Craft_Profiss%C3%B5es_-_Professor"};
  if(/Lugia Sewing Kit|Fabric|Costume/i.test(groupId+" "+recipeName))return {name:"Estilista / Mystical Tailoring Machine",url:"https://wiki.pokexgames.com/index.php/Mystical_Tailoring_Machine_ESP"};
  if(["toolbox","smartphone","macbook","translator"].includes(groupId)||/Tool Box|Smartphone|Red Dye|Gear|Macbook/i.test(recipeName))return {name:"Ingeniero",url:"https://wiki.pokexgames.com/index.php?title=Craft_Profiss%C3%B5es_-_Engenheiro"};
