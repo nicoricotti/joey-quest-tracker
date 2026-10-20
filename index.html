@@ -2345,7 +2345,8 @@ function loadTrackerByProfile(){
   try{cloud.profileNames=snap.val()||{};}catch(namesError){console.error("No se pudo procesar tracker/profileNames",namesError);fail(new Error("No se pudo procesar la lista de perfiles de Firebase. La sincronización quedó bloqueada para proteger el progreso."));return;}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   const ids=[...new Set([...Object.keys(cloud.profileNames),...Object.keys(local?.profiles||{}),"nico","pareja"])];
-  pending=ids.length+2;
+  pending=ids.length+3;
+  onValue(ref(db,"tracker/profileOwners"),s=>{cloud.profileOwners=s.val()||{};profileOwners=cloud.profileOwners;finishOne();},fail,{onlyOnce:true});
   onValue(ref(db,"tracker/activeProfile"),s=>{cloud.activeProfile=s.val()||"";finishOne();},fail,{onlyOnce:true});
   onValue(ref(db,"tracker/updatedAt"),s=>{cloud.updatedAt=s.val()||null;finishOne();},fail,{onlyOnce:true});
   ids.forEach(id=>onValue(ref(db,"tracker/profiles/"+id),s=>{try{const value=s.val();if(value&&typeof value==="object")cloud.profiles[id]=value;finishOne();}catch(profileError){console.error("No se pudo procesar el perfil Firebase:",id,profileError);fail(new Error("Firebase devolvió una estructura demasiado profunda o inválida en el perfil \""+id+"\". Se bloqueó la sincronización para proteger el progreso."));}},err=>{console.error("Error leyendo perfil Firebase:",id,err);fail(err);},{onlyOnce:true}));
