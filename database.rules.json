@@ -11,7 +11,7 @@
       },
       "profileNames": {
         "$profileId": {
-          ".write": "auth != null && auth.token.email_verified === true && (root.child('tracker/profileOwners').child($profileId).val() === auth.uid || auth.token.email === 'nicoricotti94@gmail.com' || auth.token.email === 'daniel.guzba@gmail.com')"
+          ".write": "auth != null && auth.token.email_verified === true && ((root.child('tracker/profileOwners').child($profileId).val() === auth.uid && newData.exists()) || auth.token.email === 'nicoricotti94@gmail.com' || auth.token.email === 'daniel.guzba@gmail.com')"
         }
       },
       "profileOwners": {
