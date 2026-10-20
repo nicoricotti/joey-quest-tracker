@@ -1840,6 +1840,8 @@ function save(options={}){
  if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){
   setAuthStatus("Guardando cambios en la nube…");
   const profile=profiles[activeProfile]||{};
+  // No escribir nunca en un perfil que el usuario no administra; perfiles antiguos sin propietario solo los pueden modificar los administradores.
+  if(!canDelete&&!ownsActiveProfile()){setAuthStatus("No se sincronizó: esta cuenta no es propietaria del perfil seleccionado.");return;}
   const jobs=[];
   if(options.replaceActiveProfile){
    jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),profile).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
