@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-AC</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-AD</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1443,6 +1443,40 @@ input[type=checkbox]{accent-color:#65d4b7}
 #panelJoey .pokemon-sprite,#panelMountain .pokemon-sprite{object-fit:contain;filter:drop-shadow(0 2px 4px #0007)}
 img{image-rendering:auto}
 @media(prefers-reduced-motion:reduce){.item-img,.dashboard-pokemon-mini{transition:none}.dashboard-pokemon-mini:hover{transform:none}}
+
+/* Navegación refinada: navegación móvil más clara y accesible */
+.app-sidebar{scrollbar-width:thin;scrollbar-color:#405873 transparent}
+.app-sidebar::-webkit-scrollbar{height:4px}.app-sidebar::-webkit-scrollbar-thumb{background:#405873;border-radius:999px}
+.side-link{position:relative;overflow:hidden}
+.side-link .side-icon{transition:transform .16s ease,color .16s ease}
+.side-link:hover .side-icon{transform:translateY(-1px)}
+.side-link.active .side-count{color:#d9ffc4;border-color:#52734c;background:#18271e}
+@media(max-width:700px){
+ .app-sidebar{gap:7px;padding:8px 10px 9px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-width:none}
+ .app-sidebar::-webkit-scrollbar{display:none}
+ .sidebar-brand{position:sticky;left:0;z-index:3;background:#111925f5;padding-right:12px;margin-right:3px;backdrop-filter:blur(16px)}
+ .side-link{scroll-snap-align:start;min-height:40px;border:1px solid #2b394c;background:#172130;border-radius:10px;padding:8px 11px}
+ .side-link.active{background:linear-gradient(110deg,#263c32,#1c2b37);border-color:#567451;box-shadow:inset 0 -2px 0 #9be564}
+ .side-link:hover{transform:none}
+ #appMain{padding-top:10px}
+ .tabs{top:58px;z-index:25;gap:6px;padding:5px}
+ .tab{padding:10px 8px;min-height:42px;font-size:12px;line-height:1.25}
+ .tab-progress{display:inline-block;margin-left:3px;font-size:10px}
+ .rotation-heading{align-items:flex-start;gap:10px}
+ #toggleRotation{padding:9px 10px;font-size:12px}
+ .weekly-controls{gap:7px}
+ .weekly-controls input,.weekly-controls select{min-height:44px}
+}
+@media(max-width:420px){
+ .sidebar-brand strong{font-size:11px}
+ .sidebar-brand small{letter-spacing:.12em}
+ .side-link{font-size:10px;padding:8px 9px;gap:5px}
+ .side-count{font-size:9px}
+ .tabs{top:56px}
+ .tab{font-size:11px;padding:9px 5px}
+ .tab-progress{display:block;margin:3px 0 0}
+}
+@media(min-width:701px){.app-sidebar{scrollbar-width:thin}.side-link{min-height:45px}}
 </style>
 </head>
 <body><div class="app-shell">
