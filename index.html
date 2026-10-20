@@ -1289,7 +1289,8 @@ document.getElementById("toggleRotation").addEventListener("click",()=>{const co
 document.getElementById("tabJoey").addEventListener("click",()=>{setTab("joey");document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav==="joey"));});document.getElementById("tabMountain").addEventListener("click",()=>{setTab("mountain");document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav==="mountain"));});
 
 function plannerSetView(name){
- const planner=name==="planner",weekly=name==="weekly",focused=planner||weekly;\n document.getElementById("panelChosen").hidden=name!=="chosen";
+ const planner=name==="planner",weekly=name==="weekly",focused=planner||weekly;
+ document.getElementById("panelChosen").hidden=name!=="chosen";
  document.getElementById("plannerPanel").hidden=!planner;
  document.getElementById("weeklyPanel").hidden=!weekly;
  document.querySelector(".hero").hidden=focused;
@@ -1454,7 +1455,8 @@ function activateSidebar(name){
  if(name==="weekly"){plannerSetView("weekly");renderWeeklyChecklist();document.getElementById("weeklyPanel").scrollIntoView({behavior:"smooth",block:"start"});return;}
  plannerSetView(name);
  if(name==="joey"){setTab("joey");document.getElementById("panelJoey").scrollIntoView({behavior:"smooth",block:"start"});}
- else if(name==="mountain"){setTab("mountain");document.getElementById("panelMountain").scrollIntoView({behavior:"smooth",block:"start"});}\n else if(name==="chosen"){renderChosenQuest();document.getElementById("panelChosen").scrollIntoView({behavior:"smooth",block:"start"});}
+ else if(name==="mountain"){setTab("mountain");document.getElementById("panelMountain").scrollIntoView({behavior:"smooth",block:"start"});}
+ else if(name==="chosen"){renderChosenQuest();document.getElementById("panelChosen").scrollIntoView({behavior:"smooth",block:"start"});}
  else if(name==="rotation"){document.getElementById("rotationPanel").scrollIntoView({behavior:"smooth",block:"start"});}
  else if(name==="settings"){document.getElementById("authPanel").open=true;document.getElementById("profilePanel").open=true;document.getElementById("authPanel").scrollIntoView({behavior:"smooth",block:"start"});}
  else{setTab("joey");document.getElementById("top").scrollIntoView({behavior:"smooth",block:"start"});}
