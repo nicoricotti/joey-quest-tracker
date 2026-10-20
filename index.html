@@ -1581,29 +1581,59 @@ document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seg
 let cloudHasData=false;
 let syncSafetyBlocked=false;
 function localHasProgress(data){return trackerHasProgress(data);}
-function maybeMigrateLocal(){/* Migration automática desactivada para impedir que datos antiguos del navegador sobrescriban la nube después de un reinicio. */}
+/*
+ * Recuperación preventiva: buscar la copia principal y TODAS las copias locales conocidas.
+ * No se suben automáticamente datos recuperados a Firebase: primero se bloquea la
+ * sincronización para evitar que una copia dudosa reemplace datos remotos.
+ */
+function readLocalBackupCandidates(primary){
+ const candidates=[];
+ if(primary&&primary.profiles)candidates.push(primary);
+ for(const key of ["joeyQuestTrackerSafetyBackupLatest","joeyQuestTrackerSafetyBackup","pxgTrackerPreCloudBackup","joeyQuestTrackerV2","joeyQuestTrackerV1"]){
+  try{
+   const raw=localStorage.getItem(key);if(!raw)continue;
+   const parsed=JSON.parse(raw);
+   if(parsed&&parsed.profiles)candidates.push(parsed);
+   else if(key==="joeyQuestTrackerV1"&&parsed&&typeof parsed==="object"){
+    const migrated={profiles:{nico:{},pareja:{}},profileNames:{nico:"Misterp",pareja:"Dani"},activeProfile:"nico"};
+    Object.keys(parsed).forEach(id=>{if(parsed[id]?.me)migrated.profiles.nico[id]=true;if(parsed[id]?.partner)migrated.profiles.pareja[id]=true;});
+    if(trackerHasProgress(migrated))candidates.push(migrated);
+   }
+  }catch(e){console.warn("No se pudo leer la copia local",key,e);}
+ }
+ const score=data=>{let n=0;for(const p of Object.values(data?.profiles||{}))for(const v of Object.values(p||{}))if(v===true||(typeof v==="number"&&v>0)||(typeof v==="string"&&v.length>0))n++;return n;};
+ candidates.sort((a,b)=>score(b)-score(a));
+ return candidates;
+}
+function maybeMigrateLocal(){/* La migración automática a la nube sigue desactivada para evitar sobrescrituras. */}
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
  cloudReady=true;
  cloudHasData=!!(cloud&&cloud.profiles&&Object.keys(cloud.profiles).length);
- const local=JSON.parse(localStorage.getItem(KEY)||"null");
+ let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
  if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
+ const candidates=readLocalBackupCandidates(local);
+ const recoveryLocal=candidates[0]||local;
  if(cloudHasData){
-  if(localHasMoreProgress(local,cloud)){
-   if(local&&local.profiles){createSafetyBackup();profiles=local.profiles;profileNames=local.profileNames||profileNames;activeProfile=local.activeProfile||activeProfile;localStorage.setItem(KEY,JSON.stringify({...local,profiles,profileNames,activeProfile}));}
-   syncSafetyBlocked=true;
-   refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
-   setAuthStatus("PROTECCIÓN DE DATOS: este navegador tiene progreso que falta en Firebase. No se sobrescribió. Exporta una copia y revisa los datos antes de sincronizar.");
-   return;
+  if(localHasMoreProgress(recoveryLocal,cloud)){
+   if(recoveryLocal&&recoveryLocal.profiles){
+    createSafetyBackup();profiles=recoveryLocal.profiles;profileNames=recoveryLocal.profileNames||profileNames;activeProfile=recoveryLocal.activeProfile||activeProfile;
+    try{localStorage.setItem(KEY,JSON.stringify({...recoveryLocal,profiles,profileNames,activeProfile}));}catch(e){}
+   }
+   syncSafetyBlocked=true;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+   setAuthStatus("PROTECCIÓN DE DATOS: una copia local conserva progreso que falta en Firebase. Se restauró solo en este navegador y la sincronización quedó bloqueada para evitar pérdidas.");return;
   }
-  syncSafetyBlocked=false;
-  applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");
+  syncSafetyBlocked=false;applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");
   localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));applyingCloud=false;
   refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
   if(canWrite)setAuthStatus("Datos sincronizados desde la nube ✓");
  }else{
-  if(trackerHasProgress(local)){createSafetyBackup();profiles=local.profiles;profileNames=local.profileNames||profileNames;activeProfile=local.activeProfile||activeProfile;syncSafetyBlocked=true;refreshProfileSelect();render();setAuthStatus("PROTECCIÓN DE DATOS: Firebase aparece vacío, pero este navegador conserva progreso. No se enviará nada a la nube hasta revisar/recuperar los datos.");}
-  else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
+  if(trackerHasProgress(recoveryLocal)){
+   createSafetyBackup();profiles=recoveryLocal.profiles;profileNames=recoveryLocal.profileNames||profileNames;activeProfile=recoveryLocal.activeProfile||activeProfile;
+   try{localStorage.setItem(KEY,JSON.stringify({...recoveryLocal,profiles,profileNames,activeProfile}));}catch(e){}
+   syncSafetyBlocked=true;refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+   setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
+  }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  }
 },err=>{console.error(err);cloudReady=false;syncSafetyBlocked=true;setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
