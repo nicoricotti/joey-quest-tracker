@@ -1164,11 +1164,31 @@ const spriteUrl=name=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprite
 const spriteFallback=name=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexIds[name]||0}.png`;
 const all=()=>clans.flatMap((c,ci)=>c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,clan:c.name,name:p[0],detail:p[1]})));
 function createSafetyBackup(){
- const snapshot={profiles:JSON.parse(JSON.stringify(profiles)),activeProfile,updatedAt:new Date().toISOString()};
- try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
+ const snapshot={profiles:JSON.parse(JSON.stringify(profiles)),profileNames:JSON.parse(JSON.stringify(profileNames)),activeProfile,updatedAt:new Date().toISOString()};
+ try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));localStorage.setItem("joeyQuestTrackerSafetyBackupLatest",JSON.stringify(snapshot));}catch(e){}
  return snapshot;
 }
-function save(){const updatedAt=new Date().toISOString();const payload={profiles,profileNames,activeProfile,updatedAt};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();if(canWrite&&cloudReady&&!applyingCloud){setAuthStatus("Guardando cambios en la nube…");const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});}}
+function trackerHasProgress(data){
+ if(!data||!data.profiles)return false;
+ return Object.values(data.profiles).some(p=>p&&Object.values(p).some(v=>v===true||(typeof v==="number"&&v>0)||(typeof v==="string"&&v.length>0)));
+}
+function localHasMoreProgress(local,cloud){
+ if(!trackerHasProgress(local))return false;
+ if(!trackerHasProgress(cloud))return true;
+ const lp=local.profiles||{},cp=cloud.profiles||{};
+ for(const [profile,values] of Object.entries(lp)){
+  const remote=cp[profile]||{};
+  for(const [key,value] of Object.entries(values||{})){
+   const meaningful=value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0);
+   if(meaningful){
+    const rv=remote[key],remoteMeaningful=rv===true||(typeof rv==="number"&&rv>0)||(typeof rv==="string"&&rv.length>0);
+    if(!remoteMeaningful)return true;
+   }
+  }
+ }
+ return false;
+}
+function save(){const updatedAt=new Date().toISOString();const payload={profiles,profileNames,activeProfile,updatedAt};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){setAuthStatus("Guardando cambios en la nube…");}else if(canWrite&&syncSafetyBlocked){setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");}const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});}}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
@@ -1517,10 +1537,33 @@ async function handleImport(e){const file=e.target.files[0];if(!file)return;try{
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
 document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
 document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+profileLabel(activeProfile)+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
-let cloudHasData=false;
+let cloudHasData=false;\nlet syncSafetyBlocked=false;
 function localHasProgress(data){if(!data||!data.profiles)return false;return Object.values(data.profiles).some(p=>p&&Object.entries(p).some(([k,v])=>k.startsWith("mountain-runs:")?Number(v)>0:k.startsWith("mountain-ready:")?v===true:v===true));}
 function maybeMigrateLocal(){/* Migration automática desactivada para impedir que datos antiguos del navegador sobrescriban la nube después de un reinicio. */}
-onValue(ref(db,"tracker"),snapshot=>{const cloud=snapshot.val();cloudReady=true;cloudHasData=!!(cloud&&cloud.profiles&&cloud.profileNames);if(cloudHasData){const local=JSON.parse(localStorage.getItem(KEY)||"null");if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup"))localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));applyingCloud=false;refreshProfileSelect();render();if(canWrite)setAuthStatus("Datos sincronizados desde la nube ✓");}else{maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}},err=>{console.error(err);setAuthStatus("No se pudo leer la nube: "+authErrorMessage(err));});
+onValue(ref(db,"tracker"),snapshot=>{
+ const cloud=snapshot.val();
+ cloudReady=true;
+ cloudHasData=!!(cloud&&cloud.profiles&&Object.keys(cloud.profiles).length);
+ const local=JSON.parse(localStorage.getItem(KEY)||"null");
+ if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
+ if(cloudHasData){
+  if(localHasMoreProgress(local,cloud)){
+   if(local&&local.profiles){createSafetyBackup();profiles=local.profiles;profileNames=local.profileNames||profileNames;activeProfile=local.activeProfile||activeProfile;localStorage.setItem(KEY,JSON.stringify({...local,profiles,profileNames,activeProfile}));}
+   syncSafetyBlocked=true;
+   refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+   setAuthStatus("PROTECCIÓN DE DATOS: este navegador tiene progreso que falta en Firebase. No se sobrescribió. Exporta una copia y revisa los datos antes de sincronizar.");
+   return;
+  }
+  syncSafetyBlocked=false;
+  applyingCloud=true;profiles=cloud.profiles;profileNames=cloud.profileNames||profileNames;activeProfile=activeProfile&&profiles[activeProfile]?activeProfile:(profiles.nico?"nico":Object.keys(profiles)[0]||"nico");
+  localStorage.setItem(KEY,JSON.stringify({profiles,profileNames,activeProfile,updatedAt:cloud.updatedAt||null}));applyingCloud=false;
+  refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();
+  if(canWrite)setAuthStatus("Datos sincronizados desde la nube ✓");
+ }else{
+  if(trackerHasProgress(local)){createSafetyBackup();profiles=local.profiles;profileNames=local.profileNames||profileNames;activeProfile=local.activeProfile||activeProfile;syncSafetyBlocked=true;refreshProfileSelect();render();setAuthStatus("PROTECCIÓN DE DATOS: Firebase aparece vacío, pero este navegador conserva progreso. No se enviará nada a la nube hasta revisar/recuperar los datos.");}
+  else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
+ }
+},err=>{console.error(err);cloudReady=false;syncSafetyBlocked=true;setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
 document.getElementById("googleLogin").addEventListener("click",async()=>{const button=document.getElementById("googleLogin");button.disabled=true;setAuthStatus("Abriendo acceso seguro de Google…");googleProvider.setCustomParameters({prompt:"select_account"});try{await signInWithPopup(auth,googleProvider,browserPopupRedirectResolver);setAuthStatus("Acceso con Google completado. Sincronizando…");}catch(e){console.error("Error de inicio de sesión con Google:",e);if(e?.code==="auth/popup-blocked"||e?.code==="auth/operation-not-supported-in-this-environment"){try{setAuthStatus("El navegador bloqueó la ventana. Continuando en esta pestaña…");await signInWithRedirect(auth,googleProvider);}catch(redirectError){console.error(redirectError);setAuthStatus("No se pudo abrir Google: "+authErrorMessage(redirectError));button.disabled=false;}}else{setAuthStatus("No se pudo iniciar sesión: "+authErrorMessage(e));button.disabled=false;}}});
 getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con Google completado. Sincronizando…");}).catch(e=>{console.error("Error al volver del acceso de Google:",e);setAuthStatus("No se pudo completar el acceso: "+authErrorMessage(e));});
