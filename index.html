@@ -2145,7 +2145,11 @@ function renderPlanner(){
  renderWeeklyChecklist();
 }
 function activateSidebar(name){
- document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));
+ document.querySelectorAll(".side-link[data-nav]").forEach(b=>{
+  const active=b.dataset.nav===name;
+  b.classList.toggle("active",active);
+  if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");
+ });
  if(name==="planner"){plannerSetView("planner");renderPlanner();document.getElementById("plannerPanel").scrollIntoView({behavior:"smooth",block:"start"});return;}
  if(name==="weekly"){plannerSetView("weekly");renderWeeklyChecklist();document.getElementById("weeklyPanel").scrollIntoView({behavior:"smooth",block:"start"});return;}
  plannerSetView(name);
