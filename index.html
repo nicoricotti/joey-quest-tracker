@@ -26,6 +26,7 @@ main{max-width:1050px;margin:auto;padding:24px 16px 56px}.hero{padding:26px;bord
 .auth-content,.profile-content{padding:0 16px 16px;border-top:1px solid rgba(140,160,190,.15)}
 .auth-actions,.profile-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0}
 .auth-actions input,.profile-content select{min-height:42px;border:1px solid #3b465c;border-radius:12px;background:#111827;color:inherit;padding:10px 12px;max-width:100%}
+.profile-content select{appearance:none;-webkit-appearance:none;min-width:172px;padding:11px 42px 11px 14px;font-weight:750;letter-spacing:.01em;cursor:pointer;border:1px solid #536985;border-radius:14px;background-color:#151f30;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23a9c5e8%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;box-shadow:0 5px 16px #0002;transition:border-color .15s,box-shadow .15s,background-color .15s}.profile-content select:hover{border-color:#7ce4dd;background-color:#19283a}.profile-content select:focus-visible{outline:none;border-color:#7ce4dd;box-shadow:0 0 0 3px #7ce4dd30,0 6px 18px #0003}.profile-content select option{background:#151f30;color:#edf4ff;font-weight:650}
 .friendly-btn{border:0;border-radius:12px;padding:11px 15px;background:#8ee16a;color:#152316;font-weight:750;cursor:pointer;transition:transform .12s,filter .12s;box-shadow:0 2px 0 rgba(0,0,0,.12)}
 .friendly-btn:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
 .friendly-btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none}
@@ -646,6 +647,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 @media(max-width:760px){.weekly-groups{grid-template-columns:1fr}.weekly-controls{grid-template-columns:1fr}.weekly-group-head{align-items:flex-start;flex-direction:column}}
 .planner-tasks{display:grid;gap:7px}
 .planner-task{display:flex;align-items:center;gap:11px;min-width:0;padding:10px 11px;border:1px solid #34445b;border-radius:12px;background:#101824}
+.planner-task-icon img{width:100%;height:100%;object-fit:contain;padding:2px;display:block;filter:drop-shadow(0 2px 3px #0005)}
 .planner-task-icon{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;border-radius:10px;background:#202c3d;border:1px solid #3b4c63;font-size:18px}
 .planner-task-main{flex:1;min-width:0}
 .planner-task-main strong{display:block;font-size:13px;overflow-wrap:anywhere}
@@ -1025,10 +1027,10 @@ function renderPlanner(){
  }).join("")||'<div class="planner-empty">No hay dungeons registradas para esta semana.</div>';
  const filter=document.querySelector(".planner-filter.active")?.dataset.plannerFilter||"all";
  const tasks=[];
- missingJoey.forEach(x=>tasks.push({type:"joey",icon:"🎒",name:x.name,detail:x.clan+" · "+x.detail,tag:"Joey Quest"}));
- missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]["mountain-ready:"+d];tasks.push({type:"mountain",icon:"⛰️",name:d.replace(/^DZ /,""),detail:item+" · Dungeon "+runs+"/15 · Objeto "+(ready?"marcado listo":"pendiente"),tag:"Mountain"});});
+ missingJoey.forEach(x=>tasks.push({type:"joey",image:spriteUrl(x.name),fallback:spriteFallback(x.name),name:x.name,detail:x.clan+" · "+x.detail,tag:"Joey Quest"}));
+ missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]["mountain-ready:"+d];const name=d.replace(/^DZ /,"");tasks.push({type:"mountain",image:rotationPokemonImage(name),fallback:"",name,detail:item+" · Dungeon "+runs+"/15 · Objeto "+(ready?"marcado listo":"pendiente"),tag:"Mountain"});});
  const shown=tasks.filter(t=>filter==="all"||t.type===filter);
- document.getElementById("plannerTasks").innerHTML=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon">'+t.icon+'</span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join("")||(filter==="all"?"<div class=\"planner-empty\">¡No tienes objetivos pendientes! Buen trabajo.</div>":"<div class=\"planner-empty\">No hay tareas pendientes en esta categoría.</div>");
+ document.getElementById("plannerTasks").innerHTML=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon"><img src="'+t.image+'" alt="" loading="lazy" onerror="'+(t.fallback? "if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.display=\'none\';}":"this.style.display=\'none\'")+'"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join("")||(filter==="all"?"<div class=\"planner-empty\">¡No tienes objetivos pendientes! Buen trabajo.</div>":"<div class=\"planner-empty\">No hay tareas pendientes en esta categoría.</div>");
  renderWeeklyChecklist();
 }
 function activateSidebar(name){
