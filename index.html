@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-AB</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-AC</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1423,6 +1423,26 @@ input[type=checkbox]{accent-color:#65d4b7}
 .planner-task{transition:border-color .16s,background .16s}
 .planner-task:has(input:checked){border-color:#4c7659;background:#172b22}
 @supports not selector(:has(*)){.weekly-accordion-content .weekly-task.is-done{border-color:#426b55;background:#193326}}
+
+/* Iconografía e imágenes: marcos uniformes y proporciones coherentes */
+.item-img{background:radial-gradient(circle at 50% 35%,#263c50,#101824 78%);border-color:#405b72;box-shadow:inset 0 0 0 1px #ffffff05;transition:transform .18s ease,border-color .18s ease}
+.mountain-card:hover .item-img{transform:scale(1.035);border-color:#7ed8d0}
+.rotation-mini img:not(.rotation-item-icon){background:radial-gradient(circle at 50% 35%,#30435b,#111a27 78%);border-color:#3d536d;box-shadow:inset 0 0 0 1px #ffffff05}
+.rotation-mini img.rotation-item-icon{background:radial-gradient(circle at 50% 35%,#493e2a,#20283a 78%);border-color:#8e7447}
+.dashboard-pokemon-mini{position:relative;background:radial-gradient(circle at 50% 38%,#273b50,#101a27 78%);border-color:#3a536b;transition:transform .16s ease,border-color .16s ease}
+.dashboard-pokemon-mini:hover{transform:translateY(-2px);border-color:#7ed8d0}
+.dashboard-pokemon-mini img{object-fit:contain;filter:drop-shadow(0 2px 3px #0007)}
+.dashboard-weekly-preview .dashboard-pokemon-mini.captured{background:radial-gradient(circle at 50% 38%,#294b36,#15251e 78%);box-shadow:inset 0 0 0 1px #9be56418}
+.dashboard-pending-item img{border-radius:10px;background:radial-gradient(circle at 50% 38%,#263a50,#111a27 78%);border:1px solid #344b63;padding:3px}
+.planner-task-icon{overflow:hidden;background:radial-gradient(circle at 50% 35%,#2c4057,#172233 80%);border-color:#405873}
+.planner-task-icon img{padding:3px;filter:drop-shadow(0 2px 4px #0008)}
+.weekly-clone-accordion .clone-summary-check{font-size:13px}
+#panelChosen .chosen-chapter-number{box-shadow:0 3px 9px #03070d35}
+#panelChosen .chosen-component-count{font-variant-numeric:tabular-nums;background:#211d30;border:1px solid #4d416b;border-radius:8px;padding:3px 6px}
+#panelChosen .chosen-component img{flex-shrink:0;object-fit:contain;border-radius:8px;background:radial-gradient(circle at 50% 35%,#2c2940,#151522 78%);border:1px solid #443957;padding:3px}
+#panelJoey .pokemon-sprite,#panelMountain .pokemon-sprite{object-fit:contain;filter:drop-shadow(0 2px 4px #0007)}
+img{image-rendering:auto}
+@media(prefers-reduced-motion:reduce){.item-img,.dashboard-pokemon-mini{transition:none}.dashboard-pokemon-mini:hover{transform:none}}
 </style>
 </head>
 <body><div class="app-shell">
