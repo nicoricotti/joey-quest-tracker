@@ -1300,7 +1300,7 @@ button:disabled{opacity:.48;cursor:not-allowed}
 @media(max-width:520px){.clone-date-fields{grid-template-columns:1fr}.weekly-clone-task .weekly-monthly{display:none}}
 
 /* Acordeones compactos para las listas de misiones */
-.weekly-accordion,.weekly-clone-accordion{border:1px solid #34465e;border-radius:14px;background:linear-gradient(145deg,#172333,#111925);overflow:hidden}.weekly-accordion{margin-bottom:14px}.weekly-accordion>summary,.weekly-clone-accordion>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}.weekly-accordion>summary::-webkit-details-marker,.weekly-clone-accordion>summary::-webkit-details-marker{display:none}.weekly-accordion>summary>span:first-child,.clone-summary-main{display:grid;gap:4px;min-width:0;flex:1}.weekly-accordion>summary strong,.weekly-clone-accordion>summary strong{font-size:13px;color:#f1f5fb}.weekly-accordion>summary small,.weekly-clone-accordion>summary small{font-size:11px;color:#a9bad0;line-height:1.4}.weekly-accordion-chevron{color:#9fb7d5;font-size:20px;transition:transform .18s ease}.weekly-accordion[open]>summary .weekly-accordion-chevron,.weekly-clone-accordion[open]>summary .weekly-accordion-chevron{transform:rotate(180deg)}.weekly-accordion-content{display:grid;gap:12px;padding:0 12px 12px}.weekly-accordion-content .weekly-group{margin:0}.weekly-clone-list{display:grid;gap:8px;padding:0 12px 12px}.weekly-clone-accordion{background:#111c2a;border-color:#34465e}.weekly-clone-accordion>summary{padding:12px}.clone-summary-check{width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;border-radius:8px;background:#26384d;color:#b8cce3;font-weight:800}.weekly-clone-accordion[open]>summary{border-bottom:1px solid #34465e;background:#19283a}.weekly-clone-details{padding:0 10px 10px}.weekly-clone-details .weekly-clone-task{padding:12px 2px 2px}@media(max-width:520px){.weekly-accordion>summary,.weekly-clone-accordion>summary{padding:12px}.weekly-accordion-content{padding:0 8px 8px}.weekly-clone-list{padding:0 8px 8px}}
+.weekly-accordion,.weekly-clone-accordion{border:1px solid #34465e;border-radius:14px;background:linear-gradient(145deg,#172333,#111925);overflow:hidden}.weekly-accordion{margin-bottom:14px}.weekly-accordion>summary,.weekly-clone-accordion>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}.weekly-accordion>summary::-webkit-details-marker,.weekly-clone-accordion>summary::-webkit-details-marker{display:none}.weekly-accordion>summary>span:first-child,.clone-summary-main{display:grid;gap:4px;min-width:0;flex:1}.weekly-accordion>summary strong,.weekly-clone-accordion>summary strong{font-size:13px;color:#f1f5fb}.weekly-accordion>summary small,.weekly-clone-accordion>summary small{font-size:11px;color:#a9bad0;line-height:1.4}.weekly-accordion-chevron{color:#9fb7d5;font-size:20px;transition:transform .18s ease}.weekly-accordion[open]>summary .weekly-accordion-chevron,.weekly-clone-accordion[open]>summary .weekly-accordion-chevron{transform:rotate(180deg)}.weekly-accordion-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 12px 12px}.weekly-accordion-content .weekly-group{margin:0}.weekly-clone-list{display:grid;gap:8px;padding:0 12px 12px}.weekly-clone-accordion{background:#111c2a;border-color:#34465e}.weekly-clone-accordion>summary{padding:12px}.clone-summary-check{width:24px;height:24px;display:grid;place-items:center;flex-shrink:0;border-radius:8px;background:#26384d;color:#b8cce3;font-weight:800}.weekly-clone-accordion[open]>summary{border-bottom:1px solid #34465e;background:#19283a}.weekly-clone-details{padding:0 10px 10px}.weekly-clone-details .weekly-clone-task{padding:12px 2px 2px}@media(max-width:700px){.weekly-accordion-content{grid-template-columns:1fr}}@media(max-width:520px){.weekly-accordion>summary,.weekly-clone-accordion>summary{padding:12px}.weekly-accordion-content{padding:0 8px 8px}.weekly-clone-list{padding:0 8px 8px}}
 </style>
 </head>
 <body><div class="app-shell">
@@ -1332,19 +1332,19 @@ button:disabled{opacity:.48;cursor:not-allowed}
   if(!el)return;
   const message=event.message||event.error?.message||"Error JavaScript sin detalle";
   const where=event.lineno?(" · línea "+event.lineno+(event.colno?":"+event.colno:"")):"";
-  el.textContent="Diagnóstico de versión: 2026-10-20-R · ERROR JAVASCRIPT: "+message+where;
+  el.textContent="Diagnóstico de versión: 2026-10-20-S · ERROR JAVASCRIPT: "+message+where;
  },true);
  window.addEventListener("unhandledrejection",function(event){
   const el=document.getElementById("buildStamp");
   if(!el)return;
   const reason=event.reason?.message||String(event.reason||"Rechazo de promesa sin detalle");
-  el.textContent="Diagnóstico de versión: 2026-10-20-R · ERROR DE INICIO: "+reason;
+  el.textContent="Diagnóstico de versión: 2026-10-20-S · ERROR DE INICIO: "+reason;
  });
  const started=Date.now();
  setTimeout(function(){
   const el=document.getElementById("buildStamp");
   if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
-  el.textContent="Diagnóstico de versión: 2026-10-20-R · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+  el.textContent="Diagnóstico de versión: 2026-10-20-S · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
  },12000);
 })();
 </script>
@@ -1416,7 +1416,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-R · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-S · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -1949,15 +1949,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-R · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-S · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-R · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-S · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-R · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-S · error de conectividad Firebase: "+authErrorMessage(err);
 });
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
@@ -1968,7 +1968,7 @@ onValue(ref(db,"tracker"),snapshot=>{
  if(stamp){
   let profileCount=0,progressCount=0;
   for(const values of Object.values(cloud?.profiles||{})){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}
-  stamp.textContent="Diagnóstico de versión: 2026-10-20-R · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
+  stamp.textContent="Diagnóstico de versión: 2026-10-20-S · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
  }
  let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
  if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
@@ -2004,7 +2004,7 @@ onValue(ref(db,"tracker"),snapshot=>{
    setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
   }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  }
-},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-R · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
+},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-S · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
 document.getElementById("googleLogin").addEventListener("click",async()=>{const button=document.getElementById("googleLogin");button.disabled=true;setAuthStatus("Abriendo acceso seguro de Google…");googleProvider.setCustomParameters({prompt:"select_account"});try{await signInWithPopup(auth,googleProvider,browserPopupRedirectResolver);setAuthStatus("Acceso con Google completado. Sincronizando…");}catch(e){console.error("Error de inicio de sesión con Google:",e);if(e?.code==="auth/popup-blocked"||e?.code==="auth/operation-not-supported-in-this-environment"){try{setAuthStatus("El navegador bloqueó la ventana. Continuando en esta pestaña…");await signInWithRedirect(auth,googleProvider);}catch(redirectError){console.error(redirectError);setAuthStatus("No se pudo abrir Google: "+authErrorMessage(redirectError));button.disabled=false;}}else{setAuthStatus("No se pudo iniciar sesión: "+authErrorMessage(e));button.disabled=false;}}});
 getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con Google completado. Sincronizando…");}).catch(e=>{console.error("Error al volver del acceso de Google:",e);setAuthStatus("No se pudo completar el acceso: "+authErrorMessage(e));});
