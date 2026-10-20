@@ -665,7 +665,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <button type="button" class="side-link" data-nav="joey"><span class="side-icon">◈</span><span>Joey Quest</span><span class="side-count" id="sideJoeyProgress">0%</span></button>
   <button type="button" class="side-link" data-nav="mountain"><span class="side-icon">△</span><span>Dimensional Mountain</span><span class="side-count" id="sideMountainProgress">0/12</span></button>
   <button type="button" class="side-link" data-nav="rotation"><span class="side-icon">▦</span><span>Rotación DZ</span></button>
-  <button type="button" class="side-link" data-nav="planner"><span class="side-icon">✓</span><span>Planificador</span><span class="side-count" id="sidePendingCount">—</span></button>
+  <button type="button" class="side-link" data-nav="planner"><span class="side-icon">▦</span><span>Planificador</span><span class="side-count" id="sidePendingCount">—</span></button>
+  <button type="button" class="side-link" data-nav="weekly"><span class="side-icon">☑</span><span>Semanales y mensuales</span></button>
   <div class="sidebar-spacer"></div>
   <div class="sidebar-note"><span class="sidebar-note-dot"></span><span>Tu aventura,<br>tu progreso.</span></div>
   <button type="button" class="side-link side-settings" data-nav="settings"><span class="side-icon">⚙</span><span>Perfiles y acceso</span></button>
@@ -706,6 +707,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div id="plannerTasks" class="planner-tasks"></div>
     </section>
   </div>
+  <p class="planner-footnote">Las tareas de capturas y Mountain se calculan desde el perfil activo. La checklist semanal guarda su propio progreso y se reinicia al comenzar una nueva semana de juego.</p>
+</section><section id="weeklyPanel" class="planner-panel" hidden aria-label="Misiones semanales y mensuales">
+  <div class="planner-hero">
+    <div class="kicker">Rutina de aventura</div>
+    <h2>Misiones semanales y mensuales</h2>
+    <p>Marca el progreso de tus actividades recurrentes. El estado se guarda por perfil y se reinicia según el ciclo de cada misión.</p>
+  </div>
   <section class="planner-card weekly-checklist-card" aria-label="Misiones semanales de Nightmare World">
     <div class="planner-card-heading"><div><span class="planner-eyebrow">RESET SEMANAL · LUNES 07:40 BRT</span><h3>Checklist semanal de Nightmare World</h3></div><span class="planner-icon">☑</span></div>
     <p class="planner-muted">Marca cada objetivo individualmente o completa una categoría con un solo botón. El progreso se guarda en el perfil activo y se separa por semana.</p>
@@ -716,8 +724,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div class="weekly-summary" id="weeklySummary"></div>
     <div id="weeklyChecklist" class="weekly-groups"></div>
   </section>
-  <p class="planner-footnote">Las tareas de capturas y Mountain se calculan desde el perfil activo. La checklist semanal guarda su propio progreso y se reinicia al comenzar una nueva semana de juego.</p>
+
+  <p class="planner-footnote">Las misiones semanales se reinician los lunes a las 07:40 BRT. El Terror mensual tiene su propio ciclo.</p>
 </section>
+
 <div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
@@ -891,15 +901,15 @@ document.getElementById("toggleRotation").addEventListener("click",()=>{const co
 document.getElementById("tabJoey").addEventListener("click",()=>{setTab("joey");document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav==="joey"));});document.getElementById("tabMountain").addEventListener("click",()=>{setTab("mountain");document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav==="mountain"));});
 
 function plannerSetView(name){
- const planner=name==="planner";
+ const planner=name==="planner",weekly=name==="weekly",focused=planner||weekly;
  document.getElementById("plannerPanel").hidden=!planner;
- ["top",""].forEach(()=>{});
- document.querySelector(".hero").hidden=planner;
- document.querySelector(".dashboard").hidden=planner;
- document.getElementById("rotationPanel").hidden=planner;
- document.getElementById("missionTabs").hidden=planner;
- document.getElementById("panelJoey").hidden=planner||name==="mountain";
- document.getElementById("panelMountain").hidden=planner||name!=="mountain";
+ document.getElementById("weeklyPanel").hidden=!weekly;
+ document.querySelector(".hero").hidden=focused;
+ document.querySelector(".dashboard").hidden=focused;
+ document.getElementById("rotationPanel").hidden=focused;
+ document.getElementById("missionTabs").hidden=focused;
+ document.getElementById("panelJoey").hidden=focused||name==="mountain";
+ document.getElementById("panelMountain").hidden=focused||name!=="mountain";
 }
 const weeklyTaskGroups=[
  {id:"nw-hunts",title:"Misiones semanales NW",tasks:[
@@ -1017,6 +1027,7 @@ function renderPlanner(){
 function activateSidebar(name){
  document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===name));
  if(name==="planner"){plannerSetView("planner");renderPlanner();document.getElementById("plannerPanel").scrollIntoView({behavior:"smooth",block:"start"});return;}
+ if(name==="weekly"){plannerSetView("weekly");renderWeeklyChecklist();document.getElementById("weeklyPanel").scrollIntoView({behavior:"smooth",block:"start"});return;}
  plannerSetView(name);
  if(name==="joey"){setTab("joey");document.getElementById("panelJoey").scrollIntoView({behavior:"smooth",block:"start"});}
  else if(name==="mountain"){setTab("mountain");document.getElementById("panelMountain").scrollIntoView({behavior:"smooth",block:"start"});}
