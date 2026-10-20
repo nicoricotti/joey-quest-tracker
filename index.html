@@ -1839,27 +1839,22 @@ function save(options={}){
  if(typeof renderChosenQuest==="function")renderChosenQuest();
  if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){
   setAuthStatus("Guardando cambios en la nube…");
-  const updates={};
   const profile=profiles[activeProfile]||{};
+  const jobs=[];
   if(options.replaceActiveProfile){
-   // Solo para reinicio/importación explícitos, tras respaldo y confirmación.
-   updates["profiles/"+activeProfile]=profile;
+   jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),profile).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
   }else{
-   // Parche por clave: los campos que esta versión desconoce permanecen intactos en Firebase.
-   const keys=Object.keys(profile);
-   if(keys.length){
-    for(const key of keys)updates["profiles/"+activeProfile+"/"+key]=profile[key];
+   const patch={};
+   for(const key of Object.keys(profile))patch[key]=profile[key];
+   if(Object.keys(patch).length){
+    jobs.push(update(ref(db,"tracker/profiles/"+activeProfile),patch).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
    }else if(options.createEmptyProfile){
-    // Solo addProfile puede crear explícitamente un perfil vacío.
-    updates["profiles/"+activeProfile]={};
+    jobs.push(set(ref(db,"tracker/profiles/"+activeProfile),{}).catch(err=>{throw new Error("profiles/"+activeProfile+": "+authErrorMessage(err));}));
    }
-   // Si el perfil local está vacío y no es una creación/reinicio explícito,
-   // no enviar un objeto vacío: podría borrar progreso remoto que este navegador desconoce.
   }
-  updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;
-  updates["activeProfile"]=activeProfile;
-  updates["updatedAt"]=updatedAt;
-  update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});
+  jobs.push(set(ref(db,"tracker/profileNames/"+activeProfile),profileNames[activeProfile]||activeProfile).catch(err=>{throw new Error("profileNames/"+activeProfile+": "+authErrorMessage(err));}));
+  jobs.push(set(ref(db,"tracker/updatedAt"),updatedAt).catch(err=>{throw new Error("updatedAt: "+authErrorMessage(err));}));
+  Promise.all(jobs).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+String(err.message||authErrorMessage(err)));});
  }else if(canWrite&&syncSafetyBlocked){
   setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");
  }
