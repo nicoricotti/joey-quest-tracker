@@ -1781,7 +1781,7 @@ let profileNames={nico:"Misterp"};
 let activeProfile="nico";
 let firebaseUser=null,canWrite=false,canDelete=false,cloudReady=false,applyingCloud=false,migrationAttempted=false;
 // Cualquier cuenta verificada puede crear y editar perfiles; solo las cuentas administradoras pueden eliminarlos.
-const authorizedEmails=["nicoricotti94@gmail.com"];
+const authorizedEmails=["nicoricotti94@gmail.com","daniel.guzba@gmail.com"];
 try{const stored=JSON.parse(localStorage.getItem(KEY)||"null");if(stored&&stored.profiles){profiles=stored.profiles;Object.keys(profiles).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});profileNames={...profileNames,...(stored.profileNames||{})};activeProfile=stored.activeProfile||"nico";}else{const old=JSON.parse(localStorage.getItem("joeyQuestTrackerV1")||"{}");Object.keys(old).forEach(id=>{if(old[id]?.me)profiles.nico[id]=true;if(old[id]?.partner)profiles.pareja[id]=true;});}}catch(e){profiles={nico:{},pareja:{}};profileNames={nico:"Nico",pareja:"Dani"};}
 function normalizeProfileData(){if(!profiles||typeof profiles!=="object")profiles={};if(!profileNames||typeof profileNames!=="object")profileNames={};Object.keys(profileNames).forEach(id=>{if(!profiles[id]||typeof profiles[id]!=="object")profiles[id]={};});if(!profiles.nico)profiles.nico={};if(!profileNames.nico)profileNames.nico="Misterp";}
 function profileLabel(id){return profileNames[id]||id;}
