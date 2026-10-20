@@ -1864,23 +1864,20 @@ const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)
  document.getElementById("dashWeeklyCount").textContent=String(weeklyAvailable.length);
  document.getElementById("dashWeeklyPreview").innerHTML=weeklyNames.map(name=>'<div class="dashboard-pokemon-mini '+(capturedUnique.some(x=>x.name===name)?"captured":"pending")+'" title="'+name+'"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="'+name+'" loading="lazy" onerror="rotationImageError(this)"></div>').join("")||'<div class="dashboard-empty">No hay Pokémon en la rotación actual.</div>';
  const tasks=[];
- pending.slice(0,4).forEach(x=>tasks.push({name:x.name,detail:"Joey Quest · Captura pendiente",src:spriteUrl(x.name),fallback:spriteFallback(x.name)}));
- mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15).slice(0,2).forEach(([d,item])=>{const name=d.replace(/^DZ /,"");tasks.push({name,detail:"Mountain · "+item,src:rotationPokemonImage(name),fallback:rotationArtworkImage(name)});});
- document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action" data-dashboard-target="'+(t.detail.startsWith("Mountain")?"mountain":"joey")+'" aria-label="Ir a '+t.name+' en '+(t.detail.startsWith("Mountain")?"Dimensional Mountain":"Joey Quest")+'"><img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.detail.startsWith("Mountain")?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.visibility=\'hidden\';}":"this.style.visibility=\'hidden\'"))+'"><span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
+ pending.slice(0,4).forEach(x=>tasks.push({name:x.name,detail:"Joey Quest · Captura pendiente",target:"joey",destination:"Joey Quest",src:spriteUrl(x.name),fallback:spriteFallback(x.name)}));
+ mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15).slice(0,2).forEach(([d,item])=>{const name=d.replace(/^DZ /,"");tasks.push({name,detail:"Mountain · "+item,target:"mountain",destination:"Dimensional Mountain",src:rotationPokemonImage(name),fallback:rotationArtworkImage(name)});});
+ document.getElementById("dashPendingList").innerHTML=tasks.map(t=>'<button type="button" class="dashboard-pending-item dashboard-pending-action" data-dashboard-target="'+t.target+'" aria-label="Ir a '+t.name+' en '+t.destination+'"><img src="'+t.src+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.target==="mountain"?"rotationImageError(this)":(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.visibility=\'hidden\';}":"this.style.visibility=\'hidden\'"))+'"><span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-arrow" aria-hidden="true">↗</span></button>').join("")||'<div class="dashboard-empty">No hay objetivos pendientes en estas categorías.</div>';
  document.getElementById("dashPendingCount").textContent=String(tasks.length);
  applyDashboardPreferences();
 }
 
-/* Accesos directos desde objetivos pendientes del resumen */
+/* Accesos directos del resumen: reutilizan la navegación oficial y no alteran el progreso. */
 document.getElementById("dashPendingList").addEventListener("click",e=>{
- const button=e.target.closest("[data-dashboard-target]");
+ const button=e.target.closest("button[data-dashboard-target]");
  if(!button)return;
  const target=button.dataset.dashboardTarget;
- if(target==="mountain"){plannerSetView("mountain");setTab("mountain");}
- else{plannerSetView("joey");setTab("joey");}
- document.querySelectorAll(".side-link[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===target));
- const destination=target==="mountain"?document.getElementById("panelMountain"):document.getElementById("panelJoey");
- destination?.scrollIntoView({behavior:"smooth",block:"start"});
+ if(!["joey","mountain","chosen","rotation","planner","weekly","settings","home"].includes(target))return;
+ activateSidebar(target);
 });
 function render(){
  const q=document.getElementById("searchJoey").value.trim().toLowerCase(),f=document.getElementById("filterJoey").value;
