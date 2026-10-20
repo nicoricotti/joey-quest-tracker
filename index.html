@@ -660,6 +660,161 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 @media(max-width:560px){.planner-hero{padding:18px}.planner-card{padding:13px}.planner-summary{gap:6px}.planner-stat{padding:9px}.planner-stat strong{font-size:22px}.planner-stat span{font-size:9px;line-height:1.35}.planner-layout{gap:9px}.planner-task{gap:8px;padding:9px}.planner-task-icon{width:32px;height:32px}.planner-task-type{font-size:9px}}
 @media(max-width:370px){.planner-summary{grid-template-columns:1fr}.planner-stat{display:flex;justify-content:space-between;align-items:center;gap:10px}.planner-stat span{margin:0;text-align:right}}
 
+
+/* PXG Tracker visual polish — CSS only; preserves app logic and Firebase data */
+:root{
+ --bg:#0d131b;--panel:#151e29;--panel2:#1c2937;--text:#edf4f8;--muted:#a7b8c7;
+ --line:#2b3a49;--accent:#52dfc0;--accent2:#8debd8;--warn:#f2c879;
+}
+html{scroll-behavior:smooth}
+body{
+ background:radial-gradient(ellipse at 12% -8%,#1d3948 0,transparent 38%),
+ radial-gradient(ellipse at 100% 8%,#18302e 0,transparent 28%),var(--bg);
+ letter-spacing:.005em;
+}
+#appMain{min-width:0}
+main{max-width:1180px;padding-top:22px}
+.hero,.dashboard-home,.dashboard,.planner-panel,.mission-panel,.clan,.mountain-card,.planner-card{
+ box-shadow:0 10px 28px #00000018;
+}
+.hero{
+ background:linear-gradient(140deg,#1b2b3b 0%,#151e29 70%);
+ border-color:#304454;border-radius:22px;
+}
+.kicker,.dashboard-overline{color:var(--accent)}
+p{line-height:1.6}
+.stat,.dashboard-card,.planner-card,.rotation-week-card{
+ transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.stat{background:linear-gradient(145deg,#192633,#121a24);border-color:#2d4050}
+.stat span{line-height:1.45}
+.controls{align-items:center;gap:10px}
+.controls input,.controls select,button,.profile-content select,.auth-actions input{
+ transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.controls input,.controls select{
+ background:#101923;border-color:#304454;border-radius:12px;min-height:43px;
+}
+.controls input:focus,.controls select:focus,.auth-actions input:focus{
+ outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #52dfc026;
+}
+button{border-radius:12px}
+button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible{
+ outline:2px solid var(--accent);outline-offset:3px;
+}
+button:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}
+button:disabled{opacity:.48;cursor:not-allowed;transform:none}
+.primary,.tabs .tab.active{
+ background:linear-gradient(135deg,#63e5c5,#8debd8);color:#0c2422;border-color:transparent;
+ box-shadow:0 5px 16px #52dfc018;
+}
+.tabs{gap:9px;margin:18px 0 14px}
+.tabs .tab{
+ flex:1;min-width:0;padding:13px 16px;border-radius:14px;
+ background:linear-gradient(145deg,#1b2735,#151e29);border-color:#304454;color:#dce8ef;
+}
+.tabs .tab:hover{border-color:#4e9d96}
+.tab-progress{font-variant-numeric:tabular-nums}
+.mission-panel{padding:15px;border-radius:19px;border-color:#2c3e4c;background:#111a24a8}
+.mission-controls{padding:4px 0 12px}
+.clan,.mountain-card{border-radius:17px;border-color:#2d4050;background:linear-gradient(145deg,#172330,#131b25)}
+.clan-head{background:linear-gradient(110deg,#202f3e,#1a2633);padding:16px 18px;gap:14px}
+.clan-head h2{font-size:16px;letter-spacing:-.015em}
+.clan-head:hover{background:linear-gradient(110deg,#263c4b,#1b2a37)}
+.clan-meta{line-height:1.5}
+.pill{border-color:#3b5963;background:#142b30;color:var(--accent);font-weight:750}
+.rows{padding:5px 17px 12px}
+.pokemon{padding:12px 4px;border-bottom-color:#2a3947}
+.pokemon:last-child{border-bottom:0}
+.poke-img,.item-img,.dashboard-pokemon-mini,.rotation-mini img:not(.rotation-item-icon){
+ border-color:#304656;background:linear-gradient(145deg,#192a37,#101821);
+}
+.poke-img{border-radius:12px;image-rendering:auto}
+.poke-info{gap:12px}
+.poke-name{letter-spacing:-.01em}
+.poke-sub{line-height:1.4}
+.ball-count input{background:#0e1720;border-color:#304454;border-radius:9px}
+.ball-count input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px #52dfc020}
+.check,.ready-check{color:#c0cdd7}
+.check input,.ready-check input{accent-color:var(--accent)}
+.done .poke-name{color:#9aaeb9}
+.mountain-card{background:linear-gradient(130deg,#182d36,#141e29)}
+.mountain-card .clan-head{background:linear-gradient(110deg,#203c43,#1a2b35)}
+.mountain-card .pill{color:#8debd8;background:#142d31;border-color:#35635e}
+.mountain-hero{background:linear-gradient(135deg,#1e3943,#151f2a 72%);border-color:#34535e}
+.dashboard-home{border-color:#304957;background:radial-gradient(circle at 100% 0,#52dfc018,transparent 36%),linear-gradient(145deg,#182b38,#101923)}
+.dashboard-home .dashboard-card,.dashboard-card{border-color:#2d4351;background:linear-gradient(145deg,#192a37,#121b25)}
+.dashboard-home .dashboard-card:hover,.dashboard-card:hover,.planner-card:hover,.rotation-week-card:hover{
+ border-color:#4a918a;box-shadow:0 8px 22px #00000020;
+}
+.dashboard-chip{background:#18343a;border-color:#315b5d;color:#c8f7ed}
+.dashboard-home-mark{color:var(--accent);border-color:#3a6868;background:#10242b}
+.dashboard-pokemon-mini{border-radius:10px}
+.dashboard-weekly-preview .dashboard-pokemon-mini.captured{border-color:#52dfc0;background:#17352f}
+.dashboard-pending-item{border-color:#2d4351;background:#101a24}
+.dashboard-pending-item img{border-radius:10px}
+.dashboard-clan-summary{border-top-color:#2d4351}
+.rotation-week-card{background:linear-gradient(145deg,#172431,#111a24);border-color:#2d4050;border-radius:15px}
+.rotation-week-card.current{border-color:#52dfc0;background:linear-gradient(145deg,#1a3835,#111a24)}
+.rotation-week-card.selected{box-shadow:0 0 0 2px #52dfc0 inset}
+.rotation-week-date{color:var(--accent2)}
+.rotation-week-images{gap:7px}
+.rotation-mini img:not(.rotation-item-icon){border-radius:12px}
+.rotation-mini span{line-height:1.3}
+.planner-panel{border-color:#2d4050;border-radius:20px;background:linear-gradient(145deg,#151f2a,#101820)}
+.planner-hero{border-radius:18px;border-color:#34505b;background:radial-gradient(circle at 100% 0,#52dfc01a,transparent 35%),linear-gradient(135deg,#1a3039,#151f2a)}
+.planner-card{border-color:#2d4351;border-radius:16px;background:linear-gradient(145deg,#192833,#121b24)}
+.planner-card-heading{gap:10px}
+.planner-eyebrow{color:var(--accent)}
+.planner-stat{border-color:#2d4351;background:#101a23;border-radius:13px}
+.planner-stat strong{font-variant-numeric:tabular-nums}
+.planner-filter{border-radius:999px;transition:all .16s ease}
+.planner-filter.active{background:#1a3a38;border-color:#52dfc0;color:#c9fff1}
+.planner-task,.planner-dungeon,.weekly-group,.weekly-task{
+ border-color:#2c414f;border-radius:12px;
+}
+.weekly-controls{gap:9px}
+.weekly-summary{gap:10px}
+.weekly-groups{gap:12px}
+.weekly-group{background:linear-gradient(145deg,#172632,#121b24);overflow:hidden}
+.weekly-group-head{background:#1c2e3b}
+.weekly-task{background:#101a23}
+.weekly-task:hover{border-color:#4b8983}
+.planner-footnote,.notice{font-size:12px;line-height:1.6;color:#9fb1bf}
+.auth-drawer,.profile-drawer{border-color:#2d4351;background:#141f29}
+.auth-drawer summary,.profile-drawer summary{padding:15px 17px}
+.auth-drawer summary:hover,.profile-drawer summary:hover{background:#1a2a36}
+.auth-status{border-color:#315e53;background:#142a26}
+.auth-status.is-error{border-color:#80505a;background:#301e27}
+.friendly-btn{background:linear-gradient(135deg,#63e5c5,#8debd8);color:#0c2422}
+.secondary-btn{background:#253545;color:#e7f0f6;border:1px solid #3a5263}
+.danger-btn{background:#35262e;color:#ffd1d8;border:1px solid #69404a}
+.google-btn{background:#e8f0fe;color:#1a2c4e}
+.empty,.planner-empty,.weekly-empty{padding:24px;color:#a7b8c7}
+@media(max-width:700px){
+ main{padding:14px 12px 38px}
+ .hero{border-radius:18px}
+ .mission-panel{padding:10px}
+ .clan-head{padding:14px}
+ .rows{padding:3px 10px 9px}
+ .tabs .tab{padding:12px 10px;font-size:13px}
+ .controls input,.controls select{min-width:0}
+ .dashboard-home{padding:15px}
+ .planner-card{padding:13px}
+}
+@media(max-width:430px){
+ .tabs{gap:7px}
+ .tabs .tab{font-size:12px;padding:11px 7px}
+ .tab-progress{font-size:10px;padding:2px 6px}
+ .poke-info{gap:8px}
+ .poke-name{font-size:13px}
+ .poke-sub{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{transition:none!important;animation:none!important}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
