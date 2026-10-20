@@ -1168,7 +1168,7 @@ function createSafetyBackup(){
  try{localStorage.setItem("joeyQuestTrackerSafetyBackup",JSON.stringify(snapshot));}catch(e){}
  return snapshot;
 }
-function save(){const updatedAt=new Date().toISOString();const payload={profiles,profileNames,activeProfile,updatedAt};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(canWrite&&cloudReady&&!applyingCloud){setAuthStatus("Guardando cambios en la nube…");const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});}}
+function save(){const updatedAt=new Date().toISOString();const payload={profiles,profileNames,activeProfile,updatedAt};localStorage.setItem(KEY,JSON.stringify(payload));refreshProfileSelect();render();if(typeof renderPlanner==="function")renderPlanner();if(typeof renderChosenQuest==="function")renderChosenQuest();if(canWrite&&cloudReady&&!applyingCloud){setAuthStatus("Guardando cambios en la nube…");const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});}}
 function state(id){return !!profiles[activeProfile][id]}
 
 const mountainItems=[
@@ -1296,7 +1296,7 @@ function plannerSetView(name){
  document.querySelector(".dashboard").hidden=focused;
  document.getElementById("rotationPanel").hidden=focused;
  document.getElementById("missionTabs").hidden=focused;
- document.getElementById("panelJoey").hidden=focused||name==="mountain";
+ document.getElementById("panelJoey").hidden=focused||name==="mountain"||name==="chosen";
  document.getElementById("panelMountain").hidden=focused||name!=="mountain";
 }
 const chosenChapters=[
