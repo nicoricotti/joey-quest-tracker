@@ -907,6 +907,75 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none}
  #clans .clan-head,#clans .pokemon,.dashboard-pokemon-mini,.dashboard-pending-item{transition:none}
 }
 
+
+/* PXG Tracker — third pass: navigation clarity and responsive finishing */
+.app-sidebar{
+ background:linear-gradient(180deg,#131f2b 0%,#101821 58%,#0e151d 100%);
+ border-right-color:#293f4c;
+ padding-top:20px;
+}
+.sidebar-brand{border-bottom-color:#2a404b}
+.brand-mark{
+ background:linear-gradient(135deg,#5ee2c2,#a1f0df);
+ box-shadow:0 5px 18px #52dfc01f;
+}
+.sidebar-brand small{color:#7ca5ae}
+.sidebar-label{color:#75909d;font-size:9px;letter-spacing:.17em}
+.side-link{
+ position:relative;min-height:43px;border-radius:12px;
+ color:#b7c8d2;letter-spacing:.005em;
+}
+.side-link .side-icon{color:#85cfc8}
+.side-link:hover{background:#1a2c37;border-color:#2d4c57;color:#f0fbfa}
+.side-link.active{
+ background:linear-gradient(100deg,#183b39,#1b2b35);
+ border-color:#2e625c;color:#d7fff5;
+ box-shadow:inset 3px 0 #52dfc0;
+}
+.side-link.active .side-icon{color:#7cf0d7}
+.side-count{
+ color:#a2f0dd;background:#102b2b;border-color:#2b5855;
+ font-variant-numeric:tabular-nums;
+}
+.sidebar-note{border-color:#2c454f;background:linear-gradient(135deg,#182b35,#131e28)}
+.sidebar-note-dot{background:#52dfc0;box-shadow:0 0 12px #52dfc055}
+.side-settings{border-top-color:#2a404b}
+.side-link:focus-visible,.sidebar-brand:focus-visible{
+ outline:2px solid #52dfc0;outline-offset:2px;
+}
+#appMain{scroll-margin-top:16px}
+#appMain>section,#appMain>.tabs,#appMain>.mission-panel,#appMain>.footer{scroll-margin-top:84px}
+@media(min-width:701px){
+ .app-sidebar{overflow-y:auto;overscroll-behavior:contain}
+ .app-sidebar::-webkit-scrollbar{width:5px}
+ .app-sidebar::-webkit-scrollbar-thumb{background:#2a414d;border-radius:9px}
+ .sidebar-brand:hover{opacity:.94}
+}
+@media(max-width:700px){
+ .app-sidebar{
+  gap:5px;padding:8px 9px;
+  background:#101a24f5;border-bottom-color:#2b424e;
+  box-shadow:0 6px 18px #0003;
+  scrollbar-width:thin;scrollbar-color:#34515b transparent;
+ }
+ .sidebar-brand{padding-right:9px;margin-right:3px}
+ .sidebar-brand strong{font-size:11px}
+ .side-link{min-height:39px;border-radius:10px;padding:8px 9px}
+ .side-link.active{box-shadow:inset 0 -2px #52dfc0}
+ .side-count{border-radius:6px}
+ #appMain{padding-top:13px}
+ #appMain>.hero{scroll-margin-top:75px}
+}
+@media(max-width:390px){
+ .sidebar-brand strong{font-size:10px}
+ .sidebar-brand small{letter-spacing:.12em}
+ .side-link{font-size:10px;padding:8px 7px}
+ .side-icon{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){
+ .side-link,.sidebar-brand{transition:none!important}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
