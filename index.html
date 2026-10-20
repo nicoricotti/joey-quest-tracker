@@ -1595,6 +1595,18 @@ img{image-rendering:auto}
 @media(max-width:430px){.dashboard-quickstats .stat{padding:12px 10px}.dashboard-quickstats .stat>span{font-size:10px}.dashboard-quickstats .stat>strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.dashboard-quickstats .stat .bar>div{transition:none}}
 
+
+/* Mountain: separar visualmente el umbral de dungeons del objeto ya conseguido. */
+#panelMountain .mountain-card.mountain-runs-complete{border-color:#6682a5;background:linear-gradient(115deg,#1d2b40,#141e2b)}
+#panelMountain .mountain-card.mountain-runs-complete:before{background:#83baff}
+#panelMountain .mountain-card.mountain-runs-complete .mountain-status{color:#a8d2ff}
+#panelMountain .mountain-card.mountain-ready .mountain-status{color:#b9f58b}
+#panelMountain .mountain-progress-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:9px 0 5px;color:var(--muted);font-size:11px}
+#panelMountain .mountain-progress-heading strong{color:var(--text);font-size:12px;font-variant-numeric:tabular-nums}
+#panelMountain .mountain-progress-bar{margin:0 0 5px}
+#panelMountain .mountain-progress-bar[aria-valuenow="15"]>div{background:linear-gradient(90deg,#5b9bd5,#a8d2ff);box-shadow:0 0 12px #83baff30}
+#panelMountain .mountain-card.mountain-ready .mountain-progress-bar>div{background:linear-gradient(90deg,#4bbf87,#b9f58b)}
+
 </style>
 </head>
 <body><div class="app-shell">
@@ -1850,8 +1862,8 @@ function renderMountain(){
  visibleItems.forEach(([dungeon,item])=>{
   const count=Math.max(0,Math.min(15,Number(profiles[activeProfile][runKey(dungeon)]||0)));
   const ready=!!profiles[activeProfile]["mountain-ready:"+dungeon];
-  const card=document.createElement("div");card.className="mountain-card"+(ready?" mountain-ready":count>0?" mountain-in-progress":"");
-  card.innerHTML=`<div class="clan-head" style="cursor:default"><div class="mountain-object"><img class="item-img" src="${itemImageUrl(item)}" alt="${item}" loading="lazy"><div><h2>${dungeon}</h2><div class="clan-meta">Objeto requerido: <strong>${item}</strong></div><div class="bar"><div style="width:${count/15*100}%"></div></div><div class="clan-meta">${count===15?"¡15 dungeons completadas!":"Faltan "+(15-count)+" dungeons para el umbral"}</div></div><span class="mountain-status ${ready?"ready":count>0?"in-progress":""}">${ready?"✓ Objeto listo":count===15?"✦ Umbral alcanzado":count>0?"◷ En progreso":"○ Sin comenzar"}</span></div><span class="pill">${count}/15 dungeons</span></div><div class="rows"><div class="controls" style="margin:8px 0;align-items:center"><button data-step="-1" data-dungeon="${dungeon}" ${count===0?"disabled":""}>− 1 dungeon</button><button class="primary" data-step="1" data-dungeon="${dungeon}" ${count===15?"disabled":""}>+ 1 dungeon</button><label class="ready-check"><input type="checkbox" data-ready="${dungeon}" ${ready?"checked":""}> Objeto listo</label></div></div>`;
+  const card=document.createElement("div");card.className="mountain-card"+(ready?" mountain-ready":count===15?" mountain-runs-complete":count>0?" mountain-in-progress":"");
+  card.innerHTML=`<div class="clan-head" style="cursor:default"><div class="mountain-object"><img class="item-img" src="${itemImageUrl(item)}" alt="${item}" loading="lazy"><div><h2>${dungeon}</h2><div class="clan-meta">Objeto requerido: <strong>${item}</strong></div><div class="mountain-progress-heading"><span>Progreso de dungeons</span><strong>${count}/15</strong></div><div class="bar mountain-progress-bar" role="progressbar" aria-label="${dungeon}: dungeons completadas" aria-valuemin="0" aria-valuemax="15" aria-valuenow="${count}"><div style="width:${count/15*100}%"></div></div><div class="clan-meta">${count===15?"¡Umbral alcanzado! Puedes centrarte en conseguir el objeto.":"Faltan "+(15-count)+" dungeons para el umbral"}</div></div><span class="mountain-status ${ready?"ready":count>0?"in-progress":""}">${ready?"✓ Objeto listo":count===15?"✦ 15/15 dungeons":count>0?"◷ En progreso":"○ Sin comenzar"}</span></div><span class="pill">${count}/15 dungeons</span></div><div class="rows"><div class="controls" style="margin:8px 0;align-items:center"><button data-step="-1" data-dungeon="${dungeon}" ${count===0?"disabled":""}>− 1 dungeon</button><button class="primary" data-step="1" data-dungeon="${dungeon}" ${count===15?"disabled":""}>+ 1 dungeon</button><label class="ready-check"><input type="checkbox" data-ready="${dungeon}" ${ready?"checked":""}> Objeto listo</label></div></div>`;
   root.appendChild(card);
  });
  root.querySelectorAll("input[data-ready]").forEach(box=>{box.disabled=!canWrite;box.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile]["mountain-ready:"+box.dataset.ready]=box.checked;const item=mountainItems.find(x=>x[0]===box.dataset.ready)?.[1]||"objeto";save();if(box.checked)showAchievement("🏆 ¡Objeto listo! "+item);})});
