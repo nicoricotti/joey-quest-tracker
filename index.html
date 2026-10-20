@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-D</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-E</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1057,7 +1057,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <section class="hero">
 <div class="kicker">PokeXGames · misión de capturas</div>
 <h1>PXG Mission Tracker</h1>
-<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-D · esperando respuesta de Firebase…</p>
+<p id="buildStamp" style="font-size:11px;color:var(--muted);margin-top:6px">Diagnóstico de versión: 2026-10-20-E · esperando respuesta de Firebase…</p>
+<script>
+(function(){
+ const started=Date.now();
+ setTimeout(function(){
+  const el=document.getElementById("buildStamp");
+  if(!el||!el.textContent.includes("esperando respuesta de Firebase"))return;
+  el.textContent="Diagnóstico de versión: 2026-10-20-E · el módulo principal no llegó a iniciar Firebase en 12 s. Comprueba carga de scripts/conexión.";
+ },12000);
+})();
+</script>
 <details id="authPanel" class="auth-drawer"><summary><span>🔐 Acceso y sincronización</span><span id="authSummaryStatus">Cuenta</span></summary><div class="auth-content"><div id="authStatus" class="auth-status" role="status" aria-live="polite">Conectando con el servicio de sincronización…</div><div class="auth-actions"><button class="friendly-btn google-btn" type="button" id="googleLogin">🌐 Continuar con Google</button><input id="authEmail" type="email" placeholder="Correo electrónico" autocomplete="email"><input id="authPassword" type="password" placeholder="Contraseña" autocomplete="current-password"><button class="friendly-btn" type="button" id="emailLogin">Entrar</button><button class="friendly-btn secondary-btn" type="button" id="emailSignup">Crear cuenta</button><button class="friendly-btn secondary-btn" type="button" id="logout" hidden>Cerrar sesión</button></div><div id="authHelp" hidden></div></div></details>
 <details id="profilePanel" class="profile-drawer"><summary><span>👥 Perfiles</span><span id="activeProfileBadge">Perfil activo</span></summary><div class="profile-content"><label for="profile" style="color:var(--muted)">Perfil activo</label><select id="profile" aria-label="Seleccionar perfil"></select><div class="profile-actions"><button class="friendly-btn" type="button" id="addProfile">＋ Agregar perfil</button><button class="friendly-btn secondary-btn" type="button" id="renameProfile">✎ Cambiar nombre</button><button class="friendly-btn danger-btn" type="button" id="deleteProfile" disabled>🗑 Eliminar perfil</button></div></div></details>
 <div class="stats dashboard-quickstats"><div class="stat"><span>Pokémon capturados</span><strong id="total">0/0</strong><small>Progreso de colección</small></div><div class="stat"><span>Captura completada</span><strong id="you">0%</strong><div class="bar"><div id="youbar"></div></div></div><div class="stat"><span>Misiones semanales</span><strong id="partner">0/0</strong><small id="dashWeeklyMissionNote">Progreso de actividades recurrentes</small></div></div></section><section class="dashboard dashboard-home" aria-label="Centro de mando"><div class="dashboard-home-heading"><div><div class="kicker">CENTRO DE MANDO</div><h2>Tu aventura · <span id="dashboardProfile">Misterp</span></h2><p>Tu colección, tus objetivos y el progreso registrado en PXG.</p></div><div class="dashboard-home-mark">◉</div></div><div class="dashboard-home-grid"><article class="dashboard-card"><div class="dashboard-section-title"><div><span class="dashboard-overline">POKÉDEX</span><h3>Tu colección</h3></div><span class="dashboard-chip" id="dashUnique">0/0</span></div><div class="dashboard-main" id="dashJoeyPercent">0%</div><div class="bar"><div id="dashJoeyBar" style="width:0%"></div></div><div class="dashboard-line"><span>Poké Balls registradas (aprox.)</span><strong id="dashPokeballs">0</strong></div><div class="dashboard-sprite-group"><div class="dashboard-sprite-heading"><strong>Ya capturados</strong><span id="dashCapturedCount">0</span></div><div class="dashboard-collection-preview" id="dashCollectionPreview"></div></div><div class="dashboard-sprite-group"><div class="dashboard-sprite-heading"><strong id="dashWeeklyTitle">Disponibles esta semana</strong><span id="dashWeeklyCount">0</span></div><div class="dashboard-collection-preview dashboard-weekly-preview" id="dashWeeklyPreview"></div></div><div class="dashboard-missing" id="dashJoeyMissing">Pendientes por revisar.</div></article><article class="dashboard-card"><div class="dashboard-section-title"><div><span class="dashboard-overline">DIMENSIONAL ZONE</span><h3>Mountain</h3></div><span class="dashboard-chip" id="dashReady">0/12 objetos</span></div><div class="dashboard-main" id="dashMountainPercent">0%</div><div class="bar"><div id="dashMountainBar" style="width:0%"></div></div><div class="dashboard-line"><span>Dungeons acumuladas</span><strong id="dashRuns">0/180</strong></div><div class="dashboard-missing" id="dashMountainMissing">Pendientes por revisar.</div><div class="dashboard-clan-summary dashboard-weekly-summary"><div><span>Misiones semanales</span><small id="dashWeeklyMissionNote">Progreso de actividades recurrentes</small></div><strong id="dashWeeklyMissions">0/0</strong></div></article></div><article class="dashboard-card dashboard-quests"><div class="dashboard-section-title"><div><span class="dashboard-overline">LISTA DE TAREAS</span><h3>Objetivos pendientes</h3></div><span class="dashboard-chip" id="dashPendingCount">0</span></div><div class="dashboard-pending-list" id="dashPendingList"></div><div class="dashboard-footer-note">Los objetivos se actualizan al marcar progreso en las pestañas correspondientes.</div></article></section>
@@ -1126,7 +1136,7 @@ try{
 }catch(moduleError){
  const detail=moduleError?.message||String(moduleError);
  const stamp=document.getElementById("buildStamp");
- if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-D · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
+ if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-E · ERROR AL CARGAR MÓDULOS FIREBASE: "+detail;
  const status=document.getElementById("authStatus");
  if(status){status.textContent="No se pudieron cargar los módulos de Firebase. No se modificaron ni borraron datos. Detalle: "+detail;status.hidden=false;status.classList.add("is-error");}
  console.error("No se pudieron cargar los módulos Firebase",moduleError);
@@ -1632,15 +1642,15 @@ const diagnosticStartedAt=Date.now();
 const firebaseReadWatchdog=setTimeout(()=>{
  if(firebaseReadFinished)return;
  const elapsed=Math.round((Date.now()-diagnosticStartedAt)/1000);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-D · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-E · Firebase no respondió tras "+elapsed+" s. Revisando conectividad…";
  setAuthStatus("La página cargó Firebase, pero la lectura de datos aún no terminó. No se han cambiado ni borrado datos.");
 },12000);
 onValue(ref(db,".info/connected"),snapshot=>{
  const connected=snapshot.val()===true;
- if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-D · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
+ if(!firebaseReadFinished&&diagnosticStamp&&diagnosticStamp.textContent.includes("revisando"))diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-E · conexión Firebase: "+(connected?"conectada":"sin conexión")+"; esperando datos…";
 },err=>{
  console.error("No se pudo leer el estado de conexión de Firebase",err);
- if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-D · error de conectividad Firebase: "+authErrorMessage(err);
+ if(diagnosticStamp)diagnosticStamp.textContent="Diagnóstico de versión: 2026-10-20-E · error de conectividad Firebase: "+authErrorMessage(err);
 });
 onValue(ref(db,"tracker"),snapshot=>{
  const cloud=snapshot.val();
@@ -1651,7 +1661,7 @@ onValue(ref(db,"tracker"),snapshot=>{
  if(stamp){
   let profileCount=0,progressCount=0;
   for(const values of Object.values(cloud?.profiles||{})){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}
-  stamp.textContent="Diagnóstico de versión: 2026-10-20-D · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
+  stamp.textContent="Diagnóstico de versión: 2026-10-20-E · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";
  }
  let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
  if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
@@ -1678,7 +1688,7 @@ onValue(ref(db,"tracker"),snapshot=>{
    setAuthStatus("RECUPERACIÓN LOCAL: Firebase aparece vacío, pero se encontró progreso en una copia de seguridad de este navegador. Se restauró localmente; la sincronización sigue bloqueada.");
   }else{syncSafetyBlocked=false;maybeMigrateLocal();if(!canWrite)setAuthStatus("Modo consulta: inicia sesión con una cuenta autorizada para sincronizar cambios.");}
  }
-},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-D · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
+},err=>{firebaseReadFinished=true;clearTimeout(firebaseReadWatchdog);console.error(err);cloudReady=false;syncSafetyBlocked=true;const stamp=document.getElementById("buildStamp");if(stamp)stamp.textContent="Diagnóstico de versión: 2026-10-20-E · ERROR DE LECTURA DE FIREBASE: "+authErrorMessage(err);setAuthStatus("No se pudo leer Firebase: "+authErrorMessage(err)+". Los cambios no se sincronizarán hasta recuperar la conexión.");});
 onAuthStateChanged(auth,user=>{firebaseUser=user;const email=(user?.email||"").toLowerCase();canWrite=!!user&&user.emailVerified&&authorizedEmails.includes(email);document.getElementById("googleLogin").hidden=!!user;document.getElementById("emailLogin").hidden=!!user;document.getElementById("emailSignup").hidden=!!user;document.getElementById("authEmail").hidden=!!user;document.getElementById("authPassword").hidden=!!user;document.getElementById("logout").hidden=!user;document.getElementById("addProfile").disabled=!canWrite;document.getElementById("renameProfile").disabled=!canWrite;document.getElementById("reset").disabled=!canWrite;document.getElementById("importBtnJoey").disabled=!canWrite;document.getElementById("importBtnMountain").disabled=!canWrite;document.getElementById("authHelp").textContent="";setAuthStatus("");const authSummary=document.getElementById("authSummaryStatus");if(authSummary)authSummary.textContent=user?(canWrite?"Edición habilitada":"Solo lectura"):"Consulta pública";refreshProfileSelect();render();if(user&&!canWrite)setAuthStatus("Sesión iniciada como "+(user.email||"usuario")+". Esta cuenta tiene acceso de solo lectura; solo las cuentas autorizadas pueden editar.");else if(!user)setAuthStatus("Sin iniciar sesión: puedes consultar el tracker, pero necesitas una cuenta autorizada para sincronizar cambios.");maybeMigrateLocal();});
 document.getElementById("googleLogin").addEventListener("click",async()=>{const button=document.getElementById("googleLogin");button.disabled=true;setAuthStatus("Abriendo acceso seguro de Google…");googleProvider.setCustomParameters({prompt:"select_account"});try{await signInWithPopup(auth,googleProvider,browserPopupRedirectResolver);setAuthStatus("Acceso con Google completado. Sincronizando…");}catch(e){console.error("Error de inicio de sesión con Google:",e);if(e?.code==="auth/popup-blocked"||e?.code==="auth/operation-not-supported-in-this-environment"){try{setAuthStatus("El navegador bloqueó la ventana. Continuando en esta pestaña…");await signInWithRedirect(auth,googleProvider);}catch(redirectError){console.error(redirectError);setAuthStatus("No se pudo abrir Google: "+authErrorMessage(redirectError));button.disabled=false;}}else{setAuthStatus("No se pudo iniciar sesión: "+authErrorMessage(e));button.disabled=false;}}});
 getRedirectResult(auth).then(result=>{if(result?.user)setAuthStatus("Acceso con Google completado. Sincronizando…");}).catch(e=>{console.error("Error al volver del acceso de Google:",e);setAuthStatus("No se pudo completar el acceso: "+authErrorMessage(e));});
