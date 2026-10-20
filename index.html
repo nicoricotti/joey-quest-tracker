@@ -1225,7 +1225,7 @@ function updateDashboard(uniquePokemon,total,mine){
  document.getElementById("dashPokeballs").textContent=ballTotal.toLocaleString("es-CL");
  document.getElementById("dashJoeyMissing").textContent=mine===total?"¡Has completado la colección Joey Quest!":"Te faltan "+(total-mine)+" Pokémon únicos por capturar.";
  document.getElementById("dashMountainPercent").textContent=mountainPct+"%";document.getElementById("dashMountainBar").style.width=mountainPct+"%";document.getElementById("sideMountainProgress").textContent=ready+"/12";document.getElementById("dashReady").textContent=ready+"/12 objetos";document.getElementById("dashRuns").textContent=runs+"/180";document.getElementById("dashClans").textContent=completeClans+"/"+clans.length;
- document.getElementById("dashMountainMissing").textContent=ready===12?"¡Los 12 objetos están marcados como listos!":"Faltan "+(12-ready)+" objetos por marcar como listos. Registra hasta 15 entradas por dungeon y marca el objeto cuando lo tengas."; updateDashboardWeeklySummary();
+ document.getElementById("dashMountainMissing").textContent=ready===12?"¡Los 12 objetos están marcados como listos!":"Faltan "+(12-ready)+" objetos por marcar como listos. Registra hasta 15 entradas por dungeon y marca el objeto cuando lo tengas.";
  const unique=[...new Map(all().map(x=>[x.name,x])).values()];
  const pending=unique.filter(x=>!all().some(y=>y.name===x.name&&state(y.id)));
  const captured=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)));
@@ -1467,4 +1467,7 @@ refreshProfileSelect();
 renderRotation();
 render();
 renderPlanner();
+
+// Actualiza el indicador del dashboard cuando todas las misiones ya están definidas.
+updateDashboardWeeklySummary();
 </script></body></html>
