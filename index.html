@@ -1571,6 +1571,30 @@ img{image-rendering:auto}
 @media(max-width:430px){.dashboard-pending-item{gap:8px;padding:8px}.dashboard-pending-item img,.dashboard-pending-kind{width:38px;height:38px}.dashboard-pending-kind{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.dashboard-pending-item{transition:none}}
 
+
+/* Estadísticas rápidas: lectura inmediata y diferenciación visual por objetivo. */
+.dashboard-quickstats{gap:12px;margin:18px 0 20px}
+.dashboard-quickstats .stat{position:relative;isolation:isolate;overflow:hidden;min-width:0;padding:16px 15px 14px;border:1px solid #34465b;border-radius:15px;background:linear-gradient(145deg,#1b293a,#111925);box-shadow:0 7px 18px #0002}
+.dashboard-quickstats .stat:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:3px;background:var(--quick-accent,#7ce4dd)}
+.dashboard-quickstats .stat:after{position:absolute;right:13px;top:10px;font-size:17px;opacity:.85}
+.dashboard-quickstats .stat:nth-child(1){--quick-accent:#f2c56c}
+.dashboard-quickstats .stat:nth-child(1):after{content:"◈";color:#f2c56c}
+.dashboard-quickstats .stat:nth-child(2){--quick-accent:#70d7c9}
+.dashboard-quickstats .stat:nth-child(2):after{content:"↗";color:#70d7c9}
+.dashboard-quickstats .stat:nth-child(3){--quick-accent:#c6a5ff}
+.dashboard-quickstats .stat:nth-child(3):after{content:"✦";color:#c6a5ff}
+.dashboard-quickstats .stat>span{max-width:calc(100% - 22px);color:#c6d4e4;font-size:11px;font-weight:750;line-height:1.35}
+.dashboard-quickstats .stat>strong{order:1;margin-top:4px;color:#f4f7fc;font-size:clamp(23px,2.2vw,30px);line-height:1.15;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.dashboard-quickstats .stat>small{order:2;margin-top:2px;color:var(--muted);font-size:10px;line-height:1.4}
+.dashboard-quickstats .stat .bar{order:3;margin-top:5px;height:6px;background:#263548}
+.dashboard-quickstats .stat .bar>div{background:var(--quick-accent,#7ce4dd);border-radius:inherit;transition:width .25s ease}
+.dashboard-quickstats .stat:nth-child(1)>strong{color:#ffe1a0}
+.dashboard-quickstats .stat:nth-child(2)>strong{color:#a5f1e6}
+.dashboard-quickstats .stat:nth-child(3)>strong{color:#ddc8ff}
+@media(max-width:700px){.dashboard-quickstats{gap:8px}.dashboard-quickstats .stat{padding:13px 11px 12px}}
+@media(max-width:430px){.dashboard-quickstats .stat{padding:12px 10px}.dashboard-quickstats .stat>span{font-size:10px}.dashboard-quickstats .stat>strong{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.dashboard-quickstats .stat .bar>div{transition:none}}
+
 </style>
 </head>
 <body><div class="app-shell">
