@@ -509,6 +509,82 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   #appMain,main#appMain{padding-left:24px;padding-right:24px}
 }
 
+
+/* Nueva pasada: lectura rápida, jerarquía y compactación */
+:root{--panel-edge:#40516a;--surface-raised:#1a2638}
+@media(min-width:901px){
+  #appMain,main#appMain{width:100%;max-width:none;margin:0;padding:18px 20px 36px}
+  .hero{padding:20px 24px;margin-bottom:12px}
+  .hero h1{font-size:clamp(29px,2.8vw,38px);margin:5px 0 8px}
+  .hero .auth-drawer,.hero .profile-drawer{margin-top:8px}
+  .stats{margin-top:12px;gap:8px}
+  .stat{padding:10px 12px}
+  .stat strong{font-size:24px}
+  .dashboard{padding:15px;margin-bottom:12px}
+  .dashboard-grid{gap:9px}
+  .dashboard-card{padding:13px 15px}
+  .dashboard-main{font-size:30px;margin:5px 0 7px}
+  .dashboard-line{padding:3px 0}
+  .tabs{margin:10px 0 9px}
+  .mission-panel{padding:10px}
+  .controls{margin:8px 0;padding:7px}
+  .clan,.mountain-card{margin:8px 0}
+  .clan-head{padding:10px 14px;min-height:56px}
+  .rows{padding:2px 12px 7px}
+  .pokemon{padding-top:8px;padding-bottom:8px}
+}
+.hero{isolation:isolate}
+.hero:before{z-index:-1}
+.kicker{display:inline-flex;align-items:center;max-width:100%;padding:5px 9px;border:1px solid #a6ef7030;border-radius:999px;background:#a6ef700b;font-size:10px;line-height:1.4}
+.dashboard-card{min-width:0}
+.dashboard-card h2{line-height:1.3}
+.dashboard-line{gap:14px}
+.dashboard-line span{min-width:0}
+.dashboard-line strong{white-space:nowrap}
+.bar{overflow:hidden}
+.bar>div{min-width:0;transition:width .3s ease}
+.rotation-heading{gap:10px}
+.rotation-heading h2{margin:0}
+.rotation-week-card{height:100%;display:flex;flex-direction:column}
+.rotation-week-missions{overflow-wrap:anywhere}
+.controls input,.controls select{min-height:42px}
+.clan-head .pill{flex-shrink:0}
+.pokemon{min-width:0}
+.poke-info>div{min-width:0}
+.poke-name,.poke-sub{overflow-wrap:anywhere}
+.mountain-object>div{min-width:0}
+.footer{padding-top:12px;border-top:1px solid #34425a}
+@media(max-width:900px){
+  #appMain,main#appMain{width:100%;max-width:none;margin:0;padding:16px 14px 34px}
+  .hero{margin-bottom:12px}
+}
+@media(max-width:560px){
+  #appMain,main#appMain{padding:10px 9px 28px}
+  .hero{padding:17px 14px 15px 19px}
+  .hero h1{font-size:clamp(26px,7vw,34px);overflow-wrap:anywhere}
+  .auth-drawer summary,.profile-drawer summary{gap:8px}
+  .stats{margin-top:10px}
+  .stat{min-width:0}
+  .stat span{line-height:1.35}
+  .dashboard{margin-bottom:10px}
+  .dashboard-card h2{font-size:14px}
+  .dashboard-line{font-size:12px}
+  .rotation-week-card{padding:9px}
+  .rotation-mini{width:48px}
+  .rotation-mini img:not(.rotation-item-icon){width:44px;height:44px}
+  .clan-head{align-items:center}
+  .clan-title-line{gap:7px}
+  .clan-symbol{width:27px;height:27px}
+  .clan-head .pill{max-width:85px;white-space:normal;text-align:center;font-size:10px}
+  .footer{gap:6px}
+}
+@media(max-width:370px){
+  .dashboard-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .stat{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .stat span{max-width:58%;text-align:right}
+}
+
 </style>
 </head>
 <body><div class="app-shell">
