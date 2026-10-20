@@ -1,0 +1,31 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "tracker": {
+      ".read": true,
+      "profiles": {
+        "$profileId": {
+          ".write": "auth != null && auth.token.email_verified === true && (root.child('tracker/profileOwners').child($profileId).val() === auth.uid || auth.token.email === 'nicoricotti94@gmail.com' || auth.token.email === 'daniel.guzba@gmail.com')"
+        }
+      },
+      "profileNames": {
+        "$profileId": {
+          ".write": "auth != null && auth.token.email_verified === true && (root.child('tracker/profileOwners').child($profileId).val() === auth.uid || auth.token.email === 'nicoricotti94@gmail.com' || auth.token.email === 'daniel.guzba@gmail.com')"
+        }
+      },
+      "profileOwners": {
+        "$profileId": {
+          ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'nicoricotti94@gmail.com' || auth.token.email === 'daniel.guzba@gmail.com' || (!data.exists() && newData.val() === auth.uid))",
+          ".validate": "!newData.exists() || newData.isString()"
+        }
+      },
+      "activeProfile": {
+        ".write": "auth != null && auth.token.email_verified === true"
+      },
+      "updatedAt": {
+        ".write": "auth != null && auth.token.email_verified === true"
+      }
+    }
+  }
+}
