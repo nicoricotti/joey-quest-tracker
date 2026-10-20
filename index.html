@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>PXG Mission Tracker · diagnóstico 2026-10-20-AA</title>
+<title>PXG Mission Tracker · diagnóstico 2026-10-20-AB</title>
 <style>
 :root{--bg:#10131d;--panel:#191e2c;--panel2:#20283a;--text:#f2f5fb;--muted:#aab4c7;--line:#30394e;--accent:#9be564;--accent2:#7ed8d0;--warn:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2940 0,#10131d 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -1390,6 +1390,39 @@ input[type=checkbox]{accent-color:#65d4b7}
 .bar,.progress-track{overflow:hidden}
 .bar>span,.progress-fill{transition:width .25s ease}
 @media(prefers-reduced-motion:reduce){.bar>span,.progress-fill{transition:none}}
+
+/* Progreso visual más legible: pendientes y completadas se distinguen de inmediato */
+.weekly-accordion-content .weekly-task,.weekly-clones-content .weekly-clone-accordion{position:relative;overflow:hidden}
+.weekly-accordion-content .weekly-task:before{content:"";width:3px;position:absolute;left:0;top:0;bottom:0;background:#40536a;opacity:.85}
+.weekly-accordion-content .weekly-task.is-done{border-color:#426b55;background:linear-gradient(100deg,#193326,#101c25);opacity:1}
+.weekly-accordion-content .weekly-task.is-done:before{background:#9be564}
+.weekly-accordion-content .weekly-task.is-done .weekly-task-main strong{color:#c8f0b3;text-decoration:line-through;text-decoration-color:#78a86a}
+.weekly-accordion-content .weekly-task input:checked{accent-color:#9be564}
+.weekly-clones-content .weekly-clone-accordion:before{content:"";display:block;position:absolute;left:0;top:0;bottom:0;width:3px;background:#40536a;pointer-events:none}
+.weekly-clones-content .weekly-clone-accordion:has([data-clone-done]:checked){border-color:#426b55;background:linear-gradient(100deg,#193326,#101c25)}
+.weekly-clones-content .weekly-clone-accordion:has([data-clone-done]:checked):before{background:#9be564}
+.weekly-clones-content .weekly-clone-accordion:has([data-clone-done]:checked) .clone-summary-check{color:#c8f0b3;background:#244631;border-color:#578b5c}
+.weekly-clones-content .clone-summary-main small{font-weight:650}
+#panelChosen .chosen-task{padding:11px 10px;margin:3px 0;border:1px solid #3a334e;border-radius:10px;background:#171725;align-items:flex-start;transition:background .16s,border-color .16s}
+#panelChosen .chosen-task input{width:17px;height:17px;flex-shrink:0;accent-color:#c5a4ff}
+#panelChosen .chosen-task:has(input:checked){border-color:#655486;background:linear-gradient(100deg,#2b2340,#171725)}
+#panelChosen .chosen-task:has(input:checked) strong{color:#d9c8ff}
+#panelChosen .chosen-task span{min-width:0}
+#panelChosen .chosen-chapter-head{transition:background .16s,border-color .16s}
+#panelChosen .chosen-count{padding:4px 8px;border:1px solid #655486;border-radius:999px;background:#302442;color:#d9c8ff;font-variant-numeric:tabular-nums;font-weight:750}
+#panelMountain .mountain-card{position:relative;overflow:hidden}
+#panelMountain .mountain-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#40536a;pointer-events:none}
+#panelMountain .mountain-card.mountain-in-progress:before{background:#ffd166}
+#panelMountain .mountain-card.mountain-ready:before{background:#9be564}
+#panelMountain .mountain-card.mountain-ready{background:linear-gradient(115deg,#1c3528,#141e2b);border-color:#5a8751}
+#panelMountain .mountain-card.mountain-in-progress{border-color:#71603d;background:linear-gradient(115deg,#28271f,#141e2b)}
+#panelMountain .mountain-card .bar{height:7px;border-radius:999px;background:#0b141e;border:1px solid #34465d;overflow:hidden}
+#panelMountain .mountain-card .bar>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#4bbfae,#9be564);box-shadow:0 0 10px #7ed8d022}
+#panelMountain .mountain-status{font-size:10px;letter-spacing:.025em;text-transform:uppercase}
+#panelJoey .row input:checked+span,#panelJoey input[type=checkbox]:checked{accent-color:#9be564}
+.planner-task{transition:border-color .16s,background .16s}
+.planner-task:has(input:checked){border-color:#4c7659;background:#172b22}
+@supports not selector(:has(*)){.weekly-accordion-content .weekly-task.is-done{border-color:#426b55;background:#193326}}
 </style>
 </head>
 <body><div class="app-shell">
