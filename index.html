@@ -1188,7 +1188,15 @@ function localHasMoreProgress(local,cloud){
  }
  return false;
 }
-function save(){
+/*
+ * REGLA DE SEGURIDAD PARA FUTURAS MEJORAS:
+ * Los guardados normales deben actualizar SOLO las claves presentes en el perfil,
+ * nunca reemplazar el objeto completo del perfil. Así, añadir una sección/campo nuevo
+ * no borra claves antiguas que existan en Firebase pero aún no estén en un navegador.
+ * El reemplazo completo queda reservado a acciones explícitas y confirmadas
+ * (reinicio/importación), que deben crear copia de seguridad antes de ejecutarse.
+ */
+function save(options={}){
  const updatedAt=new Date().toISOString();
  const payload={profiles,profileNames,activeProfile,updatedAt};
  try{localStorage.setItem(KEY,JSON.stringify(payload));}catch(e){setAuthStatus("No se pudo guardar en este navegador; revisa el espacio disponible.");}
@@ -1197,7 +1205,24 @@ function save(){
  if(typeof renderChosenQuest==="function")renderChosenQuest();
  if(canWrite&&cloudReady&&!applyingCloud&&!syncSafetyBlocked){
   setAuthStatus("Guardando cambios en la nube…");
-  const updates={};updates["profiles/"+activeProfile]=profiles[activeProfile]||{};updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;updates["activeProfile"]=activeProfile;updates["updatedAt"]=updatedAt;
+  const updates={};
+  const profile=profiles[activeProfile]||{};
+  if(options.replaceActiveProfile){
+   // Solo para reinicio/importación explícitos, tras respaldo y confirmación.
+   updates["profiles/"+activeProfile]=profile;
+  }else{
+   // Parche por clave: los campos que esta versión desconoce permanecen intactos en Firebase.
+   const keys=Object.keys(profile);
+   if(keys.length){
+    for(const key of keys)updates["profiles/"+activeProfile+"/"+key]=profile[key];
+   }else if(!cloudHasData){
+    // Permite crear un perfil vacío sin reemplazar perfiles existentes.
+    updates["profiles/"+activeProfile]={};
+   }
+  }
+  updates["profileNames/"+activeProfile]=profileNames[activeProfile]||activeProfile;
+  updates["activeProfile"]=activeProfile;
+  updates["updatedAt"]=updatedAt;
   update(ref(db,"tracker"),updates).then(()=>setAuthStatus("Sincronizado con la nube ✓")).catch(err=>{console.error(err);setAuthStatus("No se pudo sincronizar: "+authErrorMessage(err));});
  }else if(canWrite&&syncSafetyBlocked){
   setAuthStatus("Cambios guardados solo en este navegador: sincronización bloqueada para proteger datos.");
@@ -1550,7 +1575,7 @@ async function handleImport(e){const file=e.target.files[0];if(!file)return;try{
 [["importBtnJoey","importFileJoey"],["importBtnMountain","importFileMountain"]].forEach(([buttonId,fileId])=>{const file=document.getElementById(fileId);document.getElementById(buttonId).addEventListener("click",()=>importProgress(file));file.addEventListener("change",handleImport);});
 document.getElementById("expand").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=false));
 document.getElementById("collapse").addEventListener("click",()=>document.querySelectorAll(".rows").forEach(x=>x.hidden=true));
-document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+profileLabel(activeProfile)+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save();alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("¿Seguro que quieres borrar el progreso de "+profileLabel(activeProfile)+"? Se guardará una copia de seguridad local antes de borrar.")){createSafetyBackup();profiles[activeProfile]={};save({replaceActiveProfile:true});alert("Progreso reiniciado. La copia de seguridad anterior quedó guardada en este navegador.")}});
 let cloudHasData=false;
 let syncSafetyBlocked=false;
 function localHasProgress(data){return trackerHasProgress(data);}
