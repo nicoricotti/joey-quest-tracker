@@ -2711,7 +2711,7 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDai
 window.addEventListener("focus",refreshDailyChecklistOnNewDay);
 function renderWeeklyChecklist(){
  syncMewtwoCloneExpiry();const root=document.getElementById("weeklyChecklist");if(!root)return;
- const q=(document.getElementById("weeklySearch").value||"").trim().toLocaleLowerCase("es"),filter=document.getElementById("weeklyFilter").value,hideCompleted=!!document.getElementById("weeklyHideDone")?.checked&&filter!=="done";
+ const q=(document.getElementById("weeklySearch").value||"").trim().toLocaleLowerCase("es"),filter=document.getElementById("weeklyFilter").value,hidePreferenceKey="weekly:hide-completed",hideToggle=document.getElementById("weeklyHideDone");if(hideToggle)hideToggle.checked=!!profiles[activeProfile][hidePreferenceKey];const hideCompleted=!!profiles[activeProfile][hidePreferenceKey]&&filter!=="done";
  const groups=weeklyTaskGroups.map(g=>({...g,tasks:g.tasks.filter(t=>{const done=!!profiles[activeProfile][weeklyStateKey(t.id)],hay=(t.name+" "+t.objective+" "+(t.requirements||"")).toLocaleLowerCase("es");return (!q||hay.includes(q))&&(filter==="all"||(filter==="done"&&done)||(filter==="pending"&&!done))&&(!hideCompleted||!done);})})).filter(g=>g.tasks.length);
  const monthlyDone=!!profiles[activeProfile][weeklyStateKey(monthlyTerror.id)],monthlyHay=(monthlyTerror.name+" "+monthlyTerror.objective+" "+monthlyTerror.requirements).toLocaleLowerCase("es");
  if((!q||monthlyHay.includes(q))&&(filter==="all"||(filter==="done"&&monthlyDone)||(filter==="pending"&&!monthlyDone))&&(!hideCompleted||!monthlyDone)){let g=groups.find(x=>x.id==="terrors");if(!g){g={id:"terrors",title:"Nightmare Terrors",tasks:[]};groups.push(g);}g.tasks.push(monthlyTerror);}
@@ -2796,7 +2796,7 @@ document.querySelectorAll("[data-dashboard-pref]").forEach(el=>el.addEventListen
 document.getElementById("dashboardShowAll").addEventListener("click",()=>{profiles[activeProfile]["dashboard:widgets"]=JSON.stringify(Object.fromEntries(Object.keys(dashboardPreferenceLabels).map(key=>[key,true])));applyDashboardPreferences();save();});
 document.getElementById("weeklySearch").addEventListener("input",renderWeeklyChecklist);
 document.getElementById("weeklyFilter").addEventListener("change",renderWeeklyChecklist);
-document.getElementById("weeklyHideDone").addEventListener("change",renderWeeklyChecklist);
+document.getElementById("weeklyHideDone").addEventListener("change",e=>{profiles[activeProfile]["weekly:hide-completed"]=!!e.target.checked;save();renderWeeklyChecklist();});
 document.getElementById("dailyMissionSearch").addEventListener("input",renderDailyChecklist);
 document.getElementById("dailyMissionFilter").addEventListener("change",renderDailyChecklist);
 document.getElementById("plannerWeek").addEventListener("change",e=>{e.target.dataset.manual="1";renderPlanner();});
