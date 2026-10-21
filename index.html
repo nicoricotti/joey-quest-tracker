@@ -1343,6 +1343,18 @@ button:disabled{opacity:.48;cursor:not-allowed}
 .weekly-group-complete .weekly-group-head h4{color:#b8edc5}
 .weekly-group-actions button:focus-visible{outline:2px solid #9be564;outline-offset:3px}.weekly-accordion-content .weekly-group-rows{padding:8px}.weekly-accordion-content .weekly-task{position:relative;padding:12px 10px;gap:10px;border:1px solid #293b4e;border-radius:12px;background:#101b26;margin-bottom:7px;transition:border-color .16s,background .16s,box-shadow .16s}
 .weekly-accordion-content .weekly-task.is-pending{border-left:3px solid #607c9a}
+/* Feedback de interacción y finalización sin apagar el contenido */
+.weekly-accordion-content .weekly-task{align-items:flex-start;transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;}
+.weekly-accordion-content .weekly-task:hover{border-color:#48627c;background:#142231;}
+.weekly-accordion-content .weekly-task:focus-within{outline:2px solid #7299bd;outline-offset:2px;}
+.weekly-accordion-content .weekly-task input{width:19px;height:19px;margin-top:1px;flex:0 0 19px;accent-color:#79c78c;}
+.weekly-accordion-content .weekly-task-status{transition:color .18s ease,background .18s ease,border-color .18s ease;}
+.weekly-accordion-content .weekly-task.is-done{opacity:1;}
+.weekly-accordion-content .weekly-task.is-done .weekly-task-status{box-shadow:0 0 0 2px #79c78c12;}
+.weekly-accordion-content .weekly-task.is-done .weekly-task-objective>span,.weekly-accordion-content .weekly-task.is-done .weekly-task-requirements>span{color:#c3d8ca;}
+.weekly-accordion-content .weekly-task.is-done .weekly-task-requirements{border-left-color:#527f61;background:#172b23;}
+@media(hover:hover){.weekly-accordion-content .weekly-task:hover{transform:translateY(-1px);}}
+@media(prefers-reduced-motion:reduce){.weekly-accordion-content .weekly-task,.weekly-accordion-content .weekly-task-status{transition:none!important}.weekly-accordion-content .weekly-task:hover{transform:none!important;}}
 .weekly-accordion-content .weekly-task.is-done{border-color:#527f61;border-left:3px solid #79c78c;background:linear-gradient(110deg,#1b3028,#101824);box-shadow:inset 0 0 0 1px #527f611c}
 .weekly-accordion-content .weekly-task.is-done .weekly-task-main strong{color:#c1d9c8;text-decoration:line-through;text-decoration-color:#79c78c;text-decoration-thickness:1px}
 .weekly-task-status{align-self:flex-start;flex:0 0 auto;padding:4px 7px;border-radius:7px;font-size:9px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
