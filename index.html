@@ -1397,10 +1397,16 @@ input[type=checkbox]{accent-color:#65d4b7}
 #plannerPanel{--section-accent:var(--planner-accent);--section-glow:#8fbaff12}
 #weeklyPanel{--section-accent:var(--mountain-accent);--section-glow:#7ed8d012}
 .daily-checklist-card{margin-top:14px}
-.daily-mission-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
-.daily-mission-stat{padding:10px 12px;border:1px solid #394a63;border-radius:11px;background:#101824}
-.daily-mission-stat strong{display:block;font-size:20px;font-variant-numeric:tabular-nums}
-.daily-mission-stat span{display:block;color:#aabbd2;font-size:10px;text-transform:uppercase;letter-spacing:.04em;line-height:1.35;margin-top:3px}
+.daily-mission-summary{margin:12px 0}
+.daily-mission-progress{padding:13px 14px;border:1px solid #3b5364;border-radius:12px;background:linear-gradient(115deg,#172a2d,#101824 72%)}
+.daily-mission-progress-head,.daily-mission-progress-foot{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.daily-mission-progress-head>div{display:flex;flex-direction:column;gap:3px}
+.daily-mission-progress-head>div strong{font-size:13px}
+.daily-mission-progress-head>div span,.daily-mission-progress-foot{font-size:10px;color:#aabbd2}
+.daily-mission-percent{font-size:22px;color:#9be564;font-variant-numeric:tabular-nums}
+.daily-mission-progress-track{height:7px;margin:11px 0 8px;border-radius:99px;overflow:hidden;background:#293746}
+.daily-mission-progress-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ed8d0,#9be564);transition:width .22s ease}
+.daily-mission-progress-foot span:last-child{font-weight:600;color:#c7d7e7}
 .daily-mission-tools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .daily-mission-tools input,.daily-mission-tools select{min-height:38px;min-width:150px;flex:1;border:1px solid #394a63;border-radius:9px;background:#101824;color:var(--text);padding:8px 10px;font:inherit}
 .daily-mission-tools button{font-size:11px;padding:8px 10px}
@@ -2619,12 +2625,21 @@ function renderDailyChecklist(){
  const filter=document.getElementById("dailyMissionFilter")?.value||"all";
  const tasks=dailyMissionTasks.map(t=>({...t,done:!!profiles[activeProfile][dailyMissionStateKey(t.id)]}));
  const done=tasks.filter(t=>t.done).length;
- document.getElementById("dailyMissionSummary").innerHTML='<div class="daily-mission-stat"><strong>'+done+'/'+tasks.length+'</strong><span>Completadas hoy</span></div><div class="daily-mission-stat"><strong>'+ (tasks.length-done)+'</strong><span>Pendientes hoy</span></div><div class="daily-mission-stat"><strong>'+new Intl.DateTimeFormat("es-CL",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"short"}).format(new Date())+'</strong><span>Fecha de ciclo BRT</span></div>';
+ const summary=document.getElementById("dailyMissionSummary"),pct=tasks.length?Math.round(done/tasks.length*100):0,cycleDate=dailyMissionDateKey();
+ summary.dataset.cycleDate=cycleDate;
+ const todayLabel=new Intl.DateTimeFormat("es-CL",{timeZone:"America/Sao_Paulo",weekday:"short",day:"2-digit",month:"short"}).format(new Date());
+ summary.innerHTML='<div class="daily-mission-progress"><div class="daily-mission-progress-head"><div><strong>Tu progreso de hoy</strong><span>'+todayLabel+' · ciclo BRT</span></div><strong class="daily-mission-percent">'+pct+'%</strong></div><div class="daily-mission-progress-track" role="progressbar" aria-label="Progreso de actividades diarias" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><div class="daily-mission-progress-foot"><span>'+done+' de '+tasks.length+' completadas</span><span>'+(done===tasks.length?'¡Rutina completada!':(tasks.length-done)+' pendientes')+'</span></div></div>';
  const visible=tasks.filter(t=>(!q||(t.name+" "+t.detail).toLocaleLowerCase("es").includes(q))&&(filter==="all"||(filter==="done"&&t.done)||(filter==="pending"&&!t.done)));
  root.innerHTML=visible.map(t=>'<label class="daily-mission-item '+(t.done?'is-done':'')+'"><input type="checkbox" data-daily-task="'+t.id+'" '+(t.done?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="daily-mission-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span></label>').join("")||(visible.length===0?'<div class="daily-mission-empty">No hay actividades que coincidan con el filtro.</div>':"");
  root.querySelectorAll("[data-daily-task]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const key=dailyMissionStateKey(el.dataset.dailyTask);if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];save();renderDailyChecklist();}));
  document.querySelectorAll("[data-daily-action]").forEach(btn=>btn.onclick=()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}dailyMissionTasks.forEach(t=>{const key=dailyMissionStateKey(t.id);if(btn.dataset.dailyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();renderDailyChecklist();});
 }
+function refreshDailyChecklistOnNewDay(){
+ const summary=document.getElementById("dailyMissionSummary");
+ if(summary&&summary.dataset.cycleDate&&summary.dataset.cycleDate!==dailyMissionDateKey())renderDailyChecklist();
+}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDailyChecklistOnNewDay();});
+window.addEventListener("focus",refreshDailyChecklistOnNewDay);
 function renderWeeklyChecklist(){
  syncMewtwoCloneExpiry();const root=document.getElementById("weeklyChecklist");if(!root)return;
  const q=(document.getElementById("weeklySearch").value||"").trim().toLocaleLowerCase("es"),filter=document.getElementById("weeklyFilter").value;
