@@ -618,6 +618,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .planner-dungeon{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid #34445b;border-radius:12px;background:#101824}
 .planner-dungeon img{width:42px;height:42px;object-fit:contain;padding:3px;border-radius:9px;background:#202c3d;border:1px solid #3b4c63;flex-shrink:0}
 .planner-dungeon strong{display:block;font-size:13px}
+.planner-dungeon-priority{border-color:#5c8c70;background:linear-gradient(120deg,#1b302b,#101824 75%)}
+.planner-dungeon-main{min-width:0;flex:1}
+.planner-dungeon strong a{color:var(--accent2);text-decoration:underline;text-decoration-color:#7ed8d066;text-underline-offset:3px}
+.planner-match-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.planner-match-badges span,.planner-no-match{font-size:10px;line-height:1.35;color:#c8f2d6;border:1px solid #476f5b;background:#1c3429;border-radius:6px;padding:3px 6px}
+.planner-no-match{display:inline-block;margin-top:6px;color:#9eafc7;border-color:#34445b;background:#172130}
+.planner-priority-tag{margin-left:auto;align-self:center;font-size:10px;color:#c8f2d6;border:1px solid #476f5b;background:#1c3429;border-radius:999px;padding:4px 7px;white-space:nowrap}
 .planner-dungeon small{display:block;color:#9eafc7;font-size:11px;margin-top:2px}
 .planner-dungeon .planner-done-tag{margin-left:auto;font-size:10px;color:#bdf49e;border:1px solid #60854c;background:#1a2c20;border-radius:999px;padding:4px 7px;white-space:nowrap}
 .planner-card>.friendly-btn{width:100%;margin-top:3px}
@@ -1894,7 +1901,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
       <div id="plannerTasks" class="planner-tasks"></div>
     </section>
   </div>
-  <p class="planner-footnote">Las tareas de capturas y Mountain se calculan desde el perfil activo. La checklist semanal guarda su propio progreso y se reinicia al comenzar una nueva semana de juego.</p>
+  <p class="planner-footnote">Las dungeons con coincidencias aparecen primero: el planificador cruza tus capturas pendientes de Joey Quest y los objetivos de Dimensional Mountain con la rotación elegida. Abre el nombre de una dungeon para consultar su página de la Wiki. La checklist semanal guarda su propio progreso.</p>
 </section><section id="weeklyPanel" class="planner-panel" hidden aria-label="Misiones semanales y mensuales">
   <div class="planner-hero">
     <div class="kicker">Rutina de aventura</div>
@@ -2410,34 +2417,45 @@ function renderWeeklyChecklist(){
  root.querySelectorAll("[data-clone-date]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;const level=Number(el.dataset.cloneDate),v=el.value,completedKey=mewtwoCloneKey(level,"completed"),doneKey=mewtwoCloneKey(level,"done");if(v){profiles[activeProfile][completedKey]=v;if(profiles[activeProfile][doneKey]){const latest=mewtwoCloneTasks.map(t=>profiles[activeProfile][mewtwoCloneKey(t.level,"completed")]).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).sort().pop();if(latest)profiles[activeProfile]["mewtwo-clones:last-completed"]=latest;else delete profiles[activeProfile]["mewtwo-clones:last-completed"];}}else{delete profiles[activeProfile][completedKey];if(profiles[activeProfile][doneKey]){const latest=mewtwoCloneTasks.filter(t=>t.level!==level).map(t=>profiles[activeProfile][mewtwoCloneKey(t.level,"completed")]).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).sort().pop();if(latest)profiles[activeProfile]["mewtwo-clones:last-completed"]=latest;else delete profiles[activeProfile]["mewtwo-clones:last-completed"];}}save();renderWeeklyChecklist();}));
 }
 function renderPlanner(){
- const current=currentRotation(),weekSelect=document.getElementById("plannerWeek");
+ const current=currentRotation(),weekSelect=document.getElementById('plannerWeek');
  if(!weekSelect.dataset.manual)weekSelect.value=String(current.week);
- const week=Number(weekSelect.value), names=rotationWeeks[week]||[];
+ const week=Number(weekSelect.value),names=rotationWeeks[week]||[];
  const weekMs=7*24*60*60*1000;
  let offset=week-current.week;if(offset>4)offset-=9;if(offset< -4)offset+=9;
  const start=new Date(current.start.getTime()+offset*weekMs),end=new Date(start.getTime()+weekMs);
- const fmt=d=>new Intl.DateTimeFormat("es-CL",{timeZone:"America/Santiago",day:"2-digit",month:"short"}).format(d);
- document.getElementById("plannerDateRange").textContent=(week===current.week?"Semana activa · ":"Semana seleccionada · ")+fmt(start)+" – "+fmt(end)+(week%3===0?" · Golden Week":"");
+ const fmt=d=>new Intl.DateTimeFormat('es-CL',{timeZone:'America/Santiago',day:'2-digit',month:'short'}).format(d);
+ document.getElementById('plannerDateRange').textContent=(week===current.week?'Semana activa · ':'Semana seleccionada · ')+fmt(start)+' – '+fmt(end)+(week%3===0?' · Golden Week':'');
  const unique=[...new Map(all().map(x=>[x.name,x])).values()];
  const missingJoey=unique.filter(x=>!all().some(y=>y.name===x.name&&state(y.id)));
- const missingMountain=mountainItems.filter(([d])=>!profiles[activeProfile]["mountain-ready:"+d]||Number(profiles[activeProfile][runKey(d)]||0)<15);
+ const missingMountain=mountainItems.filter(([d])=>!profiles[activeProfile]['mountain-ready:'+d]||Number(profiles[activeProfile][runKey(d)]||0)<15);
  const captured=unique.length-missingJoey.length;
- const summary=document.getElementById("plannerSummary");
- summary.innerHTML='<div class="planner-stat"><strong>'+missingJoey.length+'</strong><span>Capturas pendientes</span></div><div class="planner-stat"><strong>'+missingMountain.length+'</strong><span>Objetivos Mountain</span></div><div class="planner-stat"><strong>'+names.length+'</strong><span>Dungeons esta semana</span></div>';
- document.getElementById("sidePendingCount").textContent=String(missingJoey.length+missingMountain.length);
- document.getElementById("plannerDungeonList").innerHTML=names.map(name=>{
-   const obj=mountainItems.find(x=>x[0].replace(/^DZ /,"")===name);
-   const dungeon=obj?obj[0]:"DZ "+name;
-   const runs=Number(profiles[activeProfile][runKey(dungeon)]||0);
-   const ready=!!profiles[activeProfile]["mountain-ready:"+dungeon];
-   return '<div class="planner-dungeon"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="" loading="lazy" onerror="rotationImageError(this)"><div style="min-width:0;flex:1"><strong>'+name+'</strong><small>'+(obj?obj[1]:"Dungeon de rotación")+(obj?" · "+Math.min(15,runs)+"/15 entradas":"")+'</small></div>'+(ready?'<span class="planner-done-tag">Listo</span>':'')+'</div>';
- }).join("")||'<div class="planner-empty">No hay dungeons registradas para esta semana.</div>';
- const filter=document.querySelector(".planner-filter.active")?.dataset.plannerFilter||"all";
+ const dungeonMatches=names.map(name=>{
+   const mountain=mountainItems.find(x=>x[0].replace(/^DZ /,'')===name);
+   const joey=missingJoey.filter(x=>x.name===name);
+   const mountainPending=!!mountain&&missingMountain.some(x=>x[0]===mountain[0]);
+   return {name,mountain,joey,mountainPending,score:joey.length+(mountainPending?1:0)};
+ });
+ const priorityCount=dungeonMatches.filter(x=>x.score>0).length;
+ const summary=document.getElementById('plannerSummary');
+ summary.innerHTML='<div class="planner-stat"><strong>'+missingJoey.length+'</strong><span>Capturas pendientes</span></div><div class="planner-stat"><strong>'+missingMountain.length+'</strong><span>Objetivos Mountain</span></div><div class="planner-stat"><strong>'+priorityCount+'/'+names.length+'</strong><span>Dungeons útiles esta semana</span></div>';
+ document.getElementById('sidePendingCount').textContent=String(missingJoey.length+missingMountain.length);
+ const sortedDungeons=[...dungeonMatches].sort((a,b)=>b.score-a.score||names.indexOf(a.name)-names.indexOf(b.name));
+ document.getElementById('plannerDungeonList').innerHTML=sortedDungeons.map(entry=>{
+   const name=entry.name,obj=entry.mountain,dungeon=obj?obj[0]:'DZ '+name;
+   const runs=Number(profiles[activeProfile][runKey(dungeon)]||0),ready=!!profiles[activeProfile]['mountain-ready:'+dungeon];
+   const info=dungeonInfo[name],reasons=[];
+   if(entry.joey.length)reasons.push(entry.joey.length+' captura'+(entry.joey.length===1?'':'s')+' Joey pendiente'+(entry.joey.length===1?'':'s'));
+   if(entry.mountainPending)reasons.push('Objeto Mountain pendiente');
+   const badges=reasons.length?'<div class="planner-match-badges">'+reasons.map(x=>'<span>'+x+'</span>').join('')+'</div>':'<div class="planner-no-match">Sin objetivo pendiente asociado</div>';
+   const nameHtml=info?'<a href="'+info.url+'" target="_blank" rel="noopener noreferrer">'+name+' ↗</a>':name;
+   return '<div class="planner-dungeon'+(entry.score?' planner-dungeon-priority':'')+'"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="" loading="lazy" onerror="rotationImageError(this)"><div class="planner-dungeon-main"><strong>'+nameHtml+'</strong><small>'+(obj?obj[1]+' · '+Math.min(15,runs)+'/15 entradas':'Dungeon de rotación')+(info?' · Grupo de '+info.players+' jugadores':'')+'</small>'+badges+'</div>'+(ready?'<span class="planner-done-tag">Listo</span>':entry.score?'<span class="planner-priority-tag">Prioridad</span>':'')+'</div>';
+ }).join('')||'<div class="planner-empty">No hay dungeons registradas para esta semana.</div>';
+ const filter=document.querySelector('.planner-filter.active')?.dataset.plannerFilter||'all';
  const tasks=[];
- missingJoey.forEach(x=>tasks.push({type:"joey",image:spriteUrl(x.name),fallback:spriteFallback(x.name),name:x.name,detail:x.clan+" · "+x.detail,tag:"Joey Quest"}));
- missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]["mountain-ready:"+d];const name=d.replace(/^DZ /,"");tasks.push({type:"mountain",image:rotationPokemonImage(name),fallback:rotationArtworkImage(name),name,detail:item+" · Dungeon "+runs+"/15 · Objeto "+(ready?"marcado listo":"pendiente"),tag:"Mountain"});});
- const shown=tasks.filter(t=>filter==="all"||t.type===filter);
- document.getElementById("plannerTasks").innerHTML=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon"><img src="'+t.image+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.type==="mountain"?"rotationImageError(this)":(t.fallback? "if(!this.dataset.fallback){this.dataset.fallback=\'1\';this.src=\'"+t.fallback+"\';}else{this.style.display=\'none\';}":"this.style.display=\'none\'"))+'"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join("")||(filter==="all"?"<div class=\"planner-empty\">¡No tienes objetivos pendientes! Buen trabajo.</div>":"<div class=\"planner-empty\">No hay tareas pendientes en esta categoría.</div>");
+ missingJoey.forEach(x=>tasks.push({type:'joey',image:spriteUrl(x.name),fallback:spriteFallback(x.name),name:x.name,detail:x.clan+' · '+x.detail,tag:'Joey Quest'}));
+ missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]['mountain-ready:'+d];const name=d.replace(/^DZ /,'');tasks.push({type:'mountain',image:rotationPokemonImage(name),fallback:rotationArtworkImage(name),name,detail:item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente'),tag:'Mountain'});});
+ const shown=tasks.filter(t=>filter==='all'||t.type===filter);
+ document.getElementById('plannerTasks').innerHTML=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon"><img src="'+t.image+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.type==='mountain'?'rotationImageError(this)':(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback='1';this.src='"+t.fallback+"';}else{this.style.display='none';}":'this.style.display=\'none\';'))+'"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join('')||(filter==='all'?'<div class="planner-empty">¡No tienes objetivos pendientes! Buen trabajo.</div>':'<div class="planner-empty">No hay tareas pendientes en esta categoría.</div>');
  renderWeeklyChecklist();
 }
 function activateSidebar(name){
