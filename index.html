@@ -1396,6 +1396,25 @@ input[type=checkbox]{accent-color:#65d4b7}
 #rotationPanel{--section-accent:var(--rotation-accent);--section-glow:#ffd16612}
 #plannerPanel{--section-accent:var(--planner-accent);--section-glow:#8fbaff12}
 #weeklyPanel{--section-accent:var(--mountain-accent);--section-glow:#7ed8d012}
+.daily-checklist-card{margin-top:14px}
+.daily-mission-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.daily-mission-stat{padding:10px 12px;border:1px solid #394a63;border-radius:11px;background:#101824}
+.daily-mission-stat strong{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.daily-mission-stat span{display:block;color:#aabbd2;font-size:10px;text-transform:uppercase;letter-spacing:.04em;line-height:1.35;margin-top:3px}
+.daily-mission-tools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.daily-mission-tools input,.daily-mission-tools select{min-height:38px;min-width:150px;flex:1;border:1px solid #394a63;border-radius:9px;background:#101824;color:var(--text);padding:8px 10px;font:inherit}
+.daily-mission-tools button{font-size:11px;padding:8px 10px}
+.daily-mission-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.daily-mission-item{display:flex;align-items:flex-start;gap:9px;padding:11px;border:1px solid #394a63;border-radius:11px;background:#101824;min-width:0;transition:background .16s,border-color .16s}
+.daily-mission-item.is-done{border-color:#527f61;background:linear-gradient(110deg,#1b3028,#101824)}
+.daily-mission-item input{accent-color:#9be564;flex-shrink:0;margin-top:3px}
+.daily-mission-copy{min-width:0;flex:1}
+.daily-mission-copy strong{display:block;font-size:12px;line-height:1.4}
+.daily-mission-copy small{display:block;color:#aabbd2;font-size:10px;line-height:1.45;margin-top:4px}
+.daily-mission-copy a{display:inline-block;color:#7ed8d0;font-size:10px;margin-top:5px}
+.daily-mission-empty{grid-column:1/-1;padding:15px;border:1px dashed #394a63;border-radius:11px;text-align:center;color:#aabbd2;font-size:12px}
+@media(max-width:620px){.daily-mission-list{grid-template-columns:1fr}.daily-mission-summary{gap:6px}.daily-mission-stat{padding:9px}.daily-mission-stat strong{font-size:17px}.daily-mission-tools button{flex:1}}
+
 #panelJoey,#panelChosen,#panelMountain,#rotationPanel,#plannerPanel,#weeklyPanel{position:relative;isolation:isolate}
 #panelJoey:before,#panelChosen:before,#panelMountain:before,#rotationPanel:before,#plannerPanel:before,#weeklyPanel:before{content:"";position:absolute;z-index:-1;inset:0;border-radius:inherit;background:radial-gradient(ellipse at 0 0,var(--section-glow),transparent 52%);pointer-events:none}
 #panelJoey .clan-head,#panelMountain .clan-head{border-left:3px solid var(--section-accent)}
@@ -1966,7 +1985,14 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
     <div id="weeklyChecklist" class="weekly-groups"></div>
   </section>
 
-  <p class="planner-footnote">Las misiones semanales se reinician los lunes a las 07:40 BRT. El Terror mensual tiene su propio ciclo.</p>
+  <section class="planner-card daily-checklist-card" aria-label="Misiones diarias">
+    <div class="planner-card-heading"><div><span class="planner-eyebrow">RESET DIARIO · 00:00 BRT</span><h3>Rutina diaria</h3></div><span class="planner-icon">☀</span></div>
+    <p class="planner-muted">Registra las actividades diarias que quieras completar. La checklist cambia de día automáticamente y conserva las marcas de días anteriores en el perfil.</p>
+    <div id="dailyMissionSummary" class="daily-mission-summary"></div>
+    <div class="daily-mission-tools"><input id="dailyMissionSearch" type="search" placeholder="Buscar actividad diaria…" aria-label="Buscar actividad diaria"><select id="dailyMissionFilter" aria-label="Filtrar actividades diarias"><option value="all">Todas las actividades</option><option value="pending">Pendientes</option><option value="done">Completadas</option></select><button type="button" data-daily-action="complete">Marcar todas</button><button type="button" data-daily-action="clear">Desmarcar todas</button></div>
+    <div id="dailyMissionList" class="daily-mission-list"></div>
+  </section>
+  <p class="planner-footnote">Las misiones semanales se reinician los lunes a las 07:40 BRT. El Terror mensual tiene su propio ciclo. Las actividades diarias se reinician a medianoche según la fecha de Brasil/Santiago horario continental.</p>
 </section>
 
 <div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div>
@@ -2509,6 +2535,34 @@ function updateDashboardWeeklySummary(){
  const bar=document.getElementById("dashWeeklyBar"),track=bar&&bar.parentElement,pct=total?Math.round(done/total*100):0;
  if(bar)bar.style.width=pct+"%";if(track)track.setAttribute("aria-valuenow",String(pct));
 }
+const dailyMissionTasks=[
+ {id:"officer-jenny",name:"Oficial Jenny",detail:"Revisar y completar la misión diaria disponible."},
+ {id:"rachel",name:"Rachel",detail:"Revisar y completar la actividad diaria disponible."},
+ {id:"duelist-brotherhood",name:"Duelist Brotherhood",detail:"Revisar la misión diaria y sus requisitos."},
+ {id:"missingno",name:"MissingNo",detail:"Revisar la actividad diaria disponible."},
+ {id:"william",name:"William",detail:"Revisar y completar la misión diaria disponible."},
+ {id:"grotto",name:"Daily da Gruta",detail:"Revisar la misión diaria de la gruta."}
+];
+function dailyMissionDateKey(){
+ const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+ const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+ return "daily:"+p.year+"-"+p.month+"-"+p.day;
+}
+function dailyMissionStateKey(id){return "daily-check:"+dailyMissionDateKey()+":"+id}
+function renderDailyChecklist(){
+ const root=document.getElementById("dailyMissionList");if(!root)return;
+ const q=(document.getElementById("dailyMissionSearch")?.value||"").trim().toLocaleLowerCase("es");
+ const filter=document.getElementById("dailyMissionFilter")?.value||"all";
+ const tasks=dailyMissionTasks.map(t=>({...t,done:!!profiles[activeProfile][dailyMissionStateKey(t.id)]}));
+ const done=tasks.filter(t=>t.done).length;
+ document.getElementById("dailyMissionSummary").innerHTML='<div class="daily-mission-stat"><strong>'+done+'/'+tasks.length+'</strong><span>Completadas hoy</span></div><div class="daily-mission-stat"><strong>'+ (tasks.length-done)+'</strong><span>Pendientes hoy</span></div><div class="daily-mission-stat"><strong>'+new Intl.DateTimeFormat("es-CL",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"short"}).format(new Date())+'</strong><span>Fecha de ciclo BRT</span></div>';
+ const visible=tasks.filter(t=>(!q||(t.name+" "+t.detail).toLocaleLowerCase("es").includes(q))&&(filter==="all"||(filter==="done"&&t.done)||(filter==="pending"&&!t.done)));
+ root.innerHTML=visible.map(t=>'<label class="daily-mission-item '+(t.done?'is-done':'')+'"><input type="checkbox" data-daily-task="'+t.id+'" '+(t.done?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="daily-mission-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span></label>').join("")||(visible.length===0?'<div class="daily-mission-empty">No hay actividades que coincidan con el filtro.</div>':"");
+ root.querySelectorAll("[data-daily-task]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const key=dailyMissionStateKey(el.dataset.dailyTask);if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];save();}));
+ document.querySelectorAll("[data-daily-action]").forEach(btn=>btn.onclick=()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}dailyMissionTasks.forEach(t=>{const key=dailyMissionStateKey(t.id);if(btn.dataset.dailyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();});
+ document.getElementById("dailyMissionSearch")?.addEventListener("input",renderDailyChecklist);
+ document.getElementById("dailyMissionFilter")?.addEventListener("change",renderDailyChecklist);
+}
 function renderWeeklyChecklist(){
  syncMewtwoCloneExpiry();const root=document.getElementById("weeklyChecklist");if(!root)return;
  const q=(document.getElementById("weeklySearch").value||"").trim().toLocaleLowerCase("es"),filter=document.getElementById("weeklyFilter").value;
@@ -2528,6 +2582,7 @@ function renderWeeklyChecklist(){
  root.querySelectorAll("[data-weekly-action]").forEach(btn=>btn.addEventListener("click",()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}const group=weeklyTaskGroups.find(g=>g.id===btn.dataset.weeklyGroup),tasks=(group?group.tasks:[]).concat(btn.dataset.weeklyGroup==="terrors"?[monthlyTerror]:[]);tasks.forEach(t=>{const key=weeklyStateKey(t.id);if(btn.dataset.weeklyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();}));
  root.querySelectorAll("[data-clone-done]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const level=Number(el.dataset.cloneDone),today=localDateString(),completedKey=mewtwoCloneKey(level,"completed"),doneKey=mewtwoCloneKey(level,"done"),cooldown=mewtwoCloneCooldown();if(el.checked){if(cooldown.locked&&!profiles[activeProfile][doneKey]){alert("Clones Mewtwo se puede realizar una vez cada 30 días. Próxima disponibilidad: "+cooldown.next);renderWeeklyChecklist();return;}profiles[activeProfile][completedKey]=today;profiles[activeProfile][doneKey]=true;profiles[activeProfile]["mewtwo-clones:last-completed"]=today;}else{delete profiles[activeProfile][doneKey];}save();renderWeeklyChecklist();}));
  root.querySelectorAll("[data-clone-date]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;const level=Number(el.dataset.cloneDate),v=el.value,completedKey=mewtwoCloneKey(level,"completed"),doneKey=mewtwoCloneKey(level,"done");if(v){profiles[activeProfile][completedKey]=v;if(profiles[activeProfile][doneKey]){const latest=mewtwoCloneTasks.map(t=>profiles[activeProfile][mewtwoCloneKey(t.level,"completed")]).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).sort().pop();if(latest)profiles[activeProfile]["mewtwo-clones:last-completed"]=latest;else delete profiles[activeProfile]["mewtwo-clones:last-completed"];}}else{delete profiles[activeProfile][completedKey];if(profiles[activeProfile][doneKey]){const latest=mewtwoCloneTasks.filter(t=>t.level!==level).map(t=>profiles[activeProfile][mewtwoCloneKey(t.level,"completed")]).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).sort().pop();if(latest)profiles[activeProfile]["mewtwo-clones:last-completed"]=latest;else delete profiles[activeProfile]["mewtwo-clones:last-completed"];}}save();renderWeeklyChecklist();}));
+ renderDailyChecklist();
 }
 function renderPlanner(){
  const current=currentRotation(),weekSelect=document.getElementById('plannerWeek');
