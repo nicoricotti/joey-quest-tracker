@@ -1443,6 +1443,32 @@ input[type=checkbox]{accent-color:#65d4b7}
 #panelChosen .chosen-chapter-head{transition:background .16s,border-color .16s}
 #panelChosen .chosen-count{padding:4px 8px;border:1px solid #655486;border-radius:999px;background:#302442;color:#d9c8ff;font-variant-numeric:tabular-nums;font-weight:750}
 #panelMountain .mountain-card{position:relative;overflow:hidden}
+.mountain-route-card{margin-top:18px;padding:clamp(15px,2.2vw,23px);border:1px solid #3d5069;border-radius:18px;background:radial-gradient(circle at 100% 0,#7ed8d012,transparent 35%),linear-gradient(145deg,#1b2637,#121925);box-shadow:0 10px 26px #0002}
+.mountain-route-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid #34445b}
+.mountain-route-heading h2{font-size:22px;letter-spacing:-.025em;margin:5px 0}
+.mountain-route-heading p{font-size:12px;line-height:1.55;color:#aabbd2;max-width:720px;margin:6px 0 0}
+.mountain-route-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:13px 0}
+.mountain-route-stat{padding:11px;border:1px solid #394a63;border-radius:11px;background:#101824}
+.mountain-route-stat strong{display:block;font-size:21px;font-variant-numeric:tabular-nums}
+.mountain-route-stat span{display:block;color:#aabbd2;font-size:10px;line-height:1.35;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+.mountain-route-steps{display:grid;gap:9px}
+.mountain-route-step{border:1px solid #394a63;border-radius:12px;background:#101824;overflow:hidden}
+.mountain-route-step.is-done{border-color:#527f61;background:linear-gradient(110deg,#1b3028,#101824)}
+.mountain-route-step-head{display:flex;align-items:flex-start;gap:10px;padding:12px}
+.mountain-route-step-head input{accent-color:#9be564;margin-top:3px;flex-shrink:0}
+.mountain-route-step-copy{flex:1;min-width:0}
+.mountain-route-step-copy strong{display:block;font-size:13px}
+.mountain-route-step-copy p{font-size:11px;line-height:1.5;color:#aabbd2;margin:4px 0 0}
+.mountain-route-number{display:grid;place-items:center;flex-shrink:0;width:28px;height:28px;border:1px solid #40516b;border-radius:8px;color:#7ed8d0;font-size:11px;font-weight:850}
+.mountain-route-materials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:0 12px 12px 50px}
+.mountain-route-material{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 9px;border:1px solid #34445b;border-radius:9px;background:#172130;min-width:0}
+.mountain-route-material span{font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.mountain-route-material label{display:flex;align-items:center;gap:5px;flex-shrink:0;font-size:10px;color:#aabbd2}
+.mountain-route-material input{width:68px;min-height:31px;padding:5px 6px;border:1px solid #465873;border-radius:7px;background:#101824;color:var(--text);font:inherit}
+.mountain-route-wiki{display:inline-block;margin-top:13px;padding:9px 12px;border:1px solid #45677a;border-radius:9px;color:#a9f1e8;text-decoration:none;font-size:12px;font-weight:750}
+.mountain-route-wiki:hover{background:#203746}
+@media(max-width:620px){.mountain-route-summary{gap:6px}.mountain-route-stat{padding:9px}.mountain-route-stat strong{font-size:17px}.mountain-route-stat span{font-size:9px}.mountain-route-heading h2{font-size:19px}.mountain-route-materials{grid-template-columns:1fr;padding-left:12px}.mountain-route-material input{width:76px}}
+
 #panelMountain .mountain-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#40536a;pointer-events:none}
 #panelMountain .mountain-card.mountain-in-progress:before{background:#ffd166}
 #panelMountain .mountain-card.mountain-ready:before{background:#9be564}
@@ -1943,7 +1969,14 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
   <p class="planner-footnote">Las misiones semanales se reinician los lunes a las 07:40 BRT. El Terror mensual tiene su propio ciclo.</p>
 </section>
 
-<div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div></section>
+<div class="tabs" id="missionTabs" role="tablist" aria-label="Secciones de misiones"><button class="tab active" id="tabJoey" type="button" role="tab" aria-controls="panelJoey" aria-selected="true">🎒 Joey Quest <span class="tab-progress" id="tabJoeyProgress">0%</span></button><button class="tab" id="tabMountain" type="button" role="tab" aria-controls="panelMountain" aria-selected="false">⛰️ Dimensional Mountain <span class="tab-progress" id="tabMountainProgress">0/12</span></button></div><section class="mission-panel" id="panelJoey"><div class="controls mission-controls"><input id="searchJoey" type="search" placeholder="Buscar Pokémon o clan…"><select id="filterJoey"><option value="all">Mostrar todos</option><option value="pending">Pendientes de este jugador</option><option value="done">Capturados por este jugador</option></select><button class="primary" id="exportJoey">Exportar progreso</button><button id="importBtnJoey">Importar progreso</button><input id="importFileJoey" type="file" accept="application/json" hidden></div><div id="clans"></div></section><section class="mission-panel" id="panelMountain" hidden><div class="hero mountain-hero"><div class="kicker" style="color:#7ed8d0">Misión 2 · Dimensional Mountain</div><h1 style="font-size:28px">Objetos de Dimensional Gold</h1><p>Cuenta las dungeons completadas hasta 15 y marca cada objeto cuando lo tengas listo.</p><div class="stats"><div class="stat"><strong id="mountainReady">0/12</strong><span>Objetos listos</span></div><div class="stat"><strong id="mountainRuns">0/180</strong><span>Dungeons acumuladas</span></div><div class="stat"><strong id="mountainPercent">0%</strong><span>Progreso de misión</span><div class="bar"><div id="mountainBar"></div></div></div></div></div><div class="controls mission-controls"><input id="searchMountain" type="search" placeholder="Buscar dungeon u objeto…"><select id="filterMountain" aria-label="Filtrar objetos de Dimensional Mountain"><option value="all">Todos los objetos</option><option value="pending">Objeto pendiente</option><option value="ready">Objeto listo</option><option value="runs">Menos de 15 dungeons</option></select><button class="primary" id="exportMountain">Exportar progreso</button><button id="importBtnMountain">Importar progreso</button><input id="importFileMountain" type="file" accept="application/json" hidden></div><div id="mountain"></div>
+<section class="mountain-route-card" aria-label="Ruta completa de Dimensional Mountain">
+ <div class="mountain-route-heading"><div><span class="planner-eyebrow">RUTA DE PROGRESO</span><h2>Ruta completa · Supreme Key</h2><p>Checklist de preparación y materiales para ordenar los pasos posteriores a las 12 dungeons. Marca solo lo que hayas completado y confirma los requisitos actuales en la Wiki antes de entregar o sacrificar objetos.</p></div><span class="planner-icon">⛰</span></div>
+ <div id="mountainRouteSummary" class="mountain-route-summary"></div>
+ <div id="mountainRouteSteps" class="mountain-route-steps"></div>
+ <p class="chosen-muted">La espera de 20 horas se registra manualmente: el tracker no puede comprobar el estado del NPC ni iniciar una cuenta regresiva fiable si no está abierto. Las cantidades de materiales son una checklist, no una verificación automática del inventario del juego.</p>
+ <a href="https://wiki.pokexgames.com/index.php/Dimensional_Mountain_Quest" target="_blank" rel="noopener noreferrer" class="mountain-route-wiki">Consultar guía de Dimensional Mountain ↗</a>
+</section></section>
 <section class="mission-panel" id="panelChosen" hidden><div class="chosen-hero"><div class="kicker" style="color:#d7b6ff">MISIÓN LEGENDARIA · 5 CAPÍTULOS</div><h1>The Chosen One Quest</h1><p>Checklist paso a paso, materiales y preparación de combates. El progreso se guarda en el perfil activo y usa la sincronización existente.</p><div class="chosen-stats"><div class="chosen-stat"><strong id="chosenTasksStat">0/0</strong><span class="chosen-muted">Tareas completadas</span><div class="chosen-bar"><span id="chosenTasksBar"></span></div></div><div class="chosen-stat"><strong id="chosenChaptersStat">0/5</strong><span class="chosen-muted">Capítulos completados</span><div class="chosen-bar"><span id="chosenChaptersBar"></span></div></div><div class="chosen-stat"><strong id="chosenCraftStat">0/0</strong><span class="chosen-muted">Crafteos listos</span><div class="chosen-bar"><span id="chosenCraftBar"></span></div></div></div></div><div class="chosen-tools"><input id="chosenSearch" type="search" placeholder="Buscar tarea o material…"><select id="chosenFilter"><option value="all">Todas las tareas</option><option value="pending">Solo pendientes</option><option value="done">Solo completadas</option></select><button type="button" id="chosenExpand">Expandir</button><button type="button" id="chosenCollapse">Contraer</button></div><p class="chosen-muted">Los cambios se guardan por perfil. La edición requiere una cuenta autorizada; los demás perfiles mantienen acceso de consulta.</p><div id="chosenChapters"></div><h2 class="chosen-section-title">Ruta de crafteo · acceso a la nave</h2><p class="chosen-muted">Objeto principal → componentes → materiales base. Marca cada objeto como listo cuando ya lo tengas fabricado o reunido. Profesiones/rangos se indican solo cuando la wiki lo permite confirmar.</p><div id="chosenShipCrafts"></div><h2 class="chosen-section-title">Ruta de crafteo · trajes de los guardianes</h2><p class="chosen-muted">Las telas y los trajes se fabrican en la Mystical Tailoring Machine. Las recetas de tela consumen 300 esencias; cada traje consume 30 telas y 500 esencias adicionales, además de otros materiales.</p><div id="chosenOutfitCrafts"></div><h2 class="chosen-section-title">Inventario compartido de materiales</h2><p class="chosen-muted">Consolida los materiales cuantificados de las recetas de la nave y los trajes. Registra aquí cuánto tienes en total: una misma materia prima se cuenta una sola vez en el resumen, aunque aparezca en varias recetas.</p><div id="chosenMaterialInventory"></div><h2 class="chosen-section-title">Preparación de combates y mazmorras</h2><div id="chosenTips" class="chosen-tips"></div><div class="footer"><a href="https://wiki.pokexgames.com/index.php/The_Chosen_One_Quest_ESP" target="_blank" rel="noopener" style="color:var(--accent2);padding:10px">Abrir índice oficial de la quest ↗</a></div></section>
 <div class="footer">
 <button id="expand">Expandir todos</button><button id="collapse">Contraer todos</button><button id="reset">Reiniciar progreso</button>
@@ -2099,6 +2132,37 @@ const mountainItems=[
 function runKey(name){return "mountain-runs:"+name}
 const itemImageFiles={"Concrete Pillar":"Concrete Pillar.png","Frozen Ice Ears":"Frozen Ice Ears.png","Sky Cloud":"Sky Cloud.png","Giant Electric Fang":"Giant Electric Fang.png","Solar Leaf Tail":"Solar Leaf Tail.gif","Volcano Stone":"Volcano Stone.png","Heavy Bell":"Heavy Bell.png","Purple Fairy Bow":"Purple Fairy Bow.png","Fallen Moon":"Fallen Moon.png","Electric Black Box":"Electric Black Box.png","Mega Steelix Tail":"Mega Steelix Tail.png","Streamlined Drill":"Streamlined Drill.png"};
 function itemImageUrl(item){return "https://wiki.pokexgames.com/index.php?title=Special:Redirect/file/"+encodeURIComponent(itemImageFiles[item]||item+".png").replace(/%20/g,"_");}
+const mountainRouteSteps=[
+ {id:"collect",title:"Reunir los 12 objetos de Dimensional Gold",description:"Completa el umbral de 15 entradas de cada dungeon y consigue el objeto correspondiente. Esta checklist se vincula al progreso de las 12 tarjetas de arriba."},
+ {id:"sacrifice",title:"Entregar / sacrificar los 12 objetos en el portal",description:"Confirma la ubicación y el orden exactos en la Wiki antes de entregar los objetos."},
+ {id:"artefact",title:"Obtener el Ancient Dimensional Artefact",description:"Marca este paso cuando el artefacto esté efectivamente en tu inventario."},
+ {id:"juniper",title:"Hablar con Harper / Juniper e iniciar la espera",description:"La guía indica una espera de 20 horas. El tracker solo permite registrar manualmente el paso."},
+ {id:"wait",title:"Completar la espera de 20 horas",description:"Vuelve con el NPC cuando haya terminado el tiempo requerido y confirma el estado de la misión."},
+ {id:"golden-keys",title:"Reunir 20 Golden Keys",description:"Registra las unidades que ya tienes para visualizar las que faltan.",materials:[["Golden Keys",20]]},
+ {id:"powered-device",title:"Fabricar / reunir el Powered Device",description:"Componentes indicados en la guía consultada; confirma cantidades y receta vigentes antes de craftear.",materials:[["Titanium Imam",3],["Boost Stone",50],["Zap",100],["Tech Ball",10],["Metal Stone",50],["Cyber Cube",10],["Dawn Stone",5],["Shiny Stone",1],["Crystal Stone",20],["Ancient Stone",20]]},
+ {id:"supreme-key",title:"Conseguir la Supreme Dimensional Zone Key",description:"Verifica que las Golden Keys y el Powered Device estén listos y completa el paso final según la Wiki."},
+ {id:"mecha-outfit",title:"Revisar recompensa / Mecha Outfit",description:"Paso opcional de seguimiento: confirma los requisitos y la recompensa final en la Wiki; no es necesario marcarlo para contar la llave como conseguida."}
+];
+function mountainRouteKey(key){return "mountain-route:"+key}
+function renderMountainRoute(){
+ const root=document.getElementById("mountainRouteSteps");if(!root)return;
+ const total=mountainRouteSteps.length;
+ const done=mountainRouteSteps.filter(step=>!!profiles[activeProfile][mountainRouteKey("done:"+step.id)]).length;
+ const readyItems=mountainItems.filter(([d])=>!!profiles[activeProfile]["mountain-ready:"+d]).length;
+ const summary=document.getElementById("mountainRouteSummary");
+ summary.innerHTML='<div class="mountain-route-stat"><strong>'+done+'/'+total+'</strong><span>Pasos de la ruta</span></div><div class="mountain-route-stat"><strong>'+readyItems+'/12</strong><span>Objetos Mountain listos</span></div><div class="mountain-route-stat"><strong>'+Math.round(done/total*100)+'%</strong><span>Ruta marcada</span></div>';
+ root.innerHTML=mountainRouteSteps.map((step,index)=>{
+  const checked=!!profiles[activeProfile][mountainRouteKey("done:"+step.id)];
+  const mats=(step.materials||[]).map(([name,required])=>{
+   const key=step.id+":"+name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g,"-");
+   const have=Math.max(0,Number(profiles[activeProfile][mountainRouteKey("material:"+key)]||0));
+   return '<div class="mountain-route-material"><span>'+name+'<br><small style="color:#aabbd2">Faltan '+Math.max(0,required-have).toLocaleString("es-CL")+'</small></span><label>Tengo <input type="number" min="0" max="9999999" step="1" inputmode="numeric" value="'+have+'" data-mountain-route-material="'+key+'" aria-label="Cantidad disponible de '+name+'" '+(!canWrite?'disabled':'')+'></label></div>';
+  }).join("");
+  return '<article class="mountain-route-step '+(checked?'is-done':'')+'"><div class="mountain-route-step-head"><span class="mountain-route-number">'+String(index+1).padStart(2,"0")+'</span><label style="display:flex;align-items:flex-start;gap:9px;flex:1;min-width:0"><input type="checkbox" data-mountain-route-step="'+step.id+'" '+(checked?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="mountain-route-step-copy"><strong>'+step.title+'</strong><p>'+step.description+'</p></span></label></div>'+(mats?'<div class="mountain-route-materials">'+mats+'</div>':'')+'</article>';
+ }).join("");
+ root.querySelectorAll("[data-mountain-route-step]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][mountainRouteKey("done:"+el.dataset.mountainRouteStep)]=el.checked;save();}));
+ root.querySelectorAll("[data-mountain-route-material]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite)return;profiles[activeProfile][mountainRouteKey("material:"+el.dataset.mountainRouteMaterial)]=Math.max(0,Math.min(9999999,Math.floor(Number(el.value)||0)));save();}));
+}
 function renderMountain(){
  const root=document.getElementById("mountain");root.innerHTML="";
  const q=(document.getElementById("searchMountain")?.value||"").trim().toLowerCase();
@@ -2239,6 +2303,7 @@ function render(){
  updateDashboard(uniquePokemon,total,mine);
  refreshProfileSelect();
  renderMountain();
+ renderMountainRoute();
  const root=document.getElementById("clans");root.innerHTML="";let shown=0;
  clans.forEach((c,ci)=>{
   const filtered=c.pokemon.map((p,pi)=>({id:`${ci}-${pi}`,name:p[0],detail:p[1]})).filter(x=>{
