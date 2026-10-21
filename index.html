@@ -2744,6 +2744,8 @@ function renderWeeklyChecklist(){
  renderDailyChecklist();
 }
 function renderPlanner(){
+ const taskRoot=document.getElementById('plannerTasks');
+ try{
  const current=currentRotation(),weekSelect=document.getElementById('plannerWeek');
  if(!weekSelect.dataset.manual)weekSelect.value=String(current.week);
  const week=Number(weekSelect.value),names=rotationWeeks[week]||[];
@@ -2785,8 +2787,20 @@ function renderPlanner(){
  const taskRoot=document.getElementById('plannerTasks');
  const taskMarkup=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon"><img src="'+t.image+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.type==='mountain'?'rotationImageError(this)':(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback='1';this.src='"+t.fallback+"';}else{this.style.display=\'none\';}":'this.style.display=\'none\';'))+'"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join('');
  taskRoot.innerHTML=taskMarkup||(filter==='all'?'<div class="planner-empty">¡No tienes objetivos pendientes! Buen trabajo.</div>':'<div class="planner-empty">No hay tareas pendientes en esta categoría.</div>');
- if(!taskRoot.children.length){taskRoot.innerHTML=mountainItems.map(([d,item])=>{const name=d.replace(/^DZ /,''),runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0)),ready=!!profiles[activeProfile]['mountain-ready:'+d];return '<div class="planner-task"><span class="planner-task-icon">◈</span><div class="planner-task-main"><strong>'+name+'</strong><small>'+item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente')+'</small></div><span class="planner-task-type">Mountain</span></div>';}).join('');}
+ if(shown.length===0&&filter!=='all'){taskRoot.innerHTML=mountainItems.map(([d,item])=>{const name=d.replace(/^DZ /,''),runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0)),ready=!!profiles[activeProfile]['mountain-ready:'+d];return '<div class="planner-task"><span class="planner-task-icon">◈</span><div class="planner-task-main"><strong>'+name+'</strong><small>'+item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente')+'</small></div><span class="planner-task-type">Mountain</span></div>';}).join('');}
  renderWeeklyChecklist();
+ }catch(err){
+  console.error("Error al renderizar el planificador:",err);
+  const summary=document.getElementById('plannerSummary');
+  if(summary)summary.innerHTML='<div class="planner-stat"><strong>—</strong><span>Capturas pendientes</span></div><div class="planner-stat"><strong>12</strong><span>Objetivos Mountain</span></div><div class="planner-stat"><strong>!</strong><span>Revisión requerida</span></div>';
+  const list=document.getElementById('plannerDungeonList');
+  if(list)list.innerHTML='<div class="planner-empty">No se pudo calcular la rotación. La lista de objetivos sigue disponible abajo.</div>';
+  if(taskRoot){
+   const safeProfile=profiles[activeProfile]||{};
+   taskRoot.innerHTML=mountainItems.map(([d,item])=>{const name=d.replace(/^DZ /,''),runs=Math.min(15,Number(safeProfile[runKey(d)]||0)),ready=!!safeProfile['mountain-ready:'+d];return '<div class="planner-task"><span class="planner-task-icon">◈</span><div class="planner-task-main"><strong>'+name+'</strong><small>'+item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente')+'</small></div><span class="planner-task-type">Mountain</span></div>';}).join('');
+  }
+  try{renderWeeklyChecklist();}catch(weeklyErr){console.error("Error al renderizar misiones semanales/mensuales:",weeklyErr);const weeklyRoot=document.getElementById("weeklyChecklist");if(weeklyRoot)weeklyRoot.innerHTML='<div class="weekly-empty">Ocurrió un error al cargar las misiones. Recarga la página y revisa la consola si el problema continúa.</div>';}
+ }
 }
 function activateSidebar(name){
  document.querySelectorAll(".side-link[data-nav]").forEach(b=>{
