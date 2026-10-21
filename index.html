@@ -1805,6 +1805,15 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
  .side-link:hover,.dashboard-pending-item:hover,.clan:hover,.rotation-week-card:hover{transform:none}
  button,.side-link,.tab,.rotation-week-card{touch-action:manipulation}
 }
+
+/* El resumen se adapta al número real de tarjetas visibles */
+.dashboard-home-grid.dashboard-home-grid-single{grid-template-columns:minmax(0,1fr)}
+.dashboard-home-grid.dashboard-home-grid-single>.dashboard-card{grid-column:1/-1;width:100%;max-width:none}
+.dashboard-home-grid.dashboard-home-grid-single>.dashboard-card .dashboard-collection-preview{grid-template-columns:repeat(auto-fill,minmax(48px,58px));justify-content:start;gap:8px}
+.dashboard-home-grid.dashboard-home-grid-single>.dashboard-card .dashboard-pokemon-mini{max-height:62px}
+.dashboard-home-grid.dashboard-home-grid-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dashboard-home-grid.dashboard-home-grid-empty{display:none}
+@media(max-width:700px){.dashboard-home-grid.dashboard-home-grid-two{grid-template-columns:1fr}}
 </style>
 </head>
 <body><div class="app-shell">
@@ -2106,7 +2115,7 @@ function applyDashboardPreferences(){
  document.querySelectorAll("[data-dashboard-widget]").forEach(el=>{const key=el.dataset.dashboardWidget;if(key in prefs)el.hidden=!prefs[key];});
  document.querySelectorAll("[data-dashboard-pref]").forEach(el=>{el.checked=prefs[el.dataset.dashboardPref]!==false;});
  const grid=document.querySelector(".dashboard-home-grid");
- if(grid)grid.classList.toggle("dashboard-home-grid-empty",!grid.querySelector("[data-dashboard-widget]:not([hidden])"));
+ if(grid){const visibleCards=[...grid.children].filter(el=>el.matches("[data-dashboard-widget]:not([hidden])"));grid.classList.toggle("dashboard-home-grid-empty",visibleCards.length===0);grid.classList.toggle("dashboard-home-grid-single",visibleCards.length===1);grid.classList.toggle("dashboard-home-grid-two",visibleCards.length===2);}
 }
 function setDashboardPreference(key,value){
  if(!dashboardPreferenceLabels[key])return;
