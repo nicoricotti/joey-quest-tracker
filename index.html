@@ -2787,12 +2787,12 @@ function renderPlanner(){
  document.getElementById('plannerDungeonList').innerHTML=sortedDungeons.map(entry=>{
    const name=entry.name,obj=entry.mountain,dungeon=obj?obj[0]:'DZ '+name;
    const runs=Number(profiles[activeProfile][runKey(dungeon)]||0),ready=!!profiles[activeProfile]['mountain-ready:'+dungeon];
-   const info=dungeonInfo[name],reasons=[];
+   const info={url:"https://wiki.pokexgames.com/DZ_"+name.replace(/\s+/g,"_")},reasons=[];
    if(entry.joey.length)reasons.push(entry.joey.length+' captura'+(entry.joey.length===1?'':'s')+' Joey pendiente'+(entry.joey.length===1?'':'s'));
    if(entry.mountainPending)reasons.push('Objeto Mountain pendiente');
    const badges=reasons.length?'<div class="planner-match-badges">'+reasons.map(x=>'<span>'+x+'</span>').join('')+'</div>':'<div class="planner-no-match">Sin objetivo pendiente asociado</div>';
    const nameHtml=info?'<a href="'+info.url+'" target="_blank" rel="noopener noreferrer">'+name+' ↗</a>':name;
-   return '<div class="planner-dungeon'+(entry.score?' planner-dungeon-priority':'')+'"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="" loading="lazy" onerror="rotationImageError(this)"><div class="planner-dungeon-main"><strong>'+nameHtml+'</strong><small>'+(obj?obj[1]+' · '+Math.min(15,runs)+'/15 entradas':'Dungeon de rotación')+(info?' · Grupo de '+info.players+' jugadores':'')+'</small>'+badges+'</div>'+(ready?'<span class="planner-done-tag">Listo</span>':entry.score?'<span class="planner-priority-tag">Prioridad</span>':'')+'</div>';
+   return '<div class="planner-dungeon'+(entry.score?' planner-dungeon-priority':'')+'"><img src="'+rotationPokemonImage(name)+'" data-pokemon="'+name+'" alt="" loading="lazy" onerror="rotationImageError(this)"><div class="planner-dungeon-main"><strong>'+nameHtml+'</strong><small>'+(obj?obj[1]+' · '+Math.min(15,runs)+'/15 entradas':'Dungeon de rotación')+(info.players?' · Grupo de '+info.players+' jugadores':'')+'</small>'+badges+'</div>'+(ready?'<span class="planner-done-tag">Listo</span>':entry.score?'<span class="planner-priority-tag">Prioridad</span>':'')+'</div>';
  }).join('')||'<div class="planner-empty">No hay dungeons registradas para esta semana.</div>';
  const filter=document.querySelector('.planner-filter.active')?.dataset.plannerFilter||'all';
  const tasks=[];
@@ -2811,7 +2811,7 @@ function renderPlanner(){
   const summary=document.getElementById('plannerSummary');
   if(summary)summary.innerHTML='<div class="planner-stat"><strong>—</strong><span>Capturas pendientes</span></div><div class="planner-stat"><strong>12</strong><span>Objetivos Mountain</span></div><div class="planner-stat"><strong>!</strong><span>Revisión requerida</span></div>';
   const list=document.getElementById('plannerDungeonList');
-  if(list)list.innerHTML='<div class="planner-empty">No se pudo calcular la rotación. La lista de objetivos sigue disponible abajo.</div>';
+  if(list)list.innerHTML='<div class="planner-empty">No se pudo calcular la rotación. Revisa la consola si el problema continúa.</div>';
   if(taskRoot){
    const safeProfile=profiles[activeProfile]||{};
    taskRoot.innerHTML=mountainItems.map(([d,item])=>{const name=d.replace(/^DZ /,''),runs=Math.min(15,Number(safeProfile[runKey(d)]||0)),ready=!!safeProfile['mountain-ready:'+d];return '<div class="planner-task"><span class="planner-task-icon">◈</span><div class="planner-task-main"><strong>'+name+'</strong><small>'+item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente')+'</small></div><span class="planner-task-type">Mountain</span></div>';}).join('');
