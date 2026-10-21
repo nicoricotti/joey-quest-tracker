@@ -1715,6 +1715,96 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
  .rows{padding:3px 10px 8px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+/* Mobile usability pass: touch targets, compact navigation, forms and safe-area */
+@media(max-width:700px){
+ body{font-size:14px;overflow-wrap:break-word}
+ .app-sidebar{position:sticky;top:0;z-index:120;display:flex;flex-wrap:nowrap;align-items:stretch;gap:6px;padding:8px 10px;scrollbar-width:thin;scrollbar-color:#405a72 transparent;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+ .app-sidebar:after{content:"";position:sticky;right:-10px;flex:0 0 7px;align-self:stretch;background:linear-gradient(90deg,transparent,#111925);pointer-events:none}
+ .sidebar-brand{position:sticky;left:0;z-index:2;flex:0 0 auto;background:#111925;padding-right:10px;margin-right:2px}
+ .side-link{flex:0 0 auto;min-height:44px;padding:9px 11px;border-radius:12px;gap:7px;font-size:12px;touch-action:manipulation}
+ .side-icon{font-size:18px}
+ .side-count{font-size:10px}
+ #appMain{padding:12px 10px calc(34px + env(safe-area-inset-bottom))}
+ #appMain>.hero{padding:16px;border-radius:16px}
+ .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:13px}
+ .stat{min-width:0;padding:10px 8px;border-radius:12px}
+ .stat span{font-size:10px;line-height:1.35}
+ .stat strong{font-size:clamp(17px,4.5vw,23px);overflow-wrap:anywhere}
+ .stat small{font-size:10px;line-height:1.3}
+ .dashboard-home-heading{align-items:center}
+ .dashboard-home-heading p{font-size:12px}
+ .dashboard-home-grid{grid-template-columns:1fr}
+ .dashboard-home .dashboard-card,.dashboard-card{padding:13px;border-radius:14px}
+ .dashboard-pending-tools{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px}
+ .dashboard-pending-tools select{width:100%;min-width:0;min-height:42px}
+ .dashboard-pending-tools>span{grid-column:1/-1;line-height:1.4}
+ .dashboard-pending-group-list{grid-template-columns:1fr;gap:8px}
+ .dashboard-pending-item{min-height:66px;padding:10px;gap:10px}
+ .dashboard-pending-item .dashboard-pending-copy{overflow-wrap:anywhere}
+ .dashboard-pending-item strong{font-size:13px}
+ .dashboard-pending-item small{font-size:11px}
+ .dashboard-pending-controls{gap:6px}
+ .dashboard-pending-controls button{min-width:40px;min-height:40px;border-radius:11px;font-size:14px}
+ .controls{gap:8px;margin:12px 0}
+ .controls input,.controls select,.controls button{min-height:44px}
+ .controls input{flex:1 1 100%;min-width:0;width:100%}
+ .controls select,.controls button{flex:1 1 auto;min-width:0}
+ .mission-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .mission-controls input[type=search]{grid-column:1/-1;min-width:0;width:100%}
+ .mission-controls select{grid-column:1/-1;width:100%}
+ .mission-controls button{width:100%;padding:10px 8px;font-size:12px}
+ .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:4px;margin:12px 0}
+ .tab{min-width:0;min-height:48px;padding:9px 7px;line-height:1.3;font-size:12px}
+ .tab-progress{display:block;margin-top:3px;font-size:10px}
+ .clan-head{gap:8px;padding:12px}
+ .clan-head h2{font-size:15px}
+ .clan-meta{font-size:11px;line-height:1.45}
+ .clan .pill{font-size:10px;padding:5px 7px}
+ .rows{padding:3px 10px 8px}
+ .pokemon{grid-template-columns:minmax(0,1fr) 76px 64px;gap:5px;padding:10px 0}
+ .poke-info{gap:7px}
+ .poke-img{width:38px;height:38px}
+ .poke-name{font-size:12px;overflow-wrap:anywhere}
+ .poke-sub{font-size:10px;line-height:1.3}
+ .ball-count input{min-height:38px;padding:6px}
+ .check{font-size:10px;gap:4px}
+ .check input,.ready-check input{width:22px;height:22px}
+ .rotation-calendar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .rotation-week-card{padding:10px}
+ .rotation-mini{width:48px}
+ .rotation-mini img:not(.rotation-item-icon){width:44px;height:44px}
+ .rotation-heading{align-items:flex-start;flex-direction:column;gap:8px}
+ #toggleRotation{min-height:44px;width:100%}
+ .planner-layout{grid-template-columns:1fr}
+ .planner-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+ input,select,textarea{font-size:16px}
+}
+@media(max-width:430px){
+ main{min-width:0}
+ #appMain>.hero{padding:13px}
+ h1{font-size:26px}
+ .dashboard-home-heading h2{font-size:21px}
+ .dashboard-home-mark{display:none}
+ .dashboard-pending-group-head{padding:10px}
+ .dashboard-pending-group-head h3{font-size:14px}
+ .dashboard-pending-item img,.dashboard-pending-kind{width:40px;height:40px;flex-basis:40px}
+ .dashboard-pending-controls button{min-width:36px;min-height:38px;padding:4px}
+ .mission-controls{grid-template-columns:1fr}
+ .mission-controls input[type=search],.mission-controls select{grid-column:auto}
+ .mission-controls button{font-size:13px}
+ .pokemon{grid-template-columns:minmax(0,1fr) 65px 58px}
+ .poke-img{width:34px;height:34px}
+ .poke-info{gap:5px}
+ .ball-count{font-size:9px}
+ .rotation-calendar{grid-template-columns:1fr}
+ .planner-summary{grid-template-columns:1fr}
+ .auth-actions{grid-template-columns:1fr}
+}
+@media(hover:none){
+ .side-link:hover,.dashboard-pending-item:hover,.clan:hover,.rotation-week-card:hover{transform:none}
+ button,.side-link,.tab,.rotation-week-card{touch-action:manipulation}
+}
 </style>
 </head>
 <body><div class="app-shell">
