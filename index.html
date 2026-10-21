@@ -2291,6 +2291,20 @@ const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)
  const preferenceKey=t=>"dashboard-task:"+t.id;
  const filter=document.getElementById("dashPendingFilter")?.value||"all";
  const filteredMissions=weeklyPending.filter(t=>{const p=profiles[activeProfile][preferenceKey(t)];return filter==="hidden"?p==="hidden":p!=="hidden"&&(filter==="priority"?p==="priority":filter==="normal"?p!=="priority":true);});
+ // Orden útil: tareas marcadas por el usuario primero; luego las demás, sin cambiar sus preferencias guardadas.
+ filteredMissions.sort((a,b)=>{
+  const pa=profiles[activeProfile][preferenceKey(a)]==="priority"?0:1;
+  const pb=profiles[activeProfile][preferenceKey(b)]==="priority"?0:1;
+  return pa-pb||a.name.localeCompare(b.name,"es");
+ });
+ // Entre las opciones de rotación, priorizar dungeons donde ya hay progreso y todavía falta el objeto.
+ availablePending.sort((a,b)=>{
+  const da=mountainItems.find(([d])=>d.replace(/^DZ /,"")===a.name);
+  const db=mountainItems.find(([d])=>d.replace(/^DZ /,"")===b.name);
+  const ra=da?Number(profiles[activeProfile][runKey(da[0])]||0):0;
+  const rb=db?Number(profiles[activeProfile][runKey(db[0])]||0):0;
+  return rb-ra||a.name.localeCompare(b.name,"es");
+ });
  const visibleTasks=[...filteredMissions,...availablePending];
 
  const missionCards=filteredMissions.map(t=>'<div class="dashboard-pending-item dashboard-pending-action dashboard-pending-item--weekly" data-dashboard-target="weekly" data-task-id="'+t.id.replace(/"/g,"&quot;")+'" role="button" tabindex="0" aria-label="Ir a '+t.name+' en '+t.destination+'"><span class="dashboard-pending-kind" aria-hidden="true">◷</span><span class="dashboard-pending-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span><span class="dashboard-pending-controls"><button type="button" data-task-action="priority" class="'+(profiles[activeProfile][preferenceKey(t)]==="priority"?"active":"")+'" aria-label="Cambiar prioridad" title="Marcar como prioritaria">★</button><button type="button" data-task-action="'+(filter==="hidden"?"restore":"hide")+'" aria-label="'+(filter==="hidden"?"Volver a mostrar":"Ocultar misión")+'" title="'+(filter==="hidden"?"Volver a mostrar":"Ocultar misión")+'">'+(filter==="hidden"?"↶":"×")+'</button></span></div>').join("");
