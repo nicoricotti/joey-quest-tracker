@@ -2558,10 +2558,8 @@ function renderDailyChecklist(){
  document.getElementById("dailyMissionSummary").innerHTML='<div class="daily-mission-stat"><strong>'+done+'/'+tasks.length+'</strong><span>Completadas hoy</span></div><div class="daily-mission-stat"><strong>'+ (tasks.length-done)+'</strong><span>Pendientes hoy</span></div><div class="daily-mission-stat"><strong>'+new Intl.DateTimeFormat("es-CL",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"short"}).format(new Date())+'</strong><span>Fecha de ciclo BRT</span></div>';
  const visible=tasks.filter(t=>(!q||(t.name+" "+t.detail).toLocaleLowerCase("es").includes(q))&&(filter==="all"||(filter==="done"&&t.done)||(filter==="pending"&&!t.done)));
  root.innerHTML=visible.map(t=>'<label class="daily-mission-item '+(t.done?'is-done':'')+'"><input type="checkbox" data-daily-task="'+t.id+'" '+(t.done?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="daily-mission-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span></label>').join("")||(visible.length===0?'<div class="daily-mission-empty">No hay actividades que coincidan con el filtro.</div>':"");
- root.querySelectorAll("[data-daily-task]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const key=dailyMissionStateKey(el.dataset.dailyTask);if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];save();}));
- document.querySelectorAll("[data-daily-action]").forEach(btn=>btn.onclick=()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}dailyMissionTasks.forEach(t=>{const key=dailyMissionStateKey(t.id);if(btn.dataset.dailyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();});
- document.getElementById("dailyMissionSearch")?.addEventListener("input",renderDailyChecklist);
- document.getElementById("dailyMissionFilter")?.addEventListener("change",renderDailyChecklist);
+ root.querySelectorAll("[data-daily-task]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const key=dailyMissionStateKey(el.dataset.dailyTask);if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];save();renderDailyChecklist();}));
+ document.querySelectorAll("[data-daily-action]").forEach(btn=>btn.onclick=()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}dailyMissionTasks.forEach(t=>{const key=dailyMissionStateKey(t.id);if(btn.dataset.dailyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();renderDailyChecklist();});
 }
 function renderWeeklyChecklist(){
  syncMewtwoCloneExpiry();const root=document.getElementById("weeklyChecklist");if(!root)return;
@@ -2650,6 +2648,8 @@ document.querySelectorAll("[data-dashboard-pref]").forEach(el=>el.addEventListen
 document.getElementById("dashboardShowAll").addEventListener("click",()=>{profiles[activeProfile]["dashboard:widgets"]=JSON.stringify(Object.fromEntries(Object.keys(dashboardPreferenceLabels).map(key=>[key,true])));applyDashboardPreferences();save();});
 document.getElementById("weeklySearch").addEventListener("input",renderWeeklyChecklist);
 document.getElementById("weeklyFilter").addEventListener("change",renderWeeklyChecklist);
+document.getElementById("dailyMissionSearch").addEventListener("input",renderDailyChecklist);
+document.getElementById("dailyMissionFilter").addEventListener("change",renderDailyChecklist);
 document.getElementById("plannerWeek").addEventListener("change",e=>{e.target.dataset.manual="1";renderPlanner();});
 document.querySelectorAll("[data-planner-filter]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("[data-planner-filter]").forEach(b=>b.classList.toggle("active",b===btn));renderPlanner();}));
 document.getElementById("plannerOpenRotation").addEventListener("click",()=>{activateSidebar("rotation");document.getElementById("rotationContent").hidden=false;document.getElementById("toggleRotation").setAttribute("aria-expanded","true");document.getElementById("toggleRotation").textContent="Ocultar calendario −";});
