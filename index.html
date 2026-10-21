@@ -2796,13 +2796,15 @@ function renderPlanner(){
  }).join('')||'<div class="planner-empty">No hay dungeons registradas para esta semana.</div>';
  const filter=document.querySelector('.planner-filter.active')?.dataset.plannerFilter||'all';
  const tasks=[];
- missingJoey.forEach(x=>tasks.push({type:'joey',image:spriteUrl(x.name),fallback:spriteFallback(x.name),name:x.name,detail:x.clan+' · '+x.detail,tag:'Joey Quest'}));
- missingMountain.forEach(([d,item])=>{const runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0));const ready=!!profiles[activeProfile]['mountain-ready:'+d];const name=d.replace(/^DZ /,'');tasks.push({type:'mountain',image:rotationPokemonImage(name),fallback:rotationArtworkImage(name),name,detail:item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente'),tag:'Mountain'});});
- const shown=tasks.filter(t=>filter==='all'||t.type===filter);
+ const rotationTasks=names.map(name=>{const mountain=mountainItems.find(x=>x[0].replace(/^DZ /,'')===name);const joey=missingJoey.filter(x=>x.name===name);const runs=mountain?Math.min(15,Number(profiles[activeProfile][runKey(mountain[0])]||0)):0;const ready=!!(mountain&&profiles[activeProfile]['mountain-ready:'+mountain[0]]);const captured=unique.some(x=>x.name===name&&!missingJoey.some(m=>m.id===x.id));return {type:'mountain',image:rotationPokemonImage(name),name,detail:(mountain?mountain[1]+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente'):'Disponible en la rotación semanal')+' · '+(joey.length?joey.length+' captura(s) pendiente(s)':captured?'Captura registrada':'Sin objetivo de captura asociado'),tag:'Semana '+week,priority:joey.length>0||(mountain&&(!ready||runs<15))};});
+ tasks.push(...rotationTasks);
+ missingJoey.filter(x=>!names.includes(x.name)).forEach(x=>tasks.push({type:'joey',image:rotationPokemonImage(x.name),name:x.name,detail:x.clan+' · '+x.detail,tag:'Joey Quest',priority:true}));
+ if(filter==='joey'){tasks.length=0;missingJoey.forEach(x=>tasks.push({type:'joey',image:rotationPokemonImage(x.name),name:x.name,detail:x.clan+' · '+x.detail,tag:'Joey Quest',priority:true}));}
+ if(filter==='mountain'){tasks.length=0;tasks.push(...rotationTasks);}
  const taskRoot=document.getElementById('plannerTasks');
- const taskMarkup=shown.slice(0,80).map(t=>'<div class="planner-task"><span class="planner-task-icon"><img src="'+t.image+'" data-pokemon="'+t.name+'" alt="" loading="lazy" onerror="'+(t.type==='mountain'?'rotationImageError(this)':(t.fallback?"if(!this.dataset.fallback){this.dataset.fallback='1';this.src='"+t.fallback+"';}else{this.style.display=\'none\';}":'this.style.display=\'none\';'))+'"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join('');
- taskRoot.innerHTML=taskMarkup||(filter==='all'?'<div class="planner-empty">¡No tienes objetivos pendientes! Buen trabajo.</div>':'<div class="planner-empty">No hay tareas pendientes en esta categoría.</div>');
- if(shown.length===0&&filter!=='all'){taskRoot.innerHTML=mountainItems.map(([d,item])=>{const name=d.replace(/^DZ /,''),runs=Math.min(15,Number(profiles[activeProfile][runKey(d)]||0)),ready=!!profiles[activeProfile]['mountain-ready:'+d];return '<div class="planner-task"><span class="planner-task-icon">◈</span><div class="planner-task-main"><strong>'+name+'</strong><small>'+item+' · Dungeon '+runs+'/15 · Objeto '+(ready?'marcado listo':'pendiente')+'</small></div><span class="planner-task-type">Mountain</span></div>';}).join('');}
+ const shown=filter==='all'?tasks:tasks.filter(t=>t.type===filter);
+ const taskMarkup=shown.slice(0,80).map(t=>'<div class="planner-task'+(t.priority?' planner-task-priority':'')+'"><span class="planner-task-icon"><img src="'+t.image+'" data-pokemon="'+t.name+'" alt="'+t.name+'" loading="lazy" onerror="rotationImageError(this)"></span><div class="planner-task-main"><strong>'+t.name+'</strong><small>'+t.detail+'</small></div><span class="planner-task-type">'+t.tag+'</span></div>').join('');
+ taskRoot.innerHTML=taskMarkup||(filter==='all'?'<div class="planner-empty">No hay objetivos asociados a esta semana.</div>':'<div class="planner-empty">No hay objetivos para esta categoría.</div>');
  renderWeeklyChecklist();
  }catch(err){
   console.error("Error al renderizar el planificador:",err);
