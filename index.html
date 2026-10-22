@@ -2727,12 +2727,12 @@ function updateDashboardWeeklySummary(){
  if(breakdown)breakdown.innerHTML=weeklyTaskGroups.map(g=>{const d=g.tasks.filter(t=>!!p[weeklyStateKey(t.id)]).length;return '<button type="button" class="dashboard-weekly-row" data-weekly-jump="'+g.id+'"><span>'+g.title+'</span><strong>'+d+'/'+g.tasks.length+'</strong></button>';}).join('')+'<button type="button" class="dashboard-weekly-row dashboard-weekly-row--special" data-weekly-jump="monthly-terror"><span>Terror mensual</span><strong>'+(monthlyDone?'1/1':'0/1')+'</strong></button>'+'<button type="button" class="dashboard-weekly-row dashboard-weekly-row--special" data-weekly-jump="clones"><span>Clones Mewtwo</span><strong>'+clonesDone+'/6</strong></button>';
 }
 const dailyMissionTasks=[
- {id:"officer-jenny",name:"Oficial Jenny",detail:"Revisar y completar la misión diaria disponible."},
- {id:"rachel",name:"Rachel",detail:"Revisar y completar la actividad diaria disponible."},
- {id:"duelist-brotherhood",name:"Duelist Brotherhood",detail:"Revisar la misión diaria y sus requisitos."},
- {id:"missingno",name:"MissingNo",detail:"Revisar la actividad diaria disponible."},
- {id:"william",name:"William",detail:"Revisar y completar la misión diaria disponible."},
- {id:"grotto",name:"Daily da Gruta",detail:"Revisar la misión diaria de la gruta."}
+ {id:"officer-jenny",name:"Oficial Jenny",detail:"Completa la Daily Kill: derrota los Pokémon que te asignó la Oficial Jenny. Revisa también las tareas diarias disponibles.",url:"https://wiki.pokexgames.com/Daily_Kill_%28ES%29"},
+ {id:"rachel",name:"Rachel",detail:"Habla con Rachel y sigue el objetivo de su misión diaria vigente; la tarea concreta puede variar.",url:"https://wiki.pokexgames.com/index.php/Miss%C3%B5es_Di%C3%A1rias"},
+ {id:"duelist-brotherhood",name:"Duelist Brotherhood",detail:"Consulta al NPC del Club de Duelistas y completa el objetivo diario que indique.",url:"https://wiki.pokexgames.com/index.php/Miss%C3%B5es_Di%C3%A1rias"},
+ {id:"missingno",name:"MissingNo",detail:"Habla con MissingNo y completa la misión diaria que esté disponible; confirma el objetivo actual en el NPC.",url:"https://wiki.pokexgames.com/index.php/Miss%C3%B5es_Di%C3%A1rias"},
+ {id:"william",name:"William",detail:"Consulta a William y completa el objetivo de su actividad diaria vigente.",url:"https://wiki.pokexgames.com/index.php/Miss%C3%B5es_Di%C3%A1rias"},
+ {id:"grotto",name:"Daily da Gruta",detail:"Entra a la Gruta, revisa la tarea diaria activa y completa sus requisitos.",url:"https://wiki.pokexgames.com/index.php/Miss%C3%B5es_Di%C3%A1rias"}
 ];
 function dailyMissionDateKey(){
  const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
@@ -2754,7 +2754,7 @@ function renderDailyChecklist(){
  if(completeBtn){completeBtn.textContent=done===tasks.length?'✓ Todo completado':'✓ Marcar todas';completeBtn.disabled=!canWrite||done===tasks.length;completeBtn.setAttribute("aria-label",done===tasks.length?'Todas las actividades ya están completadas':'Marcar todas las actividades diarias como completadas');}
  if(clearBtn){clearBtn.textContent=done===0?'Todo pendiente':'↺ Desmarcar todas';clearBtn.disabled=!canWrite||done===0;clearBtn.setAttribute("aria-label",done===0?'Todas las actividades ya están pendientes':'Desmarcar todas las actividades diarias');}
  const visible=tasks.filter(t=>(!q||(t.name+" "+t.detail).toLocaleLowerCase("es").includes(q))&&(filter==="all"||(filter==="done"&&t.done)||(filter==="pending"&&!t.done)));
- root.innerHTML=visible.map(t=>'<label class="daily-mission-item '+(t.done?'is-done':'')+'"><input type="checkbox" data-daily-task="'+t.id+'" '+(t.done?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="daily-mission-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small></span>'+(t.done?'<span class="daily-mission-done-mark" aria-label="Completada">✓</span>':'')+'</label>').join("")||(visible.length===0?'<div class="daily-mission-empty">No hay actividades que coincidan con el filtro.</div>':"");
+ root.innerHTML=visible.map(t=>'<label class="daily-mission-item '+(t.done?'is-done':'')+'"><input type="checkbox" data-daily-task="'+t.id+'" '+(t.done?'checked':'')+' '+(!canWrite?'disabled':'')+'><span class="daily-mission-copy"><strong>'+t.name+'</strong><small>'+t.detail+'</small>'+(t.url?'<a href="'+t.url+'" target="_blank" rel="noopener noreferrer" class="daily-mission-wiki">Consultar misión ↗</a>':'')+'</span>'+(t.done?'<span class="daily-mission-done-mark" aria-label="Completada">✓</span>':'')+'</label>').join("")||(visible.length===0?'<div class="daily-mission-empty">No hay actividades que coincidan con el filtro.</div>':"");
  root.querySelectorAll("[data-daily-task]").forEach(el=>el.addEventListener("change",()=>{if(!canWrite){el.checked=!el.checked;return;}const key=dailyMissionStateKey(el.dataset.dailyTask);if(el.checked)profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];save();renderDailyChecklist();}));
  document.querySelectorAll("[data-daily-action]").forEach(btn=>btn.onclick=()=>{if(!canWrite){alert("Inicia sesión con una cuenta autorizada para editar el progreso.");return;}dailyMissionTasks.forEach(t=>{const key=dailyMissionStateKey(t.id);if(btn.dataset.dailyAction==="complete")profiles[activeProfile][key]=true;else delete profiles[activeProfile][key];});save();renderDailyChecklist();});
 }
@@ -2902,6 +2902,7 @@ document.getElementById("chosenSearch").addEventListener("input",renderChosenQue
 document.querySelectorAll("[data-dashboard-pref]").forEach(el=>el.addEventListener("change",()=>setDashboardPreference(el.dataset.dashboardPref,el.checked)));
 document.getElementById("dashboardShowAll").addEventListener("click",()=>{profiles[activeProfile]["dashboard:widgets"]=JSON.stringify(Object.fromEntries(Object.keys(dashboardPreferenceLabels).map(key=>[key,true])));applyDashboardPreferences();save();});
 function navigateToWeeklyTarget(target){
+ activateSidebar("weekly");
  const search=document.getElementById("weeklySearch"),filter=document.getElementById("weeklyFilter"),hide=document.getElementById("weeklyHideDone");
  if(search)search.value="";
  if(filter)filter.value="pending";
@@ -2916,7 +2917,8 @@ function navigateToWeeklyTarget(target){
  }else{
   const accordion=root.querySelector(".weekly-accordion:not(.weekly-clones-accordion)");
   if(accordion){accordion.open=true;weeklyAccordionOpenState.weekly=true;}
-  destination=[...root.querySelectorAll("[data-weekly-group-section]")].find(section=>section.dataset.weeklyGroupSection===target)||null;
+  if(target==="monthly-terror")destination=root.querySelector('[data-weekly-task="terror-unknown"]')?.closest(".weekly-task")||null;
+  else destination=[...root.querySelectorAll("[data-weekly-group-section]")].find(section=>section.dataset.weeklyGroupSection===target)||null;
  }
  if(destination)destination.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
 }
