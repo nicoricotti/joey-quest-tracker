@@ -2068,7 +2068,7 @@ button:focus-visible,.tab:focus-visible,.rotation-week-card:focus-visible,select
  .planner-summary{grid-template-columns:minmax(0,1fr)!important}
  .weekly-pending-categories{grid-template-columns:minmax(0,1fr)!important}
 }
-.ball-average-card{margin:14px 0 18px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#192432,#121a25)}.ball-average-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.ball-average-heading h2{font-size:18px;margin:4px 0 6px}.ball-average-heading p,.ball-average-note{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.ball-average-badge{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:11px;color:var(--accent2)}.ball-average-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.ball-average-stat{display:flex;flex-direction:column;gap:5px;min-width:0;padding:11px;border:1px solid #344154;border-radius:11px;background:#101722}.ball-average-stat span{font-size:11px;color:var(--muted)}.ball-average-stat strong{font-size:22px;color:var(--text)}.ball-average-stat small{font-size:10px;color:var(--muted)}.ball-average-note{margin-top:12px}@media(max-width:600px){.ball-average-card{padding:12px}.ball-average-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ball-average-heading h2{font-size:16px}.ball-average-stat strong{font-size:20px}}</style>
+.ball-average-card{margin:14px 0 18px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#192432,#121a25)}.ball-average-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.ball-average-heading h2{font-size:18px;margin:4px 0 6px}.ball-average-heading p,.ball-average-note{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.ball-average-badge{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:11px;color:var(--accent2)}.ball-average-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.ball-average-stat{display:flex;flex-direction:column;gap:5px;min-width:0;padding:11px;border:1px solid #344154;border-radius:11px;background:#101722}.ball-average-stat span{font-size:11px;color:var(--muted)}.ball-average-stat strong{font-size:22px;color:var(--text)}.ball-average-stat small{font-size:10px;color:var(--muted)}.ball-average-note{margin-top:12px}@media(max-width:600px){.ball-average-card{padding:12px}.ball-average-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ball-average-heading h2{font-size:16px}.ball-average-stat strong{font-size:20px}}.dashboard-card-link{cursor:pointer;transition:border-color .16s,transform .16s}.dashboard-card-link:hover{border-color:#5c8293;transform:translateY(-1px)}.dashboard-card-link:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}.dashboard-pokemon-mini[role="link"]{cursor:pointer}.dashboard-pokemon-mini[role="link"]:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}</style>
 </head>
 <body><div class="app-shell">
 <aside class="app-sidebar" aria-label="Navegación principal">
@@ -2539,6 +2539,31 @@ document.getElementById("dashPendingList").addEventListener("keydown",e=>{
  const card=e.target.closest("[data-dashboard-target]");
  if(card&&(e.key==="Enter"||e.key===" ")){e.preventDefault();activateSidebar(card.dataset.dashboardTarget);}
 });
+/* Las tarjetas del resumen son accesos directos; los controles internos conservan su acción propia. */
+const dashboardCardTargets={collection:"joey",mountain:"mountain",weekly:"weekly",pending:"planner"};
+document.querySelectorAll(".dashboard-home-grid [data-dashboard-widget]").forEach(card=>{
+ const target=dashboardCardTargets[card.dataset.dashboardWidget];
+ if(!target)return;
+ card.classList.add("dashboard-card-link");
+ card.setAttribute("tabindex","0");
+ card.setAttribute("role","link");
+ card.setAttribute("aria-label","Abrir "+({joey:"Joey Quest",mountain:"Dimensional Mountain",weekly:"misiones semanales",planner:"objetivos pendientes"}[target]||target));
+ card.addEventListener("click",e=>{
+  if(e.target.closest("button,a,input,select,textarea,label,[data-weekly-jump]"))return;
+  if(e.target.closest(".dashboard-pokemon-mini")){activateSidebar("joey");return;}
+  activateSidebar(target);
+ });
+ card.addEventListener("keydown",e=>{
+  if(e.target!==card||(e.key!=="Enter"&&e.key!==" "))return;
+  e.preventDefault();activateSidebar(target);
+ });
+});
+document.querySelectorAll("#dashCollectionPreview .dashboard-pokemon-mini,#dashWeeklyPreview .dashboard-pokemon-mini").forEach(item=>{
+ item.setAttribute("tabindex","0");item.setAttribute("role","link");item.setAttribute("aria-label","Abrir Joey Quest: "+(item.title||"Pokémon"));
+ item.addEventListener("click",()=>activateSidebar("joey"));
+ item.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activateSidebar("joey");}});
+});
+
 function render(){
  const q=document.getElementById("searchJoey").value.trim().toLowerCase(),f=document.getElementById("filterJoey").value;
  const items=all();
