@@ -2426,17 +2426,33 @@ function setDashboardPreference(key,value){
 }
 
 const evolutionStageByPokemon={Darumaka:"base",Darmanitan:"final",Wingull:"base",Pelipper:"final",Cubchoo:"base",Beartic:"final",Shroomish:"base",Breloom:"final",Dwebble:"base",Crustle:"final",Joltik:"base",Galvantula:"final",Ferroseed:"base",Ferrothorn:"final",Timburr:"base",Gurdurr:"middle",Ambipom:"final",Lickilicky:"final",Heatmor:"single",Nosepass:"base",Probopass:"final",Hippopotas:"base",Hippowdon:"final",Drilbur:"base",Excadrill:"final",Emolga:"single",Axew:"base",Fraxure:"middle",Haxorus:"final",Poochyena:"base",Mightyena:"final",Skorupi:"base",Drapion:"final",Pawniard:"base",Bisharp:"final"};
-function updateBallAverages(){
+function getBallStatsAcrossProfiles(){
  const unique=[...new Map(all().map(x=>[x.name,x])).values()];
  const groups={all:[],base:[],middle:[],final:[]};
- unique.forEach(p=>{const raw=profiles[activeProfile]["pokeballs:"+p.name];if(raw===undefined||raw===null||String(raw).trim()==="")return;const n=Number(raw);if(!Number.isFinite(n)||n<=0)return;groups.all.push(n);const stage=evolutionStageByPokemon[p.name]||"single";if(groups[stage])groups[stage].push(n);});
+ Object.entries(profiles||{}).forEach(([profileId,profileData])=>{
+  unique.forEach(p=>{
+   const raw=profileData&&profileData["pokeballs:"+p.name];
+   if(raw===undefined||raw===null||String(raw).trim()==="")return;
+   const n=Number(raw);if(!Number.isFinite(n)||n<=0)return;
+   groups.all.push(n);
+   const stage=evolutionStageByPokemon[p.name]||"single";
+   if(groups[stage])groups[stage].push(n);
+  });
+ });
+ const averages={};
+ Object.keys(groups).forEach(k=>{averages[k]=groups[k].length?groups[k].reduce((s,n)=>s+n,0)/groups[k].length:null;});
+ averages.samples=groups.all.length;averages.groups=groups;
+ return averages;
+}
+function updateBallAverages(){
+ const stats=getBallStatsAcrossProfiles(),groups=stats.groups;
  const avg=arr=>arr.length?Math.round(arr.reduce((s,n)=>s+n,0)/arr.length):null;
  const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value===null?"—":value.toLocaleString("es-CL")+" Balls";};
  const count=(id,arr)=>{const el=document.getElementById(id);if(el)el.textContent=arr.length?arr.length+" registro"+(arr.length===1?"":"s"):"Sin datos";};
  put("ballAverageAll",avg(groups.all));put("ballAverageBase",avg(groups.base));put("ballAverageMiddle",avg(groups.middle));put("ballAverageFinal",avg(groups.final));
  count("ballAverageAllCount",groups.all);count("ballAverageBaseCount",groups.base);count("ballAverageMiddleCount",groups.middle);count("ballAverageFinalCount",groups.final);
- const badge=document.getElementById("ballAverageSamples");if(badge)badge.textContent=groups.all.length+" registro"+(groups.all.length===1?"":"s");
- const note=document.getElementById("ballAverageNote");if(note)note.textContent=groups.all.length?"Promedios del perfil "+profileLabel(activeProfile)+". Solo cuentan valores de Balls mayores que cero; los datos nuevos actualizan los promedios automáticamente.":"Aún no hay registros de Balls en este perfil. Al ingresar capturas, los promedios se calcularán automáticamente. Las especies de una sola etapa se incluyen solo en el promedio general.";
+ const badge=document.getElementById("ballAverageSamples");if(badge)badge.textContent=groups.all.length+" registros globales";
+ const note=document.getElementById("ballAverageNote");if(note)note.textContent=groups.all.length?"Promedios construidos con todos los registros disponibles de los perfiles compartidos, no solo del perfil seleccionado. Cada valor de una especie en cada perfil cuenta como muestra; se excluyen valores vacíos o iguales a cero.":"Aún no hay registros de Balls en los perfiles disponibles. Al ingresar capturas, los promedios globales se calcularán automáticamente.";
 }
 function updateDashboard(uniquePokemon,total,mine){
  const joeyPct=total?Math.round(mine/total*100):0;
@@ -2453,13 +2469,12 @@ function updateDashboard(uniquePokemon,total,mine){
  document.getElementById("dashMountainMissing").textContent=ready===12?"¡Los 12 objetos están marcados como listos!":"Faltan "+(12-ready)+" objetos por marcar como listos. Registra hasta 15 entradas por dungeon y marca el objeto cuando lo tengas.";
  const unique=[...new Map(all().map(x=>[x.name,x])).values()];
  const pending=unique.filter(x=>!all().some(y=>y.name===x.name&&state(y.id)));
- // Estimación pendiente basada en el promedio real de registros del perfil activo.
- const ballSamples=unique.map(x=>({name:x.name,value:Number(profiles[activeProfile]["pokeballs:"+x.name])})).filter(x=>Number.isFinite(x.value)&&x.value>0);
- const ballAverage=ballSamples.length?ballSamples.reduce((sum,x)=>sum+x.value,0)/ballSamples.length:null;
- const ballEstimate=ballAverage===null?null:Math.round(pending.reduce((sum,x)=>{const exact=Number(profiles[activeProfile]["pokeballs:"+x.name]);return sum+(Number.isFinite(exact)&&exact>0?exact:ballAverage);},0));
+ // Estima pendientes con los datos específicos del perfil activo o, si faltan, con promedios globales por etapa.
+ const ballStats=getBallStatsAcrossProfiles();
+ const ballEstimate=ballStats.samples?Math.round(pending.reduce((sum,x)=>{const exact=Number(profiles[activeProfile]["pokeballs:"+x.name]);if(Number.isFinite(exact)&&exact>0)return sum+exact;const stage=evolutionStageByPokemon[x.name]||"single";const avg=ballStats[stage]!==null?ballStats[stage]:ballStats.all;return sum+(avg===null?0:avg);},0)):null;
  const ballEstimateEl=document.getElementById("dashPokeballs");
  ballEstimateEl.textContent=ballEstimate===null?"—":("~"+ballEstimate.toLocaleString("es-CL"));
- ballEstimateEl.title=ballEstimate===null?"Registra las Balls usadas en alguna captura para calcular tu promedio.":"Promedio general de "+Math.round(ballAverage).toLocaleString("es-CL")+" Balls a partir de "+ballSamples.length+" registro(s); estimación para "+pending.length+" Pokémon pendientes.";
+ ballEstimateEl.title=ballEstimate===null?"Registra las Balls usadas en alguna captura para calcular tu promedio.":"Estimación basada en "+ballStats.samples+" registros de todos los perfiles, usando el promedio de la etapa evolutiva cuando no hay dato específico; "+pending.length+" Pokémon pendientes.";
  updateBallAverages();
  const captured=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)));
 const capturedUnique=unique.filter(x=>all().some(y=>y.name===x.name&&state(y.id)));const current=currentRotation();const weeklyNames=rotationWeeks[current.week]||[];
