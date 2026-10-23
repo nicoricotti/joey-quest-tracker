@@ -3094,7 +3094,7 @@ function loadTrackerByProfile(){
   if(stamp){let profileCount=0,progressCount=0;for(const values of Object.values(cloud.profiles)){if(values&&typeof values==="object"){profileCount++;for(const value of Object.values(values))if(value===true||(typeof value==="number"&&value>0)||(typeof value==="string"&&value.length>0))progressCount++;}}stamp.textContent="Diagnóstico de versión: 2026-10-20-U · Firebase: "+profileCount+" perfiles, "+progressCount+" avances guardados.";}
   let local=null;try{local=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(local&&local.profiles&&!localStorage.getItem("pxgTrackerPreCloudBackup")){try{localStorage.setItem("pxgTrackerPreCloudBackup",JSON.stringify(local));}catch(e){}}
-  const candidates=readLocalBackupCandidates(local),recoveryLocal=(local&&local.profiles)?local:(candidates[0]||null);
+  const candidates=readLocalBackupCandidates(local),recoveryLocal=candidates[0]||((local&&local.profiles)?local:null);
   if(cloudHasData){
    if(localHasMoreProgress(recoveryLocal,cloud)){
     createSafetyBackup();const mergedProfiles={};
