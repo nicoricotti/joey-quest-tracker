@@ -2247,7 +2247,7 @@ const joeyDzInfo={
 };
 function joeyPokemonWikiUrl(name){return "https://wiki.pokexgames.com/index.php?title="+encodeURIComponent(name).replace(/%20/g,"_");}
 function joeyDetailMarkup(detail){
- const zones=[...new Set((detail.match(/DZ [^/]+/g)||[]).map(x=>x.trim()))];
+ const zones=[...new Set((detail.match(/DZ [^/]+/g)||[]).map(x=>x.trim()))];\n if(detail.includes("Giant Galvantula")&&!zones.includes("DZ Giant Galvantula"))zones.push("DZ Giant Galvantula");
  const uniqueZones=zones.length?zones:[detail.replace(/^.*?·\s*/,"")];
  return uniqueZones.map(zone=>{
   const info=joeyDzInfo[zone];
